@@ -36,7 +36,7 @@ Which (if any) progressive web app feature(s) does your app support?
 
 ## Mockup images
 
-**Add images/photos that show your mockup along with a very brief caption:**
+**[Add images/photos that show your mockup](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository) along with a very brief caption:**
 
 ![](/static/mockups1.png)
 ![](/static/mockups2.png)
@@ -55,8 +55,6 @@ Our homepage will show the user all national parks either in a list view or a ma
 
 **[Add a screenshot of each key page](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository)
 along with a very brief caption:**
-
-![](https://media.giphy.com/media/o0vwzuFwCGAFO/giphy.gif)
 
 
 
