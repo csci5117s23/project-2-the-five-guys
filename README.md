@@ -10,8 +10,11 @@ CSCI 5117, Spring 2022, [assignment description](https://canvas.umn.edu/courses/
 
 ### Students
 
-* First Last, x500@umn.edu
-* ...
+* John Cullom, cullo006@umn.edu
+* Mikkel Folting, folti002@umn.edu
+* Nathaniel Ludwig, ludwi298@umn.edu
+* Sahil Raina, raina024@umn.edu
+* Ray Robards, robar031@umn.edu
 
 
 ## Key Features
