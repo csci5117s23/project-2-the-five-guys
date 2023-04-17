@@ -5,12 +5,24 @@ import styles from '@/styles/Home.module.css'
 import {useEffect, useState} from "react";
 import NationalParkItem from "@/components/NationalParkItem"
 import ExploreParkItem from "@/components/ExploreParkItem"
+import { useAuth, SignIn, UserButton } from "@clerk/nextjs";
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  const [nationalParks, setNationalParks] = useState([]);
+    const router = useRouter();
+    const [itemId, setItemId] = useState("");
+
+  const [nationalParks, setNationalParks] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [park, setPark] = useState(null);
 
   const apiKey = process.env.NEXT_PUBLIC_NATIONAL_PARK_KEY;
+
+    useEffect(() => {
+        if(router.query.id){
+            setItemId(router.query.id as string);
+        }
+    },[router.query]);
   
   useEffect(()=> {
     async function loadNationalParkData()
@@ -26,23 +38,17 @@ export default function Home() {
     loadNationalParkData();
   },[]);
 
-  if(loading)
-  {
-    return (
-      <p>Loading......</p>
-    )
-  }
-  const parkList = nationalParks.map((park)=> {
-    return(
-    <ExploreParkItem nationalPark={park} />)
-  });
+  useEffect(()=> {
+    if(nationalParks && itemId){
+        setPark(nationalParks.find(park => park.id === itemId));
+    }
+  }, [nationalParks, itemId]); 
 
-  return (
-    <>
-    <div>
-      {parkList}
-    {/* <NationalParkItem nationalPark={nationalParks[0]} /> */}
-    </div>
-    </>
-  )
+  if(loading || !park){
+    return(<div>loading...</div>)
+  }
+
+    return (
+        <NationalParkItem nationalPark={park} />
+    )
 }

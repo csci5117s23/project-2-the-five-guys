@@ -3,9 +3,9 @@ export default function NationalParkItem(props)
     const {nationalPark} = props;
     return (
         <div className="nationalParkItemContainer">
-            <div className="parkTitle">
+            {/* <div className="parkTitle">
                 <span>{nationalPark.name}</span>
-            </div>
+            </div> */}
             <div className="parkImage">
                 <img src={nationalPark.images[0].url}></img>
             </div>
