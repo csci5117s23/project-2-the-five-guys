@@ -10,8 +10,6 @@ import { getNationalParks } from '../modules/requests';
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const apiKey = process.env.NEXT_PUBLIC_NATIONAL_PARK_KEY;
   
   useEffect(()=> {
     async function loadNationalParkData()
