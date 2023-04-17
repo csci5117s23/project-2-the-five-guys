@@ -32,9 +32,9 @@ export default function Home() {
       <p>Loading......</p>
     )
   }
-  const parkList = nationalParks.map((park)=> {
+  const parkList = nationalParks.map((park, index)=> {
     return(
-    <ExploreParkItem nationalPark={park} />)
+    <ExploreParkItem key={index} nationalPark={park} />)
   });
 
   return (

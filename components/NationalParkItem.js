@@ -13,8 +13,8 @@ export default function NationalParkItem(props)
                 <p className="parkDescription">{nationalPark.description}</p>
                 <span>Things to do: </span>
                 <ul className="activitiesList">
-                    {nationalPark.activities.map(activity => (
-                        <li>{activity.name}</li>
+                    {nationalPark.activities.map((activity, index) => (
+                        <li key={index}>{activity.name}</li>
                     ))}
                 </ul>
             </div>
