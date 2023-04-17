@@ -11,7 +11,7 @@ export default function ExploreParkItem(props) {
           </div>
 
           <div className="pure-u-3-4" id="parkName">
-            <h2>{nationalPark.name}</h2>
+            <h2 className='exploreParkName'>{nationalPark.name}</h2>
           </div>
         </div>
     </Link>
