@@ -4,9 +4,9 @@ CSCI 5117, Spring 2022, [assignment description](https://canvas.umn.edu/courses/
 
 ## App Info:
 
-* Team Name: TODO
+* Team Name: The Five Guys
 * App Name: TODO
-* App Link: <https://TODO.com/>
+* App Link: https://snazzy-kelpie-9a8b46.netlify.app/
 
 ### Students
 
