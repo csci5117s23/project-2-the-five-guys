@@ -23,7 +23,7 @@ export default function Home() {
       setLoading(false);
     }
     loadNationalParkData();
-  },[])
+  },[]);
 
   if(loading)
   {
