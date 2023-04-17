@@ -12,7 +12,7 @@ export default function Home() {
     const router = useRouter();
     const [itemId, setItemId] = useState("");
 
-  const [nationalParks, setNationalParks] = useState<any[]>([]);
+  const [nationalParks, setNationalParks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [park, setPark] = useState(null);
 
@@ -20,7 +20,7 @@ export default function Home() {
 
     useEffect(() => {
         if(router.query.id){
-            setItemId(router.query.id as string);
+            setItemId(router.query.id);
         }
     },[router.query]);
   
