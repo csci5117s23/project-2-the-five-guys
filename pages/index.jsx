@@ -6,6 +6,7 @@ import {useEffect, useState} from "react";
 import NationalParkItem from "@/components/NationalParkItem"
 import ExploreParkItem from "@/components/ExploreParkItem"
 import { getNationalParks } from '../modules/requests';
+import MapComponent from '@/components/map';
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -28,15 +29,17 @@ export default function Home() {
       <p>Loading......</p>
     )
   }
-  const parkList = nationalParks.map((park, index)=> {
-    return(
-    <ExploreParkItem key={index} nationalPark={park} />)
-  });
+  // const parkList = nationalParks.map((park, index)=> {
+  //   return(
+  //   <ExploreParkItem key={index} nationalPark={park} />
+  //   )
+  // });
 
   return (
     <>
-    <div>
-      {parkList}
+    <div className='test'>
+      {/* {parkList} */}
+      <MapComponent parks={nationalParks}></MapComponent>
     {/* <NationalParkItem nationalPark={nationalParks[0]} /> */}
     </div>
     </>
