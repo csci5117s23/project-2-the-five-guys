@@ -36,9 +36,11 @@ export default function Home() {
 
   return (
     <>
-    <Stack spacing={2}>
-      {parkList}
-    </Stack>
+    <span className = "parkStackWrapper">
+      <Stack className="parkStack" spacing={2}>
+        {parkList}
+      </Stack>
+    </span>
     </>
   )
 }

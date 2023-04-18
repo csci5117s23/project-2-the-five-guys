@@ -27,7 +27,10 @@ export default function App({ Component, pageProps }: AppProps) {
         <Component {...pageProps} />
         <BottomNavigation showLabels value={bottomChoice} 
           sx={{
-            bgcolor: 'green'
+            bgcolor: 'green',
+            position: 'fixed', 
+            bottom: 0,
+            left: 0, right: 0
           }}
           onChange={(event, newValue) => {
             console.log(newValue);

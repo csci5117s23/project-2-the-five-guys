@@ -5,7 +5,7 @@ export default function ExploreParkItem(props) {
     const {nationalPark} = props;
     let parkLink = "parks/"+nationalPark.id;
     return(
-    <Link href={parkLink}>
+    <Link className='exploreParkLink' href={parkLink}>
       <Grid className="exploreParkItem" container spacing={2}>
         <Grid item xs={3}>
           <img className = "exploreParkPic" src={nationalPark.images[0].url}></img>
