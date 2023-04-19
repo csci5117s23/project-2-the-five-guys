@@ -1,11 +1,17 @@
+import { Box } from "@mui/material";
+
 export default function MapIcon(props)
 {
-    const {parkName} = props;
+    const {parkInfo} = props;
+    console.log(parkInfo);
     return (
         <>
             <div className="mapIcon">
-                <p >{parkName}</p>
+                <div className="mapIconImageContainer">
+                    <img className="mapIconImage" src={parkInfo.images[0].url}></img>
+                </div>
             </div>
         </>
+        
     )
 }

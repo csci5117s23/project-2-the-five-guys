@@ -23,11 +23,12 @@
     "codehooks-js": "^1.0.11",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
+    "leaflet": "^1.9.3",
     "next": "13.3.0",
-    "ol": "^7.3.0",
     "purecss": "^3.0.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-leaflet": "^4.2.1",
     "styled-components": "^5.3.9",
     "typescript": "5.0.4"
   }

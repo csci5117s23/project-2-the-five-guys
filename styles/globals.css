@@ -57,16 +57,16 @@
 
 .bottomFooter{
   width: 100%;
-  height: 6rem;
-  background-color: #1B742E;
+  /* height:  20vh; */
+  background-color: red;
   color: white;
 
 }
 
 .bottomNavBar{
   width: 100%;
-  height: 6rem;
-  background-color: #1B742E;
+  /* height: 20vh; */
+  background-color: red;
   color: white;
 }
 
@@ -79,13 +79,22 @@
 .topHeader{
   display:flex;
   width: 100%;
-  height: 6rem;
+  height: 7vh;
   background-color: #1B742E;
   color: white;
   align-items: center;
   justify-content: center;
   font-size: 2rem;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
+}
+
+.exploreSelector{
+  display: flex;
+  width: 100%;
+  height: 5vh;
+  background-color: white;
+  /* margin-bottom: 20px; */
+  justify-content: center; 
 }
 
 
@@ -105,7 +114,7 @@
 
 .mapContainer {
   width: 100%;
-  height: 72vh;
+  height: 81vh;
 }
 
 .ol-attribution {
@@ -145,12 +154,27 @@
   color: white;
 }
 
-.mapIcon {
-  width: 10px;
-  height: 10px;
-  font-size: .7rem;
-}
-
 .mapIcon:hover {
   cursor: pointer;
+}
+
+.mapIconImageContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border: 3px solid white;
+  box-shadow: 2px 2px 5px black;
+}
+
+.mapIconImageContainer:hover{
+  border: 5px solid white;
+}
+
+.mapIconImage {
+  width: 40px;
+  height: 40px;
+  object-fit: scale-down;
 }
