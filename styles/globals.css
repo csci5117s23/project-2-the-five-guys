@@ -14,7 +14,16 @@
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
   align-items: center;
+}
 
+.parkStack{
+  margin-right: auto;
+  width:80%;
+  margin-left: auto;
+}
+
+.parkStackWrapper{
+  align-items: center;
 }
 
 .exploreParkPic {
@@ -35,8 +44,18 @@
   font-size: 2rem;
 }
 
+.userButton{
+  float:right;
+  margin-left: 10px;
+}
+
 .exploreParkName{
   margin-left: 5px;
+}
+
+.exploreParkLink {
+  text-decoration: none;
+  color: #000000
 }
 
 .bottomFooter{
@@ -51,6 +70,13 @@
   text-align: center;
   justify-content: center;
   color:rgba(253, 253, 253, 0.856);
+}
+
+.bottomNavBar{
+  width: 100%;
+  height: 6rem;
+  background-color: #1B742E;
+  color: white;
 }
 
 .topHeader{

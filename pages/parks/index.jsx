@@ -8,6 +8,7 @@ import ExploreParkItem from "@/components/ExploreParkItem"
 import { getNationalParks } from '@/modules/requests';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import RedirectToHome from '@/components/RedirectToHome';
+import Stack from '@mui/material/Stack';
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -38,10 +39,11 @@ export default function Home() {
   return (
     <>
       <SignedIn>
-        <div>
-          {parkList}
-          {/* <NationalParkItem nationalPark={nationalParks[0]} /> */}
-        </div>
+        <span className = "parkStackWrapper">
+          <Stack className="parkStack" spacing={2}>
+            {parkList}
+          </Stack>
+        </span>
       </SignedIn>
 
       <SignedOut>
