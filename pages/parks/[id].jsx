@@ -16,8 +16,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [park, setPark] = useState(null);
 
-  const apiKey = process.env.NEXT_PUBLIC_NATIONAL_PARK_KEY;
-
     useEffect(() => {
         if(router.query.id){
             setItemId(router.query.id);
@@ -27,11 +25,7 @@ export default function Home() {
   useEffect(()=> {
     async function loadNationalParkData()
     {
-      let response = await fetch(`https://developer.nps.gov/api/v1/parks?limit=950`, {
-        method: 'GET',
-        headers: {'x-api-key': `${apiKey}`}
-      })
-      let data = await response.json();
+      let data = await getNationalParks();
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
       setNationalParks(filteredParks);
       setLoading(false);
