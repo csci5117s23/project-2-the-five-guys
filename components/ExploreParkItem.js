@@ -2,9 +2,9 @@ import Link from 'next/link';
 import Grid from '@mui/material/Grid';
 
 export default function ExploreParkItem(props) {
-    const {nationalPark} = props;
-    let parkLink = "parks/"+nationalPark.id;
-    return(
+  const {nationalPark} = props;
+  let parkLink = "parks/"+nationalPark.id;
+  return(
     <Link className='exploreParkLink' href={parkLink}>
       <Grid className="exploreParkItem" container spacing={2}>
         <Grid item xs={3}>
@@ -15,5 +15,5 @@ export default function ExploreParkItem(props) {
         </Grid>
       </Grid>
     </Link>
-    );
+  );
 }
