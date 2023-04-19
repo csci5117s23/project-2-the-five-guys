@@ -24,7 +24,6 @@ export default function App({ Component, pageProps }) {
         Explore
         <span className="userButton" ><UserButton/></span>
       </div>
-      <UserButton />
       <Component {...pageProps} />
       <BottomNavigation showLabels value={bottomChoice} 
         sx={{

@@ -8,10 +8,12 @@ import ExploreParkItem from "@/components/ExploreParkItem"
 import { getNationalParks } from '@/modules/requests';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import RedirectToHome from '@/components/RedirectToHome';
-import Stack from '@mui/material/Stack';
+import { Chip, Stack } from '@mui/material';
+import dynamic from 'next/dynamic';
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
+  const [exploreView, setExploreView] = useState("map");
   const [loading, setLoading] = useState(true);
   
   useEffect(()=> {
@@ -36,14 +38,32 @@ export default function Home() {
     <ExploreParkItem key={index} nationalPark={park} />)
   });
 
+  //leaflet react doest work well with server side rendering(nextjs)
+  //credit to fixing the issue: https://stackoverflow.com/questions/57704196/leaflet-with-next-js
+  //answer is "answer for 2020"
+  const Map = dynamic(
+    () => import('@/components/map'),
+    {
+      loading: () => <span>loading map....</span>,
+      ssr: false // line prevents server-side render
+    }
+  )
+
   return (
     <>
       <SignedIn>
-        <span className = "parkStackWrapper">
+        <div className='exploreSelector'>
+          <Chip label="List View" onClick={() => setExploreView('list')} />
+          <Chip label="Map View" onClick={() => setExploreView('map')} />
+        </div>
+        {exploreView === 'list' && (<span className = "parkStackWrapper">
           <Stack className="parkStack" spacing={2}>
             {parkList}
           </Stack>
-        </span>
+        </span>)}
+        {exploreView === 'map' && (
+        <Map parks={nationalParks}/>
+    )}
       </SignedIn>
 
       <SignedOut>

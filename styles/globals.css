@@ -6,8 +6,6 @@
 }
 
 .exploreParkItem {
-  height:10%;
-  width:100%;
   background-color: rgba(238, 240, 241, 0.5);
   border: 1px solid rgba(172, 175, 176, 0.3);
   border-radius: 12px;
@@ -29,7 +27,6 @@
 .exploreParkPic {
   max-width: 100%;
   max-height: 100%;
-  margin: 2px;
   border-radius: 12px;
 }
 
@@ -60,10 +57,17 @@
 
 .bottomFooter{
   width: 100%;
-  height: 6rem;
-  background-color: #1B742E;
+  /* height:  20vh; */
+  background-color: red;
   color: white;
 
+}
+
+.bottomNavBar{
+  width: 100%;
+  /* height: 20vh; */
+  background-color: red;
+  color: white;
 }
 
 .bottomLink {
@@ -80,14 +84,24 @@
 }
 
 .topHeader{
-  display: flex;
+  display:flex;
   width: 100%;
-  height: 6rem;
+  height: 7vh;
   background-color: #1B742E;
   color: white;
   align-items: center;
   justify-content: center;
   font-size: 2rem;
+  /* margin-bottom: 20px; */
+}
+
+.exploreSelector{
+  display: flex;
+  width: 100%;
+  height: 5vh;
+  background-color: white;
+  /* margin-bottom: 20px; */
+  justify-content: center; 
 }
 
 
@@ -105,4 +119,69 @@
   overflow: scroll;
 }
 
+.mapContainer {
+  width: 100%;
+  height: 81vh;
+}
 
+.ol-attribution {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.ol-attribution button {
+  display: none;
+}
+
+.ol-attribution li {
+  list-style-type: none;
+  background-color: white;
+  padding: .5rem;
+  border-radius: .5rem;
+  font-size: .7rem;
+}
+
+.ol-zoom-in  {
+  margin-top: .5rem;
+  margin-right: .5rem;
+  margin-left: .5rem;
+  background-color: white;
+  border-radius: .5rem;
+}
+
+.ol-zoom-out {
+  background-color: white;
+  border-radius: .5rem;
+}
+
+.ol-zoom-out:hover, .ol-zoom-in:hover {
+  cursor: pointer;
+  background-color: #1B742E;
+  color: white;
+}
+
+.mapIcon:hover {
+  cursor: pointer;
+}
+
+.mapIconImageContainer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border: 3px solid white;
+  box-shadow: 2px 2px 5px black;
+}
+
+.mapIconImageContainer:hover{
+  border: 5px solid white;
+}
+
+.mapIconImage {
+  width: 40px;
+  height: 40px;
+  object-fit: scale-down;
+}
