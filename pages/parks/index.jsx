@@ -1,9 +1,4 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
 import {useEffect, useState} from "react";
-import NationalParkItem from "@/components/NationalParkItem"
 import ExploreParkItem from "@/components/ExploreParkItem"
 import { getNationalParks } from '@/modules/requests';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
@@ -57,14 +52,16 @@ export default function Home() {
           <Chip label="List View" onClick={() => setExploreView('list')} />
           <Chip label="Map View" onClick={() => setExploreView('map')} />
         </div>
-        {exploreView === 'list' && (<span className = "parkStackWrapper">
-          <Stack className="parkStack" spacing={2}>
-            {parkList}
-          </Stack>
-        </span>)}
+        {exploreView === 'list' && (
+          <span className = "parkStackWrapper">
+            <Stack className="parkStack" spacing={2}>
+              {parkList}
+            </Stack>
+          </span>
+        )}
         {exploreView === 'map' && (
-        <Map parks={nationalParks}/>
-    )}
+          <Map parks={nationalParks}/>
+        )}
       </SignedIn>
 
       <SignedOut>
