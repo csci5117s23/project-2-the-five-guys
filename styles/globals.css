@@ -4,6 +4,62 @@
   font-family: 'Open Sans', sans-serif;
 }
 
+/* Top and bottom nav bars */
+.topHeader{
+  display:flex;
+  width: 100%;
+  height: 7vh;
+  background-color: #1B742E;
+  color: white;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  /* margin-bottom: 20px; */
+  box-shadow: 1px 1px 5px black;
+}
+
+.bottom-user-button{
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 10%;
+}
+
+
+
+
+
+
+/* Home page layout */
+.home-page{
+  justify-content: center;
+  text-align: center;
+  height: auto;
+}
+
+.home-page-image{
+  padding: 2rem;
+  max-width: 80%;
+  height: auto;
+}
+
+.home-page-paragraph{
+  padding: 1rem;
+  max-width: 80%;
+  height: auto;
+}
+
+
+
+
+
+
+
+/* Park-related styling */
 .nationalParkItemContainer {
   height: 100%;
   width: 100%;
@@ -54,85 +110,6 @@
 .exploreParkLink {
   text-decoration: none;
   color: #000000
-}
-
-.bottomFooter{
-  width: 100%;
-  /* height:  20vh; */
-  background-color: red;
-  color: white;
-
-}
-
-.bottomNavBar{
-  width: 100%;
-  /* height: 20vh; */
-  background-color: red;
-  color: white;
-}
-
-.bottomLink {
-  text-align: center;
-  justify-content: center;
-  color:rgba(253, 253, 253, 0.856);
-}
-
-.bottomNavBar{
-  width: 100%;
-  height: 6rem;
-  background-color: #1B742E;
-  color: white;
-}
-
-.topHeader{
-  display:flex;
-  width: 100%;
-  height: 7vh;
-  background-color: #1B742E;
-  color: white;
-  align-items: center;
-  justify-content: center;
-  font-size: 2rem;
-  position: sticky;
-  top: 0;
-  z-index: 9999;
-  /* margin-bottom: 20px; */
-  box-shadow: 1px 1px 5px black;
-}
-
-.top-logo {
-  left: 0;
-}
-
-.userButton{
-  float:right;
-  margin-left: 1rem;
-}
-
-.bottom-user-button{
-  justify-content: center;
-  align-items: center;
-  margin-top: auto;
-  margin-bottom: auto;
-  width: 10%;
-}
-
-.home-page{
-  justify-content: center;
-  text-align: center;
-  height: auto;
-}
-
-.home-page-image{
-  padding: 2rem;
-  max-width: 80%;
-  height: auto;
-}
-
-.home-page-paragraph{
-  padding: 1rem;
-  max-width: 80%;
-  height: auto;
 }
 
 .exploreSelector{
