@@ -1,13 +1,10 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
 import {useEffect, useState} from "react";
 import NationalParkItem from "@/components/NationalParkItem"
-import ExploreParkItem from "@/components/ExploreParkItem"
-import { useAuth, SignIn, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useRouter } from 'next/router';
 import { getNationalParks } from '@/modules/requests';
+import RedirectToHome from '@/components/RedirectToHome';
+
 export default function Home() {
     const router = useRouter();
     const [itemId, setItemId] = useState("");
@@ -43,7 +40,15 @@ export default function Home() {
     return(<div>loading...</div>)
   }
 
-    return (
+  return (
+    <>
+      <SignedIn>
         <NationalParkItem nationalPark={park} />
-    )
+      </SignedIn>
+
+      <SignedOut>
+        <RedirectToHome />
+      </SignedOut>
+    </>
+  )
 }
