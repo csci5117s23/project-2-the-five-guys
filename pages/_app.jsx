@@ -7,7 +7,9 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import { Paper } from '@mui/material';
 import {useState} from 'react'
 import MapIcon from "@mui/icons-material/Map";
-import FavoriteIcon from "@mui/icons-material/Favorite"
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import Image from 'next/image';
+import ParkTrackLogo from '@/public/ParkTrack.png';
 
 export default function App({ Component, pageProps }) {
   const [bottomChoice, setBottomChoice] = useState(0);
@@ -23,8 +25,9 @@ export default function App({ Component, pageProps }) {
     <ClerkProvider {...pageProps}>
       {/* Header */}
       <div className="topHeader">
-        Explore
-        <span className="userButton" ><UserButton/></span>
+        {/* <Image src={ParkTrackLogo} alt='ParkTrack logo' height={241} width={883} /> */}
+        <Image src={ParkTrackLogo} alt='ParkTrack logo' height={40.2} width={147.2} className='top-logo'/>
+        <span className="userButton"> <UserButton/> </span>
       </div>
 
       <Component {...pageProps} />
@@ -32,7 +35,7 @@ export default function App({ Component, pageProps }) {
       {/* Bottom navigation bar */}
       <Paper 
         sx={{
-          position: 'fixed', 
+          position: 'sticky', 
           bottom: 0,
           left: 0, 
           right: 0,
