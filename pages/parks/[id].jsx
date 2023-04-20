@@ -7,7 +7,7 @@ import NationalParkItem from "@/components/NationalParkItem"
 import ExploreParkItem from "@/components/ExploreParkItem"
 import { useAuth, SignIn, UserButton } from "@clerk/nextjs";
 import { useRouter } from 'next/router';
-
+import { getNationalParks } from '@/modules/requests';
 export default function Home() {
     const router = useRouter();
     const [itemId, setItemId] = useState("");
