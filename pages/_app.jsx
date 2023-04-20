@@ -1,5 +1,5 @@
 import '@/styles/globals.css'
-import { ClerkProvider, SignedIn, UserButton, UserProfile } from '@clerk/nextjs';
+import { ClerkProvider, SignedIn, UserButton } from '@clerk/nextjs';
 import {useRouter} from 'next/router';
 import 'purecss/build/pure.css';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -34,7 +34,7 @@ export default function App({ Component, pageProps }) {
       {/* Bottom navigation bar */}
       <Paper 
         sx={{
-          position: 'sticky', 
+          position: 'fixed', 
           bottom: 0,
           left: 0, 
           right: 0,

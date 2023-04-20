@@ -8,7 +8,7 @@ import dynamic from 'next/dynamic';
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
-  const [exploreView, setExploreView] = useState("map");
+  const [exploreView, setExploreView] = useState("list");
   const [loading, setLoading] = useState(true);
   
   useEffect(()=> {

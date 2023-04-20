@@ -1,11 +1,6 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
 import {useEffect, useState} from "react";
 import NationalParkItem from "@/components/NationalParkItem"
-import ExploreParkItem from "@/components/ExploreParkItem"
-import { useAuth, SignIn, UserButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useRouter } from 'next/router';
 import { getNationalParks } from '@/modules/requests';
 import RedirectToHome from '@/components/RedirectToHome';

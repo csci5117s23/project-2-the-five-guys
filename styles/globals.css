@@ -17,7 +17,6 @@
   position: sticky;
   top: 0;
   z-index: 9999;
-  /* margin-bottom: 20px; */
   box-shadow: 1px 1px 5px black;
 }
 
@@ -53,7 +52,9 @@
   height: auto;
 }
 
-
+.sign-in-buttons{
+  margin: 1rem;
+}
 
 
 
