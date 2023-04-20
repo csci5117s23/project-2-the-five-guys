@@ -106,7 +106,15 @@
 
 .userButton{
   float:right;
-  margin-left: 10px;
+  margin-left: 1rem;
+}
+
+.bottom-user-button{
+  justify-content: center;
+  align-items: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  width: 10%;
 }
 
 .home-page{

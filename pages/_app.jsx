@@ -1,5 +1,5 @@
 import '@/styles/globals.css'
-import { ClerkProvider, UserButton } from '@clerk/nextjs';
+import { ClerkProvider, SignedIn, UserButton, UserProfile } from '@clerk/nextjs';
 import {useRouter} from 'next/router';
 import 'purecss/build/pure.css';
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -27,7 +27,6 @@ export default function App({ Component, pageProps }) {
       <div className="topHeader">
         {/* <Image src={ParkTrackLogo} alt='ParkTrack logo' height={241} width={883} /> */}
         <Image src={ParkTrackLogo} alt='ParkTrack logo' height={40.2} width={147.2} className='top-logo'/>
-        <span className="userButton"> <UserButton/> </span>
       </div>
 
       <Component {...pageProps} />
@@ -50,7 +49,7 @@ export default function App({ Component, pageProps }) {
             console.log(newValue);
             if(newValue == 0){
               router.push("/parks");
-            }else{
+            } else if(newValue == 1){
               router.push("/parks");
             }
             setBottomChoice(newValue);
@@ -58,6 +57,9 @@ export default function App({ Component, pageProps }) {
         >
           <BottomNavigationAction label="Explore" icon={<MapIcon />} sx={navBarSelected}/>
           <BottomNavigationAction label="My Trips" icon={<FavoriteIcon />} sx={navBarSelected}/>
+          <SignedIn>
+            <BottomNavigationAction icon={<UserButton />} sx={navBarSelected}/>
+          </SignedIn>
         </BottomNavigation>
       </Paper>
     </ClerkProvider>
