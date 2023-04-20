@@ -33,6 +33,7 @@ export default function Home() {
       <p>Loading......</p>
     )
   }
+  
   const parkList = nationalParks.map((park, index)=> {
     return(
     <ExploreParkItem key={index} nationalPark={park} />)

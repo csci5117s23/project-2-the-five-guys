@@ -179,3 +179,20 @@
 .mapIconImageContainer:hover{
   border: 5px solid white;
 }
+
+.parkMap {
+  display: flex;
+  justify-content: center;
+}
+
+.parkMapContainer {
+  margin-top: 1rem;
+  width: 80%;
+  height: 50vh;
+  border: 8px solid #1B742E;
+  border-radius: .5rem;
+}
+
+.parkMapIcon {
+  color: #1B742E;
+}
