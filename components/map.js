@@ -22,7 +22,7 @@ export default function MapComponent(props)
       />
       {parks.map(park => (
         //custom markers
-        <Marker position={[park.latitude, park.longitude]} icon={divIcon({
+        <Marker key={park.id} position={[park.latitude, park.longitude]} icon={divIcon({
           className: 'icon',
           html: ReactDOMServer.renderToString(
             <MapIcon parkInfo={park}/>
