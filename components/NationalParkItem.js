@@ -14,9 +14,7 @@ export default function NationalParkItem(props)
     const ParkMap = dynamic(
         () => import('@/components/parkMap'),
         {
-          loading: () => <div>
-            <CircularProgress />
-          </div>,
+          loading: () => <div className='centered'><CircularProgress /></div>,
           ssr: false // line prevents server-side render
         }
       )
