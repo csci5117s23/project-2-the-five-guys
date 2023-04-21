@@ -66,6 +66,68 @@
   width: 100%;
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+.nationalParkItemContents {
+  width: 90%;
+}
+
+.parkName {
+  display: inline-block;
+  background-color: #1B742E;
+  font-size: 2.5rem;
+  color: white;
+  padding: .7rem;
+  margin-top: 1rem;
+  border-radius: .3rem;
+}
+
+.parkItemImages {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  border: 5px solid #1B742E;
+  border-radius: .5rem;
+}
+
+.imagesCarousel {
+  display: flex;
+  flex-direction: column;
+}
+
+.carouselImage {
+  width:100%;
+  height: 20rem;
+  object-fit: cover;
+}
+
+.parkAbout {
+  margin-top: 1rem;
+  display: inline-block;
+  color: #1B742E;
+  font-size: 2rem;
+}
+
+.parkDescription {
+  width: fit-content;
+  font-size: 1.2rem;
+}
+
+.parkDescription span {
+  font-size: 2rem;
+  color: #1B742E;
+}
+
+.activitiesAccordion {
+  margin-bottom: 10rem;
+  width: 100.7%;
+}
+
+.mobileStepper {
+  width: 400px;
 }
 
 .exploreParkItem {
@@ -91,6 +153,11 @@
   max-width: 100%;
   max-height: 100%;
   border-radius: 12px;
+}
+
+.userButton{
+  float:right;
+  margin-left: 10px;
 }
 
 .parkTitle {
@@ -125,16 +192,6 @@
 
 .parkImage img {
   width: 100%
-}
-
-.parkDescription {
-  font-size: 1.2rem;
-}
-
-.nationalParkItemContents {
-  width: 100%;
-  height: 100%;
-  overflow: scroll;
 }
 
 .mapContainer {
@@ -205,14 +262,28 @@
 
 .parkMapContainer {
   margin-top: 1rem;
-  width: 80%;
-  height: 50vh;
+  width: 100%;
+  height: 20rem;
   border: 8px solid #1B742E;
   border-radius: .5rem;
 }
 
 .parkMapIcon {
   color: #1B742E;
+}
+
+.modalContentsContainer {
+  width: 85vw;
+  height: 90vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 2px 2px 5px black;
+  outline: 7px solid #1B742E;
+  overflow-y: scroll;
 }
 
 .centered {

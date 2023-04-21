@@ -41,6 +41,7 @@ export default function App({ Component, pageProps }) {
       <Paper 
         sx={{
           position: 'fixed', 
+          zIndex: 100,
           bottom: 0,
           left: 0, 
           right: 0,
