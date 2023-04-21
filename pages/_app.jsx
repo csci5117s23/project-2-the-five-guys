@@ -29,6 +29,7 @@ export default function App({ Component, pageProps }) {
         sx={{
           bgcolor: 'green',
           position: 'fixed', 
+          zIndex: 100,
           bottom: 0,
           left: 0, right: 0
         }}

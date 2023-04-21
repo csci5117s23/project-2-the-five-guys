@@ -3,15 +3,28 @@ import {divIcon, latLngBounds } from 'leaflet';
 import 'leaflet/dist/leaflet.css'
 import MapIcon from '@/components/mapIcon';
 import ReactDOMServer  from 'react-dom/server';
-import Link from 'next/link';
+import { Button, Modal, Box} from '@mui/material';
+import { useState } from 'react';
+import NationalParkItem from '@/components/NationalParkItem';
 
 export default function MapComponent(props)
 {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPark, setSelectedPark] = useState(null);
   const usLatLongMin = [12, -180];
   const usLatLongMax = [75, -66];
   //map bounds
   const bounds = latLngBounds(usLatLongMin, usLatLongMax);
   const {parks} = props;
+
+  function handleOpen(park) {
+    setSelectedPark(park);
+    setModalOpen(true);
+  }
+
+  function handleClose() {
+    setModalOpen(false);
+  }
   
   return (
     <MapContainer className='mapContainer' center={[40, -100]} zoom={6} scrollWheelZoom={true} bounds={bounds} maxBounds={bounds} maxBoundsViscosity={1.0} minZoom={4} maxZoom={8}>
@@ -29,7 +42,16 @@ export default function MapComponent(props)
           )
         })}>
           <Popup>
-           <Link href={`/parks/${park.id}`}>{park.name}</Link>
+           <Button onClick={() => handleOpen(park)}>{park.name}</Button>
+              <Modal
+                  open={modalOpen}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description">
+                  <Box className="modalContentsContainer">
+                    <NationalParkItem nationalPark={selectedPark}></NationalParkItem>
+                  </Box>
+            </Modal>
           </Popup>
         </Marker>
       ))}
