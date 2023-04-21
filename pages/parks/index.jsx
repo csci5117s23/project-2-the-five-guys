@@ -25,7 +25,7 @@ export default function Home() {
   if(loading)
   {
     return (
-      <p>Loading......</p>
+      <div className='centered'> Loading National Parks... </div>
     )
   }
   
@@ -40,7 +40,7 @@ export default function Home() {
   const Map = dynamic(
     () => import('@/components/map'),
     {
-      loading: () => <span>loading map....</span>,
+      loading: () => <div className='centered'> Loading map... </div>,
       ssr: false // line prevents server-side render
     }
   )

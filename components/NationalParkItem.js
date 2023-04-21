@@ -7,7 +7,7 @@ export default function NationalParkItem(props)
     const ParkMap = dynamic(
         () => import('@/components/parkMap'),
         {
-          loading: () => <span>loading map....</span>,
+          loading: () => <div className='centered'>Loading map....</div>,
           ssr: false // line prevents server-side render
         }
       )

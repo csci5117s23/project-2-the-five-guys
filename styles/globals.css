@@ -214,3 +214,8 @@
 .parkMapIcon {
   color: #1B742E;
 }
+
+.centered {
+  margin: 2rem;
+  text-align: center;
+}
