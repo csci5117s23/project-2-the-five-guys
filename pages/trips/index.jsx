@@ -1,10 +1,21 @@
-import { Box, Divider, List, ListItem, Typography, Stack, Fab, Grid, Button, CardActions, CardContent, Card } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import Container from '@mui/material/Container';
+import {
+  Box,
+  Divider,
+  List,
+  ListItem,
+  Typography,
+  Stack,
+  Fab,
+  Grid,
+  CardContent,
+  Card,
+  CardActionArea,
+  CardMedia,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import Container from "@mui/material/Container";
 
 export default function TripListPage() {
-
-
   return (
     <Box>
       <Container>
@@ -27,56 +38,42 @@ export default function TripListPage() {
             <Grid container spacing={2} justifyContent="center">
               <Grid item xs={12} md={6}>
                 <Card>
-                  <CardContent>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      Word of the Day
-                    </Typography>
-                    <Typography variant="h5" component="div">
-                      benevolent
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      adjective
-                    </Typography>
-                    <Typography variant="body2">
-                      well meaning and kindly.
-                      <br />
-                      {'"a benevolent smile"'}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">Learn More</Button>
-                  </CardActions>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image="https://www.nps.gov/common/uploads/structured_data/3C7B12D1-1DD8-B71B-0BCE0712F9CEA155.jpg"
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Grand Canyon
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        January 1 - January 1, 2023
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
                 </Card>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Card>
-                  <CardContent>
-                    <Typography
-                      sx={{ fontSize: 14 }}
-                      color="text.secondary"
-                      gutterBottom
-                    >
-                      Word of the Day
-                    </Typography>
-                    <Typography variant="h5" component="div">
-                      benevolent
-                    </Typography>
-                    <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                      adjective
-                    </Typography>
-                    <Typography variant="body2">
-                      well meaning and kindly.
-                      <br />
-                      {'"a benevolent smile"'}
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">Learn More</Button>
-                  </CardActions>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image="https://www.nps.gov/common/uploads/structured_data/3C7B12D1-1DD8-B71B-0BCE0712F9CEA155.jpg"
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Grand Canyon
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        January 1 - January 1, 2023
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
                 </Card>
               </Grid>
             </Grid>
