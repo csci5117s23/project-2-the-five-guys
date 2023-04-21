@@ -16,7 +16,7 @@
   font-size: 2rem;
   position: sticky;
   top: 0;
-  z-index: 9999;
+  z-index: 1200;
   box-shadow: 1px 1px 5px black;
 }
 
@@ -284,6 +284,7 @@
   box-shadow: 2px 2px 5px black;
   outline: 7px solid #1B742E;
   overflow-y: scroll;
+  z-index: 9999;
 }
 
 .centered {
