@@ -7,7 +7,6 @@ export default function ExploreParkItemList(props) {
 
   // Filter national parks by search item
   if(searchValue.length > 0){
-    console.log("hellow");
     const result = nationalParks.filter((element) =>
       element.name.includes(searchValue)
     );

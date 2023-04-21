@@ -42,10 +42,9 @@ export default function Home() {
     }
   )
 
-  // Update list of park
+  // Update the search value as the user writes their search
   function handleSearch(e) {
     const input = e.target.value.toString();
-    console.log(typeof input);
     setSearchValue(input);
   }
 
