@@ -63,7 +63,7 @@ export default function Home() {
             <div className='centered'>
               <TextField 
                 id='outlined-basic' 
-                label='Search' 
+                label='Search for parks' 
                 variant='outlined' 
                 value={searchValue}
                 sx={{

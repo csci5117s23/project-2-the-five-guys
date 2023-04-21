@@ -3,12 +3,12 @@ import { Stack } from "@mui/material";
 
 export default function ExploreParkItemList(props) {  
   let nationalParks = props.nationalParks;
-  const searchValue = props.searchValue;
+  const searchValue = props.searchValue.toLowerCase();
 
   // Filter national parks by search item
   if(searchValue.length > 0){
     const result = nationalParks.filter((element) =>
-      element.name.includes(searchValue)
+      element.name.toLowerCase().includes(searchValue)
     );
     nationalParks = result;
   } 

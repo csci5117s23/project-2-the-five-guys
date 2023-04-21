@@ -52,7 +52,6 @@ export default function App({ Component, pageProps }) {
           showLabels 
           value={bottomChoice} 
           onChange={(event, newValue) => {
-            console.log(newValue);
             if(newValue == 0){
               router.push("/parks");
             } else if(newValue == 1){
