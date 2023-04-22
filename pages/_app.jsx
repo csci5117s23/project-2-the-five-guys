@@ -10,6 +10,7 @@ import MapIcon from "@mui/icons-material/Map";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from 'next/image';
 import ParkTrackLogo from '@/public/ParkTrack.png';
+import Head from 'next/head';
 
 export default function App({ Component, pageProps }) {
   const [bottomChoice, setBottomChoice] = useState(0);
@@ -39,7 +40,12 @@ export default function App({ Component, pageProps }) {
   return (
     <ThemeProvider theme={theme}>
       <ClerkProvider {...pageProps}>
-        {/* Header */}
+        {/* Website title */}
+      <Head>
+        <title> ParkTrack </title>
+      </Head>
+
+      {/* Header */}
         <div className="topHeader">
           {/* <Image src={ParkTrackLogo} alt='ParkTrack logo' height={241} width={883} /> */}
           <Image src={ParkTrackLogo} alt='ParkTrack logo' height={40.2} width={147.2} className='top-logo'/>
@@ -51,6 +57,7 @@ export default function App({ Component, pageProps }) {
         <Paper
           sx={{
             position: 'fixed',
+            zIndex: 100,
             bottom: 0,
             left: 0,
             right: 0,
@@ -62,8 +69,7 @@ export default function App({ Component, pageProps }) {
             showLabels
             value={bottomChoice}
             onChange={(event, newValue) => {
-              console.log(newValue);
-              if(newValue == 0){
+                if(newValue == 0){
                 router.push("/parks");
               } else if(newValue == 1){
                 router.push("/parks");
