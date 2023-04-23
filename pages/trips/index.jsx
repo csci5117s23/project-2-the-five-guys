@@ -7,21 +7,25 @@ import {
   Stack,
   Fab,
   Grid,
-  CardContent,
-  Card,
-  CardActionArea,
-  CardMedia,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  TextField,
+  DialogActions,
+  Button,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Container from "@mui/material/Container";
 import { useState, useEffect } from "react";
 import { getNationalParks, getTrips } from "../../modules/requests";
-import { formatDate } from "../../modules/util"
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
-import RedirectToHome from '@/components/RedirectToHome';
+import RedirectToHome from "@/components/RedirectToHome";
+import TripCard from "../../components/TripCard";
 
 export default function TripListPage({ parks }) {
   const [trips, setTrips] = useState([]);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const { isLoaded, userId, getToken } = useAuth();
   console.log(parks);
   useEffect(() => {
@@ -29,10 +33,10 @@ export default function TripListPage({ parks }) {
       const token = await getToken({ template: "codehooks" });
       if (token) {
         const trips = await getTrips(token);
-        const updatedTrips = trips.map(trip => {
-          const park = parks.find(park => park.id === trip.nationalPark_id);
+        const updatedTrips = trips.map((trip) => {
+          const park = parks.find((park) => park.id === trip.nationalPark_id);
           const { fullName, images } = park;
-          const imageUrl = images[0].url
+          const imageUrl = images[0].url;
           return { ...trip, fullName, imageUrl };
         });
         setTrips(updatedTrips);
@@ -40,6 +44,14 @@ export default function TripListPage({ parks }) {
     };
     loadTrips();
   }, [isLoaded, userId, getToken, parks]);
+
+  const handleClickOpen = () => {
+    setDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setDialogOpen(false);
+  };
 
   return (
     <>
@@ -55,7 +67,11 @@ export default function TripListPage({ parks }) {
                   alignItems="center"
                 >
                   <Typography variant="h3">My Trips</Typography>
-                  <Fab color="primary" aria-label="add">
+                  <Fab
+                    color="primary"
+                    aria-label="add"
+                    onClick={handleClickOpen}
+                  >
                     <AddIcon />
                   </Fab>
                 </Stack>
@@ -65,24 +81,7 @@ export default function TripListPage({ parks }) {
                 <Grid container spacing={2} justifyContent="center">
                   {trips.map((trip) => (
                     <Grid item xs={12} md={6} key={trip._id}>
-                      <Card>
-                        <CardActionArea>
-                          <CardMedia
-                            component="img"
-                            height="140"
-                            image={trip.imageUrl}
-                            alt="trip image"
-                          />
-                          <CardContent>
-                            <Typography gutterBottom variant="h5" component="div" noWrap>
-                              {trip.fullName}
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
-                            </Typography>
-                          </CardContent>
-                        </CardActionArea>
-                      </Card>
+                      <TripCard trip={trip} />
                     </Grid>
                   ))}
                 </Grid>
@@ -90,6 +89,28 @@ export default function TripListPage({ parks }) {
             </List>
           </Container>
         </Box>
+        <Dialog open={dialogOpen} onClose={handleClose}>
+          <DialogTitle>Subscribe</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              To subscribe to this website, please enter your email address
+              here. We will send updates occasionally.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Email Address"
+              type="email"
+              fullWidth
+              variant="standard"
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleClose}>Create Trip</Button>
+          </DialogActions>
+        </Dialog>
       </SignedIn>
       <SignedOut>
         <RedirectToHome />
@@ -104,5 +125,5 @@ export async function getStaticProps() {
     props: {
       parks,
     },
-  }
+  };
 }
