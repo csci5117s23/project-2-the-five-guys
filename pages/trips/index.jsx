@@ -16,6 +16,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Container from "@mui/material/Container";
 import { useState, useEffect } from "react";
 import { getNationalParks, getTrips } from "../../modules/requests";
+import { formatDate } from "../../modules/util"
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from '@/components/RedirectToHome';
 
@@ -61,7 +62,7 @@ export default function TripListPage({ parks }) {
               </ListItem>
               <Divider />
               <ListItem>
-                <Grid container spacing={2} justifyContent="center" >
+                <Grid container spacing={2} justifyContent="center">
                   {trips.map((trip) => (
                     <Grid item xs={12} md={6} key={trip._id}>
                       <Card>
@@ -77,7 +78,7 @@ export default function TripListPage({ parks }) {
                               {trip.fullName}
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
-                              {trip.startDate} - {trip.endDate}
+                              {formatDate(trip.startDate)} - {formatDate(trip.endDate)}
                             </Typography>
                           </CardContent>
                         </CardActionArea>
