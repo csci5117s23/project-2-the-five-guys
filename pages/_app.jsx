@@ -41,11 +41,11 @@ export default function App({ Component, pageProps }) {
     <ThemeProvider theme={theme}>
       <ClerkProvider {...pageProps}>
         {/* Website title */}
-      <Head>
-        <title> ParkTrack </title>
-      </Head>
+        <Head>
+          <title> ParkTrack </title>
+        </Head>
 
-      {/* Header */}
+        {/* Header */}
         <div className="topHeader">
           {/* <Image src={ParkTrackLogo} alt='ParkTrack logo' height={241} width={883} /> */}
           <Image src={ParkTrackLogo} alt='ParkTrack logo' height={40.2} width={147.2} className='top-logo'/>

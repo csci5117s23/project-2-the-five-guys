@@ -1,6 +1,7 @@
 const apiKey = process.env.NEXT_PUBLIC_NATIONAL_PARK_KEY;
+const BASE_API_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
-export async function getNationalParks() 
+export async function getNationalParks()
 {
     let response = await fetch(`https://developer.nps.gov/api/v1/parks?limit=950`, {
         method: 'GET',
@@ -16,5 +17,13 @@ export async function getParkPlaces(parkCode)
       method: 'GET',
       headers: {'x-api-key': `${apiKey}`}
     });
+  return await response.json();
+}
+
+export async function getTrips(authToken) {
+  const response = await fetch(`${BASE_API_URL}/trips`, {
+      method:'GET',
+      headers: {'Authorization': 'Bearer ' + authToken}
+  });
   return await response.json();
 }
