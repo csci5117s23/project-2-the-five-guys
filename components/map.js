@@ -1,11 +1,12 @@
-import { MapContainer, Marker, Popup, TileLayer, useMap} from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer} from 'react-leaflet'
 import {divIcon, latLngBounds } from 'leaflet';
 import 'leaflet/dist/leaflet.css'
 import MapIcon from '@/components/mapIcon';
 import ReactDOMServer  from 'react-dom/server';
-import { Button, Modal, Box} from '@mui/material';
+import { Button, Modal, Box, IconButton} from '@mui/material';
 import { useState } from 'react';
 import NationalParkItem from '@/components/NationalParkItem';
+import CloseIcon from '@mui/icons-material/Close';
 
 export default function MapComponent(props)
 {
@@ -20,10 +21,6 @@ export default function MapComponent(props)
   function handleOpen(park) {
     setSelectedPark(park);
     setModalOpen(true);
-  }
-
-  function handleClose() {
-    setModalOpen(false);
   }
   
   return (
@@ -42,13 +39,16 @@ export default function MapComponent(props)
           )
         })}>
           <Popup>
-           <Button onClick={() => handleOpen(park)}>{park.name}</Button>
+           <Button style={{color: "#1B742E"}} onClick={() => handleOpen(park)}>{park.name}</Button>
               <Modal
                   open={modalOpen}
-                  onClose={handleClose}
+                  onClose={() => setModalOpen(false)}
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description">
                   <Box className="modalContentsContainer">
+                   <IconButton aria-label="back" size='large' onClick={() => setModalOpen(false)}>
+                      <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
+                   </IconButton>
                     <NationalParkItem nationalPark={selectedPark}></NationalParkItem>
                   </Box>
             </Modal>

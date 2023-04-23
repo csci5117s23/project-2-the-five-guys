@@ -4,14 +4,16 @@ import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { useRouter } from 'next/router';
 import { getNationalParks } from '@/modules/requests';
 import RedirectToHome from '@/components/RedirectToHome';
+import { CircularProgress, IconButton } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 export default function Home() {
     const router = useRouter();
     const [itemId, setItemId] = useState("");
 
-  const [nationalParks, setNationalParks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [park, setPark] = useState(null);
+    const [nationalParks, setNationalParks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [park, setPark] = useState(null);
 
     useEffect(() => {
         if(router.query.id){
@@ -37,12 +39,18 @@ export default function Home() {
   }, [nationalParks, itemId]); 
 
   if(loading || !park){
-    return(<div>loading...</div>)
+    return(<div className='centered'>
+              <CircularProgress style={{color: "#1B742E"}}/>
+              <div>Loading Park...</div>
+            </div>)
   }
 
   return (
     <>
       <SignedIn>
+        <IconButton aria-label="back" size="large" onClick={() => {router.back()}}>
+          <ArrowBackIcon style={{fontSize: "3rem", color: "#1B742E"}}/>
+        </IconButton>
         <NationalParkItem nationalPark={park} />
       </SignedIn>
 
