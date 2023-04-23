@@ -1,20 +1,20 @@
-import { Accordion, AccordionDetails, AccordionSummary, CircularProgress} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, CircularProgress, IconButton} from '@mui/material';
 import Stack from '@mui/joy/Stack';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import Carousel from 'react-material-ui-carousel';
+import Skeleton from '@mui/material/Skeleton';
 
 export default function NationalParkItem(props)
 {
     const {nationalPark} = props;
-    console.log(nationalPark)
 
     const ParkMap = dynamic(
         () => import('@/components/parkMap'),
         {
-          loading: () => <div className='centered'><CircularProgress /></div>,
+          loading: () => <Skeleton variant='rectangular' width={"100%"} height={"20rem"}/>,
           ssr: false // line prevents server-side render
         }
       )

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { getParkPlaces } from '@/modules/requests';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ReactDOMServer  from 'react-dom/server';
+import Skeleton from '@mui/material/Skeleton';
 
 export default function ParkMapComponent(props)
 {
@@ -25,7 +26,7 @@ export default function ParkMapComponent(props)
   if(loading)
   {
     return (
-      <p>Loading......</p>
+      <Skeleton style={{marginTop: "1rem", borderRadius: "0.5rem"}} variant='rectangular' width={"100%"} height={"20rem"}/>
     )
   }
 
