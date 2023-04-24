@@ -6,6 +6,7 @@ import { Chip, Stack, TextField, CircularProgress, Button } from "@mui/material"
 import dynamic from "next/dynamic";
 import myTripStyles from "@/styles/MyTrip.module.css";
 import homeStyles from "@/styles/Home.module.css";
+import ItineraryList from "../../components/itineraryList";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -29,16 +30,7 @@ export default function Home() {
     },
   };
   const [itinerary, setItinerary] = useState(itineraryData);
-  const days = Object.keys(itinerary).map((day) => (
-    <div key={day}>
-      <h2>{day}</h2>
-      <ul>
-        {itinerary[day].places.map((place) => (
-          <li key={place}>{place}</li>
-        ))}
-      </ul>
-    </div>
-  ));
+
   // Grab national park data from National Park Service API
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
   useEffect(() => {
@@ -95,7 +87,11 @@ export default function Home() {
         </div>
 
         {/* If in agenda view, show itinerary */}
-        {pageView === "agenda" && <div className={myTripStyles.myTrip}>Here's the agenda for today {days}</div>}
+        {pageView === "agenda" && (
+          <div className={myTripStyles.myTrip}>
+            <ItineraryList itineraryList={itinerary} />
+          </div>
+        )}
 
         {/* If in map view, show map */}
         {pageView === "map" && <Map parks={nationalParks} />}
