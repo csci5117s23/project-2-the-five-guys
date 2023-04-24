@@ -83,7 +83,7 @@ export default function Home() {
             </div>
 
             <span className = "parkStackWrapper">
-                <ExploreParkItemList nationalParks={nationalParks} searchValue={searchValue}/>
+              <ExploreParkItemList nationalParks={nationalParks} searchValue={searchValue}/>
             </span>
           </>
         )}
