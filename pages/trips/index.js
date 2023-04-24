@@ -78,11 +78,11 @@ export default function Home() {
       <SignedIn>
         <Box sx={{ flexGrow: 2 }}>
           <Grid container spacing={2}>
-            <Grid item xs={11}>
+            <Grid item xs={9}>
               {" "}
               <h1 className={myTripStyles.myTrip}>My Trip</h1>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item xs={3}>
               {" "}
               <EditIcon className={myTripStyles.edit} />
             </Grid>
