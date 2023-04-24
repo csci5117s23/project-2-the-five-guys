@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import ExploreParkItemList from "@/components/ExploreParkItemList";
 import { getNationalParks } from "@/modules/requests";
 import { SignedIn, SignedOut } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
@@ -19,12 +18,27 @@ export default function Home() {
 
   //Dummy data: Need to update this so that it's not intially set and is called in the useEffect to be set from the backend based on trip id
   const itineraryData = {
-    Day1: ["Place 1", "Place 2"],
-    Day2: ["Place 3", "Place 4"],
-    Day3: ["Place 5", "Place 6", "Place 7"],
+    Day1: {
+      places: ["Place A", "Place B", "Place C"],
+    },
+    Day2: {
+      places: ["Place D", "Place E", "Place F"],
+    },
+    Day3: {
+      places: ["Place G", "Place H", "Place I"],
+    },
   };
   const [itinerary, setItinerary] = useState(itineraryData);
-
+  const days = Object.keys(itinerary).map((day) => (
+    <div key={day}>
+      <h2>{day}</h2>
+      <ul>
+        {itinerary[day].places.map((place) => (
+          <li key={place}>{place}</li>
+        ))}
+      </ul>
+    </div>
+  ));
   // Grab national park data from National Park Service API
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
   useEffect(() => {
@@ -81,7 +95,7 @@ export default function Home() {
         </div>
 
         {/* If in agenda view, show itinerary */}
-        {pageView === "agenda" && <div className={myTripStyles.myTrip}>Here's the agenda for today</div>}
+        {pageView === "agenda" && <div className={myTripStyles.myTrip}>Here's the agenda for today {days}</div>}
 
         {/* If in map view, show map */}
         {pageView === "map" && <Map parks={nationalParks} />}
