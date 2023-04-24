@@ -24,12 +24,15 @@ export default function Home() {
   const itineraryData = {
     Day1: {
       places: ["Place A", "Place B", "Place C"],
+      description: ["Description A", "Description B", "Description C"],
     },
     Day2: {
       places: ["Place D", "Place E", "Place F"],
+      description: ["Description D", "Description E", "Description F"],
     },
     Day3: {
       places: ["Place G", "Place H", "Place I"],
+      description: ["Description G", "Description H", "Description I"],
     },
   };
   const [itinerary, setItinerary] = useState(itineraryData);
