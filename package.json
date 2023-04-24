@@ -31,6 +31,7 @@
     "react-leaflet": "^4.2.1",
     "react-material-ui-carousel": "^3.4.2",
     "styled-components": "^5.3.9",
-    "typescript": "5.0.4"
+    "typescript": "5.0.4",
+    "yup": "^1.1.1"
   }
 }

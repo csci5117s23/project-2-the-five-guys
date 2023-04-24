@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getNationalParks } from "@/modules/requests";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
 import { Chip, Stack, TextField, CircularProgress, Button } from "@mui/material";
 import dynamic from "next/dynamic";
@@ -15,6 +15,7 @@ export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
   const [pageView, setPageView] = useState("agenda");
   const [loading, setLoading] = useState(true);
+  const { userId, getToken } = useAuth();
 
   //Dummy data: Need to update this so that it's not intially set and is called in the useEffect to be set from the backend based on trip id
   const [startDate, setStartDate] = ["January 1 2022"];
@@ -41,6 +42,12 @@ export default function Home() {
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
   useEffect(() => {
     async function loadNationalParkData() {
+      if (!userId) {
+        return;
+      }
+      console.log("userid: ", userId);
+      const token = await getToken({ template: "codehooks" });
+      console.log("Token: ", token);
       let data = await getNationalParks();
       console.log("Data: ", data);
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
