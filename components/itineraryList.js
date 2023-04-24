@@ -1,5 +1,6 @@
-import { Stack } from "@mui/material";
+import { Stack, Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function ItineraryList({ itineraryList }) {
   const [days, setDays] = useState([]);
@@ -10,14 +11,18 @@ export default function ItineraryList({ itineraryList }) {
     async function extractDays() {
       setDays(
         Object.keys(itineraryList).map((day) => (
-          <div key={day}>
-            <h2>{day}</h2>
-            <ul>
-              {itineraryList[day].places.map((place) => (
-                <li key={place}>{place}</li>
-              ))}
-            </ul>
-          </div>
+          <Accordion key={day}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography>{day}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Stack spacing={2}>
+                {itineraryList[day].places.map((place) => (
+                  <Typography key={place}>{place}</Typography>
+                ))}
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
         ))
       );
     }
