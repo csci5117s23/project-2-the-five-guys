@@ -1,3 +1,8 @@
 .myTrip{
     margin-left: 2rem;
 }
+
+.edit{
+    margin-top: 2rem;
+    transform: scale(1.8)
+}

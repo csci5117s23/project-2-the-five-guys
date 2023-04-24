@@ -7,6 +7,9 @@ import dynamic from "next/dynamic";
 import myTripStyles from "@/styles/MyTrip.module.css";
 import homeStyles from "@/styles/Home.module.css";
 import ItineraryList from "../../components/itineraryList";
+import EditIcon from "@mui/icons-material/Edit";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -36,6 +39,7 @@ export default function Home() {
   useEffect(() => {
     async function loadNationalParkData() {
       let data = await getNationalParks();
+      console.log("Data: ", data);
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
       setNationalParks(filteredParks);
       setLoading(false);
@@ -69,7 +73,19 @@ export default function Home() {
   return (
     <>
       <SignedIn>
-        <h1 className={myTripStyles.myTrip}>My Trip</h1>
+        <Box sx={{ flexGrow: 2 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={11}>
+              {" "}
+              <h1 className={myTripStyles.myTrip}>My Trip</h1>
+            </Grid>
+            <Grid item xs={1}>
+              {" "}
+              <EditIcon className={myTripStyles.edit} />
+            </Grid>
+          </Grid>
+        </Box>
+
         <h2 className={myTripStyles.myTrip}>
           {startDate} - {endDate}
         </h2>
