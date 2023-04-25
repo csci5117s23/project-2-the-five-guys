@@ -78,13 +78,13 @@ export default function Home() {
                   minWidth: 200,
                   width: 0.40,
                 }}
-                onChange={e => handleSearch(e) }
+                onChange={ e => handleSearch(e) }
               />
             </div>
 
-            <span className = "parkStackWrapper">
-              <ExploreParkItemList nationalParks={nationalParks} searchValue={searchValue}/>
-            </span>
+            {/* <span className = "parkStackWrapper"> */}
+            <ExploreParkItemList nationalParks={nationalParks} searchValue={searchValue}/>
+            {/* </span> */}
           </>
         )}
 

@@ -1,5 +1,6 @@
 import ExploreParkItem from "./ExploreParkItem";
-import { Stack } from "@mui/material";
+import { Container, Stack, Box, List, ListItem, Typography, Fab, Divider, Grid } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function ExploreParkItemList(props) {  
   let nationalParks = props.nationalParks;
@@ -16,13 +17,45 @@ export default function ExploreParkItemList(props) {
   // Build list of parks
   const parkList = nationalParks.map((park, index)=> {
     return(
-      <ExploreParkItem key={index} nationalPark={park} />
+      <Grid item xs={12} md={6} key={index}>
+        <ExploreParkItem nationalPark={park} />
+      </Grid>
     );
   });
 
   return (
-    <Stack className="parkStack" spacing={2}>
-      {parkList}
-    </Stack>
+    // <Stack className="parkStack" spacing={2}>
+    //   {parkList}
+    // </Stack>
+    <Box>
+      <Container>
+        <List>
+          <ListItem>
+            <Stack
+              direction='row'
+              justifyContent='space-between'
+              spacing={2}
+              alignItems='center'
+            >
+              <Typography variant="h1"> All National Parks </Typography>
+              <Fab
+                color='green'
+                aria-label='add'
+              >
+                <AddIcon />
+              </Fab>
+            </Stack>
+          </ListItem>
+
+          <Divider />
+
+          <ListItem>
+            <Grid container spacing={2} justifyContent='center'>
+              {parkList}
+            </Grid>
+          </ListItem>
+        </List>
+      </Container>
+    </Box>
   );
 }
