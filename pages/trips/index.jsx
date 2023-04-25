@@ -14,6 +14,7 @@ import {
   TextField,
   DialogActions,
   Button,
+  Autocomplete,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Container from "@mui/material/Container";
@@ -22,12 +23,13 @@ import { getNationalParks, getTrips } from "../../modules/requests";
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
 import TripCard from "../../components/TripCard";
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function TripListPage({ parks }) {
   const [trips, setTrips] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { isLoaded, userId, getToken } = useAuth();
-  console.log(parks);
+
   useEffect(() => {
     const loadTrips = async () => {
       const token = await getToken({ template: "codehooks" });
@@ -89,22 +91,18 @@ export default function TripListPage({ parks }) {
             </List>
           </Container>
         </Box>
-        <Dialog open={dialogOpen} onClose={handleClose}>
-          <DialogTitle>Subscribe</DialogTitle>
+        <Dialog open={dialogOpen} onClose={handleClose} fullWidth={true}>
+          <DialogTitle>New Trip</DialogTitle>
           <DialogContent>
-            <DialogContentText>
-              To subscribe to this website, please enter your email address
-              here. We will send updates occasionally.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
-              fullWidth
-              variant="standard"
-            />
+            <Stack spacing={2} pt={1}>
+              <Autocomplete
+                disablePortal
+                options={parks.map((park) => park.fullName)}
+                renderInput={(params) => <TextField {...params} label="Park" fullWidth />}
+              />
+              <DatePicker label="Start Date" fullWidth />
+              <DatePicker label="End Date" fullWidth />
+            </Stack>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Cancel</Button>
@@ -120,7 +118,8 @@ export default function TripListPage({ parks }) {
 }
 
 export async function getStaticProps() {
-  const parks = (await getNationalParks()).data;
+  const unfilteredParks = await getNationalParks();
+  const parks = unfilteredParks.data.filter((element) => element.designation.includes("National Park"));
   return {
     props: {
       parks,
