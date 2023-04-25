@@ -11,20 +11,18 @@ export default function ItineraryList({ itineraryList }) {
         Object.keys(itineraryList).map((day) => (
           <Accordion key={day}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Typography>{day}</Typography>
+              <Typography>{itineraryList[day].location}</Typography>
             </AccordionSummary>
             <AccordionDetails>
               <Stack spacing={2}>
-                {itineraryList[day].places.map((place, index) => (
-                  <Accordion key={place}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography>{place}</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography>{itineraryList[day].description[index]}</Typography>
-                    </AccordionDetails>
-                  </Accordion>
-                ))}
+                <Accordion key={itineraryList[day].location}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>{itineraryList[day].location}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>{itineraryList[day].description}</Typography>
+                  </AccordionDetails>
+                </Accordion>
               </Stack>
             </AccordionDetails>
           </Accordion>

@@ -10,6 +10,7 @@ import ItineraryList from "../../components/itineraryList";
 import EditIcon from "@mui/icons-material/Edit";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
+import { fetchItemData } from "../../modules/data";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -36,12 +37,12 @@ export default function Home() {
       description: ["Description G", "Description H", "Description I"],
     },
   };
-  const [itinerary, setItinerary] = useState(itineraryData);
+  const [itinerary, setItinerary] = useState();
 
   // Grab national park data from National Park Service API
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
   useEffect(() => {
-    async function loadNationalParkData() {
+    async function loadData() {
       if (!userId) {
         return;
       }
@@ -51,10 +52,14 @@ export default function Home() {
       let data = await getNationalParks();
       console.log("Data: ", data);
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
+      //Need to update this to get the id of the trip from the route
+      const dummyTripId = "6446f960c03608412d91d157";
+      await fetchItemData(userId, dummyTripId, setItinerary, token);
+      console.log("Itenary information: ", itinerary);
       setNationalParks(filteredParks);
       setLoading(false);
     }
-    loadNationalParkData();
+    loadData();
   }, []);
 
   // Return loading text if currently loading
