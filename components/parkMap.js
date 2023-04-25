@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { getParkPlaces } from '@/modules/requests';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ReactDOMServer  from 'react-dom/server';
+import Skeleton from '@mui/material/Skeleton';
 
 export default function ParkMapComponent(props)
 {
@@ -25,21 +26,21 @@ export default function ParkMapComponent(props)
   if(loading)
   {
     return (
-      <p>Loading......</p>
+      <Skeleton style={{marginTop: "1rem", borderRadius: "0.5rem"}} variant='rectangular' width={"100%"} height={"20rem"}/>
     )
   }
 
   const minLatLong = {"minLat":75, "minLong":-66};
   const maxLatLong = {"maxLat":12, "maxLong": -180};
   places.forEach(place => {
-      if(place.latitude !== "" && place.longitude !== "")
-      {
-        minLatLong.minLat = Math.min(minLatLong.minLat, place.latitude);
-        minLatLong.minLong = Math.min(minLatLong.minLong, place.longitude);
-        maxLatLong.maxLat = Math.max(maxLatLong.maxLat, place.latitude);
-        maxLatLong.maxLong = Math.max(maxLatLong.maxLong, place.longitude);
-      }
-    });
+    if(place.latitude !== "" && place.longitude !== "")
+    {
+      minLatLong.minLat = Math.min(minLatLong.minLat, place.latitude);
+      minLatLong.minLong = Math.min(minLatLong.minLong, place.longitude);
+      maxLatLong.maxLat = Math.max(maxLatLong.maxLat, place.latitude);
+      maxLatLong.maxLong = Math.max(maxLatLong.maxLong, place.longitude);
+    }
+  });
 
   const parkLatLongMin = [minLatLong.minLat - 1, minLatLong.minLong - 1.5];
   const parkLatLongMax = [maxLatLong.maxLat + 1, maxLatLong.maxLong + 1.5];
@@ -75,7 +76,7 @@ export default function ParkMapComponent(props)
             <Popup>
               {park.name}
             </Popup>
-          </Marker>
+        </Marker>
       </MapContainer>
     </div>
   );

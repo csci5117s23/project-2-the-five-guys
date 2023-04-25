@@ -3,7 +3,7 @@ import ExploreParkItemList from "@/components/ExploreParkItemList";
 import { getNationalParks } from '@/modules/requests';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import RedirectToHome from '@/components/RedirectToHome';
-import { Chip, Stack, TextField } from '@mui/material';
+import { Chip, Stack, TextField, CircularProgress } from '@mui/material';
 import dynamic from 'next/dynamic';
 
 export default function Home() {
@@ -27,7 +27,10 @@ export default function Home() {
   // Return loading text if currently loading
   if(loading) {
     return (
-      <div className='centered'> Loading National Parks... </div>
+      <div className='centered'> 
+        <CircularProgress style={{color: "#1B742E"}}/>
+        <div>Loading National Parks...</div> 
+      </div>
     );
   }
 
@@ -37,7 +40,10 @@ export default function Home() {
   const Map = dynamic(
     () => import('@/components/map'),
     {
-      loading: () => <div className='centered'> Loading map... </div>,
+      loading: () => <div className='centered'>
+          <CircularProgress style={{color: "#1B742E"}}/>
+          <div>Loading Map...</div> 
+        </div>,
       ssr: false // line prevents server-side render
     }
   )
@@ -77,7 +83,7 @@ export default function Home() {
             </div>
 
             <span className = "parkStackWrapper">
-                <ExploreParkItemList nationalParks={nationalParks} searchValue={searchValue}/>
+              <ExploreParkItemList nationalParks={nationalParks} searchValue={searchValue}/>
             </span>
           </>
         )}
