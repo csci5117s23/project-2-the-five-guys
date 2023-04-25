@@ -14,10 +14,12 @@ export default function MapComponent(props)
   const [selectedPark, setSelectedPark] = useState(null);
   const usLatLongMin = [12, -180];
   const usLatLongMax = [75, -66];
-  //map bounds
+
+  // Set map bounds
   const bounds = latLngBounds(usLatLongMin, usLatLongMax);
   const {parks} = props;
 
+  // Handle when user clicks on a specific park
   function handleOpen(park) {
     setSelectedPark(park);
     setModalOpen(true);
