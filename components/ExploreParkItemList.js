@@ -1,6 +1,5 @@
 import ExploreParkItem from "./ExploreParkItem";
-import { Container, Stack, Box, List, ListItem, Typography, Fab, Divider, Grid } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
+import { ListItem, Grid } from "@mui/material";
 
 export default function ExploreParkItemList(props) {  
   let nationalParks = props.nationalParks;
@@ -14,7 +13,7 @@ export default function ExploreParkItemList(props) {
     nationalParks = result;
   } 
 
-  // Build list of parks
+  // Build list of parks using MUI Grid component
   const parkList = nationalParks.map((park, index)=> {
     return(
       <Grid item xs={12} md={6} key={index}>
@@ -24,38 +23,10 @@ export default function ExploreParkItemList(props) {
   });
 
   return (
-    // <Stack className="parkStack" spacing={2}>
-    //   {parkList}
-    // </Stack>
-    <Box>
-      <Container>
-        <List>
-          <ListItem>
-            <Stack
-              direction='row'
-              justifyContent='space-between'
-              spacing={2}
-              alignItems='center'
-            >
-              <Typography variant="h1"> All National Parks </Typography>
-              <Fab
-                color='green'
-                aria-label='add'
-              >
-                <AddIcon />
-              </Fab>
-            </Stack>
-          </ListItem>
-
-          <Divider />
-
-          <ListItem>
-            <Grid container spacing={2} justifyContent='center'>
-              {parkList}
-            </Grid>
-          </ListItem>
-        </List>
-      </Container>
-    </Box>
+    <ListItem>
+      <Grid container spacing={2} justifyContent='center'>
+        {parkList}
+      </Grid>
+    </ListItem>
   );
 }

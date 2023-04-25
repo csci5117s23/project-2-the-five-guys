@@ -39,18 +39,18 @@ export default function MapComponent(props)
           )
         })}>
           <Popup>
-           <Button style={{color: "#1B742E"}} onClick={() => handleOpen(park)}>{park.name}</Button>
-              <Modal
-                  open={modalOpen}
-                  onClose={() => setModalOpen(false)}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description">
-                  <Box className="modalContentsContainer">
-                   <IconButton aria-label="back" size='large' onClick={() => setModalOpen(false)}>
-                      <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
-                   </IconButton>
-                    <NationalParkItem nationalPark={selectedPark}></NationalParkItem>
-                  </Box>
+            <Button style={{color: "#1B742E"}} onClick={() => handleOpen(park)}>{park.name}</Button>
+            <Modal
+              open={modalOpen}
+              onClose={() => setModalOpen(false)}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description">
+              <Box className="modalContentsContainer">
+                <IconButton aria-label="back" size='large' onClick={() => setModalOpen(false)}>
+                  <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
+                </IconButton>
+                <NationalParkItem nationalPark={selectedPark} />
+              </Box>
             </Modal>
           </Popup>
         </Marker>

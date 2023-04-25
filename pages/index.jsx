@@ -24,7 +24,7 @@ export default function Home() {
           <h1> Welcome to ParkTrack! </h1>
           <Image src={ParkTrackLogo} alt='ParkTrack logo' height={241} width={883} className='home-page-image'/>
           <p> 
-            ParkTrack is your one-stop shop for planning and logging your adventures at US National Parks. 
+            ParkTrack is the one-stop shop for planning and logging your adventures at US National Parks. 
           </p>
           <h3> Sign in or create an account below </h3>
 

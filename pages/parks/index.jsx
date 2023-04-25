@@ -1,9 +1,19 @@
+import { 
+  Chip, 
+  Stack, 
+  TextField,
+  CircularProgress, 
+  ListItem, 
+  Box, 
+  Container, 
+  List, 
+  Typography, 
+  Divider } from '@mui/material';
 import {useEffect, useState} from "react";
 import ExploreParkItemList from "@/components/ExploreParkItemList";
 import { getNationalParks } from '@/modules/requests';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import RedirectToHome from '@/components/RedirectToHome';
-import { Chip, Stack, TextField, CircularProgress } from '@mui/material';
 import dynamic from 'next/dynamic';
 
 export default function Home() {
@@ -66,25 +76,54 @@ export default function Home() {
         {/* If in list view, show list of National Parks with search bar */}
         {exploreView === 'list' && (
           <>
-            <div className='centered'>
-              <TextField 
-                id='outlined-basic' 
-                label='Search for parks' 
-                variant='outlined' 
-                value={searchValue}
-                sx={{
-                  boxShadow: 1,
-                  borderRadius: 2,
-                  minWidth: 200,
-                  width: 0.40,
-                }}
-                onChange={ e => handleSearch(e) }
-              />
-            </div>
+            <Box>
+              <Container>
+                <List className='parkStackWrapper'>
+                  {/* Header above list */}
+                  <ListItem>
+                    <Stack
+                      direction='row'
+                      justifyContent='space-between'
+                      spacing={2}
+                      alignItems='center'
+                    >
+                      <Typography variant="h3"> National Parks </Typography>
+                    </Stack>
+                  </ListItem>
 
-            {/* <span className = "parkStackWrapper"> */}
-            <ExploreParkItemList nationalParks={nationalParks} searchValue={searchValue}/>
-            {/* </span> */}
+                  <Divider />
+
+                  {/* Search field */}
+                  <ListItem>
+                    <Stack
+                      direction='row'
+                      justifyContent='space-between'
+                      spacing={2}
+                      alignItems='center'
+                      margin='auto'
+                      padding={1}
+                    >
+                      <TextField 
+                        id='outlined-basic' 
+                        label='Search for parks' 
+                        variant='outlined' 
+                        value={searchValue}
+                        sx={{
+                          boxShadow: 1,
+                          borderRadius: 2,
+                          minWidth: 200,
+                          width: 1,
+                        }}
+                        onChange={ e => handleSearch(e) }
+                      />
+                    </Stack>
+                  </ListItem>
+
+                  {/* List of national parks */}
+                  <ExploreParkItemList nationalParks={nationalParks} searchValue={searchValue}/>
+                </List>
+              </Container>
+            </Box>            
           </>
         )}
 
