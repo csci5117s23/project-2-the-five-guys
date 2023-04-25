@@ -4,6 +4,8 @@ import 'leaflet/dist/leaflet.css'
 import MapIcon from '@/components/mapIcon';
 import ReactDOMServer  from 'react-dom/server';
 import Link from 'next/link';
+import {useState, useEffect} from 'react'
+import Button from '@mui/material/Button';
 
 export default function MapComponent(props)
 {
@@ -12,9 +14,31 @@ export default function MapComponent(props)
   //map bounds
   const bounds = latLngBounds(usLatLongMin, usLatLongMax);
   const {parks} = props;
+
+
+  function SetUserLocation(){
+    const map = useMap();
+    function success(position) {
+      let userLatLong = [position.coords.latitude, position.coords.longitude];
+      map.setView(userLatLong, 6); 
+    }
+
+    function error() {
+      console.log("Unable to retrieve your location");
+    }
+
+    if (!navigator.geolocation) {
+      console.log("Geolocation is not supported by your browser");
+    } else {
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+    return null;
+  }
   
   return (
+    <>
     <MapContainer className='mapContainer' center={[40, -100]} zoom={6} scrollWheelZoom={true} bounds={bounds} maxBounds={bounds} maxBoundsViscosity={1.0} minZoom={4} maxZoom={8}>
+      <SetUserLocation/>
       <TileLayer
         //using OSM for map
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
@@ -34,5 +58,6 @@ export default function MapComponent(props)
         </Marker>
       ))}
     </MapContainer>
+    </>
   );
 }
