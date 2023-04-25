@@ -1,4 +1,4 @@
-import { MapContainer, Marker, Popup, TileLayer} from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer, useMap} from 'react-leaflet'
 import {divIcon, latLngBounds } from 'leaflet';
 import 'leaflet/dist/leaflet.css'
 import MapIcon from '@/components/mapIcon';
