@@ -40,6 +40,7 @@ export default function MapComponent(props)
   //map bounds
   const bounds = latLngBounds(usLatLongMin, usLatLongMax);
   const {parks} = props;
+
   useEffect(() => {
     //on success will setUserLocation, otherwise error
     navigator.geolocation.getCurrentPosition(setUserLocation, error);
@@ -72,7 +73,7 @@ export default function MapComponent(props)
   return (
     <>
     <MapContainer className='mapContainer' center={[40, -100]} zoom={6} scrollWheelZoom={true} bounds={bounds} maxBounds={bounds} maxBoundsViscosity={1.0} minZoom={4} maxZoom={8}>
-      <SetUserLocation/>
+      {!userLocation && (<SetUserLocation/>)}
       <TileLayer
         //using OSM for map
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
