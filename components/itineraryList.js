@@ -1,6 +1,10 @@
 import { Stack, Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function ItineraryList({ itineraryList }) {
   const [days, setDays] = useState([]);
@@ -38,9 +42,18 @@ export default function ItineraryList({ itineraryList }) {
           return (
             <Accordion key={day}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>
-                  {formattedStartDate} {formattedStartTime} - {formattedEndDate} {formattedEndTime}
-                </Typography>
+                <Box sx={{ flexGrow: 2 }}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={11}>
+                      <Typography>
+                        {formattedStartDate} {formattedStartTime} - {formattedEndDate} {formattedEndTime}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={1}>
+                      <DeleteIcon />
+                    </Grid>
+                  </Grid>
+                </Box>
               </AccordionSummary>
               <AccordionDetails>
                 <Stack spacing={2}>
@@ -48,9 +61,18 @@ export default function ItineraryList({ itineraryList }) {
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                       <Typography>{events[day].location}</Typography>
                     </AccordionSummary>
-                    <AccordionDetails>
-                      <Typography>{events[day].description}</Typography>
-                    </AccordionDetails>
+                    <Box sx={{ flexGrow: 2 }}>
+                      <Grid container spacing={2}>
+                        <Grid item xs={11}>
+                          <AccordionDetails>
+                            <Typography>{events[day].description}</Typography>
+                          </AccordionDetails>
+                        </Grid>
+                        <Grid item xs={1}>
+                          <EditIcon />
+                        </Grid>
+                      </Grid>
+                    </Box>
                   </Accordion>
                 </Stack>
               </AccordionDetails>
