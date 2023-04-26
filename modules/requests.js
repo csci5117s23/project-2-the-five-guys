@@ -1,8 +1,11 @@
+import { avoidRateLimit } from "./util";
+
 const apiKey = process.env.NEXT_PUBLIC_NATIONAL_PARK_KEY;
 const BASE_API_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 
 export async function getNationalParks()
 {
+  await avoidRateLimit();
   let response = await fetch(`https://developer.nps.gov/api/v1/parks?limit=950`, {
     method: 'GET',
     headers: {'x-api-key': `${apiKey}`}
