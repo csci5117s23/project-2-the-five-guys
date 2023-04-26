@@ -1,28 +1,46 @@
 import ExploreParkItem from "./ExploreParkItem";
-import { Stack } from "@mui/material";
+import { ListItem, Grid } from "@mui/material";
+import abbrState from "./GetFullStateName";
 
 export default function ExploreParkItemList(props) {  
   let nationalParks = props.nationalParks;
   const searchValue = props.searchValue.toLowerCase();
 
+  // Callback function to filter parks by both the states they are
+  // located in and by their names.
+  function filterElements(element){
+    // Convert state abbreviations into full names
+    let statesList = element.states.split(',');
+    statesList = statesList.map((state) => {
+      return abbrState(state);
+    });
+
+    return element.name.toLowerCase().includes(searchValue) ||
+            statesList.some(function(elem) {
+              return elem.toLowerCase().includes(searchValue);
+            });
+  }
+
   // Filter national parks by search item
   if(searchValue.length > 0){
-    const result = nationalParks.filter((element) =>
-      element.name.toLowerCase().includes(searchValue)
-    );
+    const result = nationalParks.filter(filterElements);
     nationalParks = result;
   } 
 
-  // Build list of parks
+  // Build list of parks using MUI Grid component
   const parkList = nationalParks.map((park, index)=> {
     return(
-      <ExploreParkItem key={index} nationalPark={park} />
+      <Grid item xs={12} md={6} key={index}>
+        <ExploreParkItem nationalPark={park} />
+      </Grid>
     );
   });
 
   return (
-    <Stack className="parkStack" spacing={2}>
-      {parkList}
-    </Stack>
+    <ListItem>
+      <Grid container spacing={2} justifyContent='center'>
+        {parkList}
+      </Grid>
+    </ListItem>
   );
 }
