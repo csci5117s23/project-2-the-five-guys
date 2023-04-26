@@ -50,15 +50,17 @@ export default function NationalParkItem(props)
             <div className='imagesCarouselContainer'>
               <Carousel className='imagesCarousel' animation='slide' swipe navButtonsAlwaysVisible>
                 {
-                  nationalPark.images.map(image => {
+                  nationalPark.images.map((image, index) => {
                     return(
                       <>
-                        <img className="carouselImage" src={image.url} alt={image.title} />
-                        <Stack direction="column">
-                          <div style={{paddingLeft: "1rem", fontSize: "1.6rem"}}>{image.title}</div>
-                          <div style={{paddingLeft: "1rem"}}>{image.credit}</div>
-                          {/* <div style={{paddingLeft: "1rem"}}>{image.description}</div> */}
-                        </Stack>
+                        <div key={index}>
+                          <img className="carouselImage" src={image.url} alt={image.title} />
+                          <Stack direction="column">
+                            <div style={{paddingLeft: "1rem", fontSize: "1.6rem"}}>{image.title}</div>
+                            <div style={{paddingLeft: "1rem"}}>{image.credit}</div>
+                            {/* <div style={{paddingLeft: "1rem"}}>{image.description}</div> */}
+                          </Stack>
+                        </div>
                       </>
                     )
                   })

@@ -7,6 +7,7 @@ export default function abbrState(input){
     ['Alabama', 'AL'],
     ['Alaska', 'AK'],
     ['Arkansas', 'AR'],
+    ['American Samoa', 'AS'],
     ['California', 'CA'],
     ['Colorado', 'CO'],
     ['Connecticut', 'CT'],
