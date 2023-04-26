@@ -4,7 +4,7 @@ const backend_base = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 //fetch data general trip page
 export async function fetchAllItems(userId, setData, authToken) {
   if (userId) {
-    const response = await fetch(backend_base + `/tripItem?userId=${userId}`, {
+    const response = await fetch(backend_base + `/trips?userId=${userId}`, {
       method: "GET",
       headers: { Authorization: "Bearer " + authToken, Accept: "application/json" },
     });
@@ -16,7 +16,7 @@ export async function fetchAllItems(userId, setData, authToken) {
 //fetch data specific trip
 export async function fetchItemData(userId, tripId, setData, authToken) {
   if (userId && tripId) {
-    const response = await fetch(backend_base + `/tripItem?userId=${userId}&_id=${tripId}`, {
+    const response = await fetch(backend_base + `/trips?userId=${userId}&_id=${tripId}`, {
       method: "GET",
       headers: { Authorization: "Bearer " + authToken, Accept: "application/json" },
     });
@@ -27,7 +27,7 @@ export async function fetchItemData(userId, tripId, setData, authToken) {
 
 // add a trip to the database
 export async function postDataUnchecked(userId, authToken, nationalPark_id, startDate, endDate) {
-  const response = await fetch(backend_base + "/tripItem", {
+  const response = await fetch(backend_base + "/trips", {
     method: "POST",
     headers: { Authorization: "Bearer " + authToken, "Content-Type": "application/json" },
     body: JSON.stringify({ userId: userId, nationalPark_id: nationalPark_id, startDate: startDate, endDate: endDate }),

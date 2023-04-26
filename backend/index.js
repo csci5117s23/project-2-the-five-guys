@@ -90,12 +90,12 @@ app.use("/trips/:id", async (req, res, next) => {
 app.put("/updateParkItem", updateParkItem);
 async function updateParkItem(req, res) {
   const database = await Datastore.open();
-  const data = await database.updateOne("tripItem", req.query._id, req.body);
+  const data = await database.updateOne("trips", req.query._id, req.body);
   res.json(data);
 }
 
 // Use Crudlify to create a REST API for any collection
-crudlify(app, { tripItem: tripYup });
+crudlify(app, { trips: tripYup });
 // test route for https://<PROJECTID>.api.codehooks.io/dev/
 
 // bind to serverless runtime
