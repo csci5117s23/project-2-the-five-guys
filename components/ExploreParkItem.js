@@ -23,7 +23,7 @@ export default function ExploreParkItem(props) {
 
   return(
     <Link className='exploreParkLink' href={parkLink}>
-      <Card>
+      <Card> {/* style={{ height: '25rem' }} */}
         <CardActionArea>
           {/* Main image of park */}
           <CardMedia
