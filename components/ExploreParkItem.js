@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import abbrState from './GetFullStateName';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 export default function ExploreParkItem(props) {
   // Set appropriate park link based on props
@@ -21,9 +22,13 @@ export default function ExploreParkItem(props) {
   //   parkDescription = parkDescription.slice(0, maxDescriptionLength) + '...';
   // }
 
+
+  // Check if this park has been visited by this user
+  let visited = true;
+
   return(
     <Link className='exploreParkLink' href={parkLink}>
-      <Card> {/* style={{ height: '25rem' }} */}
+      <Card style={{ border: visited? '1px solid green' : '' }}>
         <CardActionArea>
           {/* Main image of park */}
           <CardMedia
@@ -33,9 +38,12 @@ export default function ExploreParkItem(props) {
             alt={nationalPark.images[0].alt}
           />
           <CardContent>
-            {/* Title of park */}
-            <Typography variant='h5' component='div' noWrap>
+            {/* Title of park and checkmark if this park has been visited */}
+            <Typography variant='h5' component='div'>
               {nationalPark.name}
+              { visited && (
+                <CheckCircleIcon color='primary' style={{ marginLeft: '5px' }} />
+              )}
             </Typography>
             
             {/* Location of park */}
