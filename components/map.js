@@ -1,4 +1,5 @@
 import { MapContainer, Marker, Popup, TileLayer, useMap} from 'react-leaflet'
+import Control from 'react-leaflet-custom-control'
 import {divIcon, latLngBounds } from 'leaflet';
 import 'leaflet/dist/leaflet.css'
 import MapIcon from '@/components/mapIcon';
@@ -8,22 +9,27 @@ import {useState, useEffect} from 'react'
 import { Button, Modal, Box, IconButton} from '@mui/material';
 import NationalParkItem from '@/components/NationalParkItem';
 import CloseIcon from '@mui/icons-material/Close';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
 export default function MapComponent(props)
 {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPark, setSelectedPark] = useState(null);
   const usLatLongMin = [12, -180];
-  const usLatLongMax = [75, -66];
+  const usLatLongMax = [75, -60];
   //map bounds
   const bounds = latLngBounds(usLatLongMin, usLatLongMax);
   const {parks} = props;
-  
+
+  //will be set by setUserLocationFunction
+  let userLocation = null;
+
   function SetUserLocation(){
     const map = useMap();
     function success(position) {
       let userLatLong = [position.coords.latitude, position.coords.longitude];
       map.setView(userLatLong, 6); 
+      userLocation = position;
     }
 
     function error() {
@@ -42,6 +48,24 @@ export default function MapComponent(props)
     setSelectedPark(park);
     setModalOpen(true);
   }
+
+  function GoToCurrentLocation() {
+    //button that goes to current user location on map, keeps same zoom in 
+    const map = useMap();
+    function locationChange() 
+    {
+      let userLatLong = [userLocation.coords.latitude, userLocation.coords.longitude];
+      map.setView(userLatLong, map._zoom); 
+    }
+
+    return (
+      <Control prepend position='topleft'>
+        <button onClick={() => locationChange()} className='locationButton' color='inherit'> 
+          <MyLocationIcon />
+        </button>
+      </Control>
+    )
+  }
   
   return (
     <>
@@ -52,6 +76,7 @@ export default function MapComponent(props)
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
+      <GoToCurrentLocation/>
       {parks.map(park => (
         //custom markers
         <Marker key={park.id} position={[park.latitude, park.longitude]} icon={divIcon({
