@@ -21,7 +21,7 @@ export async function fetchItemData(userId, tripId, setData, authToken) {
       headers: { Authorization: "Bearer " + authToken, Accept: "application/json" },
     });
     const data = await response.json();
-    return setData(data[0].itinerary);
+    return setData(data[0]);
   }
 }
 
