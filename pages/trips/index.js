@@ -8,6 +8,7 @@ import myTripStyles from "@/styles/MyTrip.module.css";
 import homeStyles from "@/styles/Home.module.css";
 import ItineraryList from "../../components/itineraryList";
 import EditIcon from "@mui/icons-material/Edit";
+import AddIcon from "@mui/icons-material/Add";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { fetchItemData } from "../../modules/data";
@@ -17,27 +18,10 @@ export default function Home() {
   const [pageView, setPageView] = useState("agenda");
   const [loading, setLoading] = useState(true);
   const { userId, getToken } = useAuth();
+  const [overallStartDate, setOverallStartDate] = useState("");
+  const [overallEndDate, setOverallEndDate] = useState("");
 
-  //Dummy data: Need to update this so that it's not intially set and is called in the useEffect to be set from the backend based on trip id
-  const [startDate, setStartDate] = ["January 1 2022"];
-  const [endDate, setEndDate] = ["Feb 1 2022"];
-
-  //Dummy data: Need to update this so that it's not intially set and is called in the useEffect to be set from the backend based on trip id
-  const itineraryData = {
-    Day1: {
-      places: ["Place A", "Place B", "Place C"],
-      description: ["Description A", "Description B", "Description C"],
-    },
-    Day2: {
-      places: ["Place D", "Place E", "Place F"],
-      description: ["Description D", "Description E", "Description F"],
-    },
-    Day3: {
-      places: ["Place G", "Place H", "Place I"],
-      description: ["Description G", "Description H", "Description I"],
-    },
-  };
-  const [itinerary, setItinerary] = useState();
+  const [itinerary, setItinerary] = useState([]);
 
   // Grab national park data from National Park Service API
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
@@ -56,6 +40,12 @@ export default function Home() {
       const dummyTripId = "6448d3567c720e9bef8516c9";
       await fetchItemData(userId, dummyTripId, setItinerary, token);
       console.log("Itenary information: ", itinerary);
+      const startDates = itinerary.map((event) => new Date(event.startDate));
+      const endDates = itinerary.map((event) => new Date(event.endDate));
+      const earliestStartDate = new Date(Math.min(...startDates)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+      const latestEndDate = new Date(Math.max(...endDates)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+      setOverallStartDate(earliestStartDate);
+      setOverallEndDate(latestEndDate);
       setNationalParks(filteredParks);
       setLoading(false);
     }
@@ -90,19 +80,24 @@ export default function Home() {
       <SignedIn>
         <Box sx={{ flexGrow: 2 }}>
           <Grid container spacing={2}>
-            <Grid item xs={9}>
+            <Grid item xs={8}>
               {" "}
               <h1 className={myTripStyles.myTrip}>My Trip</h1>
             </Grid>
-            <Grid item xs={3}>
+            <Grid item xs={2}>
               {" "}
               <EditIcon className={myTripStyles.edit} />
+            </Grid>
+            <Grid item xs={2}>
+              {" "}
+              {/* Need to edit this later so that there is a link to the add events page */}
+              <AddIcon className={myTripStyles.edit} />
             </Grid>
           </Grid>
         </Box>
 
         <h2 className={myTripStyles.myTrip}>
-          {startDate} - {endDate}
+          {overallStartDate} - {overallEndDate}
         </h2>
 
         {/* Buttons to toggle agenda or map view */}
