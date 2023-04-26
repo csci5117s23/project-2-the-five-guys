@@ -28,7 +28,7 @@ export default function ExploreParkItem(props) {
 
   return(
     <Link className='exploreParkLink' href={parkLink}>
-      <Card style={{ border: visited? '1px solid green' : '' }}>
+      <Card style={{ border: visited? '1px solid #1B742E' : '' }}>
         <CardActionArea>
           {/* Main image of park */}
           <CardMedia
