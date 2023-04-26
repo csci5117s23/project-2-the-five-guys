@@ -25,6 +25,7 @@ import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
 import TripCard from "../../components/TripCard";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Link from "next/link";
 
 export default function TripListPage({ parks }) {
   const [trips, setTrips] = useState([]);
@@ -102,7 +103,9 @@ export default function TripListPage({ parks }) {
                 <Grid container spacing={2} justifyContent="center">
                   {trips.map((trip) => (
                     <Grid item xs={12} md={6} key={trip._id}>
-                      <TripCard trip={trip} />
+                      <Link href={`/trip/${trip._id}`}>
+                        <TripCard trip={trip} />
+                      </Link>
                     </Grid>
                   ))}
                 </Grid>
