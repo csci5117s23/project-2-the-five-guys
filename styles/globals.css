@@ -324,3 +324,26 @@
 .leaflet-control-zoom-out:hover {
   background-color: green !important;
 }
+
+.locationButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position:absolute;
+  padding: 6px;
+  top: 100px;
+  border: 4px solid white;
+  background-color: #1B742E;
+  color: white;
+  box-shadow: 2px 2px 5px black;
+  border-radius: .2rem;
+}
+
+.locationButton:hover {
+  background-color: green;
+  cursor: pointer;
+}
+
+.leaflet-control-container {
+  display: flex;
+}
