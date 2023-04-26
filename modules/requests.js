@@ -45,3 +45,15 @@ export async function createTrip(authToken, trip) {
   });
   return await response.json();
 }
+
+export async function updateTrip(authToken, id, updates) {
+  const response = await fetch(`${BASE_API_URL}/trips/${id}`, {
+      method: "PATCH",
+      headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer ' + authToken
+      },
+      body: JSON.stringify(updates),
+  });
+  return await response.json();
+}
