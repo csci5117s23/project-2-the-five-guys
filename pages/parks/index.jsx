@@ -17,7 +17,7 @@ export default function Home() {
     async function loadNationalParkData()
     {
       let data = await getNationalParks();
-      let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
+      let filteredParks = data.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood")|| element.fullName.includes("American Samoa"));
       setNationalParks(filteredParks);
       setLoading(false);
     }
