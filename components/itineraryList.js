@@ -44,13 +44,16 @@ export default function ItineraryList({ itineraryList }) {
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <Box sx={{ flexGrow: 2 }}>
                   <Grid container spacing={2}>
-                    <Grid item xs={11}>
+                    <Grid item xs={10}>
                       <Typography>
                         {formattedStartDate} {formattedStartTime} - {formattedEndDate} {formattedEndTime}
                       </Typography>
                     </Grid>
                     <Grid item xs={1}>
                       <DeleteIcon />
+                    </Grid>
+                    <Grid item xs={1}>
+                      
                     </Grid>
                   </Grid>
                 </Box>

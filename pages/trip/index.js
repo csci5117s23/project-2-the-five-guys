@@ -135,7 +135,7 @@ export default function Home() {
             <Grid item xs={2}>
               {" "}
               {/* Need to edit this later so that there is a link to the add events page */}
-              <AddIcon className={myTripStyles.edit} />
+              <IconButton className={myTripStyles.edit}><AddIcon/></IconButton>
             </Grid>
           </Grid>
         </Box>
