@@ -103,9 +103,7 @@ export default function TripListPage({ parks }) {
                 <Grid container spacing={2} justifyContent="center">
                   {trips.map((trip) => (
                     <Grid item xs={12} md={6} key={trip._id}>
-                      <Link href={`/trip/${trip._id}`}>
-                        <TripCard trip={trip} />
-                      </Link>
+                      <TripCard trip={trip} />
                     </Grid>
                   ))}
                 </Grid>
