@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { fetchItemData } from "../../modules/data";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -22,6 +23,7 @@ export default function Home() {
   const [overallEndDate, setOverallEndDate] = useState("");
 
   const [itinerary, setItinerary] = useState([]);
+  const router = useRouter();
 
   // Grab national park data from National Park Service API
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
@@ -37,15 +39,20 @@ export default function Home() {
       console.log("Data: ", data);
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
       //Need to update this to get the id of the trip from the route
-      const dummyTripId = "6448d3567c720e9bef8516c9";
-      await fetchItemData(userId, dummyTripId, setItinerary, token);
+      // const tripId = router.query["id"];
+      //User this dummyID for testing purposes with itinerary until event page is up
+      const tripId = "64496dabe30f5119ffa72a9b";
+      console.log("trip id: ", tripId);
+      await fetchItemData(userId, tripId, setItinerary, token);
       console.log("Itenary information: ", itinerary);
-      const startDates = itinerary.map((event) => new Date(event.startDate));
-      const endDates = itinerary.map((event) => new Date(event.endDate));
-      const earliestStartDate = new Date(Math.min(...startDates)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-      const latestEndDate = new Date(Math.max(...endDates)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-      setOverallStartDate(earliestStartDate);
-      setOverallEndDate(latestEndDate);
+      if (itinerary != undefined) {
+        const startDates = itinerary.map((event) => new Date(event.startDate));
+        const endDates = itinerary.map((event) => new Date(event.endDate));
+        const earliestStartDate = new Date(Math.min(...startDates)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        const latestEndDate = new Date(Math.max(...endDates)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        setOverallStartDate(earliestStartDate);
+        setOverallEndDate(latestEndDate);
+      }
       setNationalParks(filteredParks);
       setLoading(false);
     }
@@ -113,11 +120,7 @@ export default function Home() {
         </div>
 
         {/* If in agenda view, show itinerary */}
-        {pageView === "agenda" && (
-          <div className={myTripStyles.myTrip}>
-            <ItineraryList itineraryList={itinerary} />
-          </div>
-        )}
+        {pageView === "agenda" && <div className={myTripStyles.myTrip}>{itinerary ? <ItineraryList itineraryList={itinerary} /> : <h2>No Agenda!</h2>}</div>}
 
         {/* If in map view, show map */}
         {pageView === "map" && <Map parks={nationalParks} />}
