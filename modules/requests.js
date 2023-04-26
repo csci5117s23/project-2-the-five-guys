@@ -27,3 +27,15 @@ export async function getTrips(authToken) {
   });
   return await response.json();
 }
+
+export async function createTrip(authToken, trip) {
+  const response = await fetch(`${BASE_API_URL}/trips`, {
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json",
+          'Authorization': 'Bearer ' + authToken
+      },
+      body: JSON.stringify(trip),
+  });
+  return await response.json();
+}
