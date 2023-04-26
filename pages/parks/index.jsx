@@ -81,42 +81,27 @@ export default function Home() {
                 <List className='parkStackWrapper'>
                   {/* Header above list */}
                   <ListItem>
-                    <Stack
-                      direction='row'
-                      justifyContent='space-between'
-                      spacing={2}
-                      alignItems='center'
-                    >
-                      <Typography variant="h3"> National Parks </Typography>
-                    </Stack>
+                    <Typography variant="h3"> National Parks </Typography>
                   </ListItem>
 
                   <Divider />
 
                   {/* Search field */}
                   <ListItem>
-                    <Stack
-                      direction='row'
-                      justifyContent='space-between'
-                      spacing={2}
-                      alignItems='center'
-                      margin='auto'
-                      padding={1}
-                    >
-                      <TextField 
-                        id='outlined-basic' 
-                        label='Search for parks' 
-                        variant='outlined' 
-                        value={searchValue}
-                        sx={{
-                          boxShadow: 1,
-                          borderRadius: 2,
-                          minWidth: 200,
-                          width: 1,
-                        }}
-                        onChange={ e => handleSearch(e) }
-                      />
-                    </Stack>
+                    <TextField 
+                      id='outlined-basic' 
+                      label='Search parks or states' 
+                      variant='outlined' 
+                      value={searchValue}
+                      sx={{
+                        boxShadow: 1,
+                        borderRadius: 2,
+                        minWidth: 200,
+                        width: 0.5,
+                        margin: 'auto',
+                      }}
+                      onChange={ e => handleSearch(e) }
+                    />
                   </ListItem>
 
                   {/* List of national parks */}
