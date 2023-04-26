@@ -64,7 +64,7 @@ export default function Home() {
     return (
       <div className="centered">
         <CircularProgress style={{ color: "#1B742E" }} />
-        <div>Loading The Trip...</div>
+        <div>Loading trip...</div>
       </div>
     );
   }

@@ -34,17 +34,17 @@ export default function ExploreParkItem(props) {
           />
           <CardContent>
             {/* Title of park */}
-            <Typography gutterBottom variant='h5' component='div' noWrap>
+            <Typography variant='h5' component='div' noWrap>
               {nationalPark.name}
             </Typography>
             
             {/* Location of park */}
-            <Typography gutterBottom>
+            <Typography variant='subtitle1'>
               {statesList.join(', ')}
             </Typography> 
 
             {/* Description of park */}
-            <Typography variant='body2' color='#1B742E'>
+            <Typography variant='body2'>
               {parkDescription}
             </Typography>
           </CardContent>

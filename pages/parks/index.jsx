@@ -8,7 +8,9 @@ import {
   Container, 
   List, 
   Typography, 
-  Divider } from '@mui/material';
+  Divider,
+  ButtonGroup, 
+  Button} from '@mui/material';
 import {useEffect, useState} from "react";
 import ExploreParkItemList from "@/components/ExploreParkItemList";
 import { getNationalParks } from '@/modules/requests';
@@ -69,8 +71,29 @@ export default function Home() {
       <SignedIn>
         {/* Buttons to toggle list or map view */}
         <div className='exploreSelector'>
-          <Chip label="List View" onClick={() => setExploreView('list')} />
-          <Chip label="Map View" onClick={() => setExploreView('map')} />
+          {/* <Chip label="List View" onClick={() => setExploreView('list')} />
+          <Chip label="Map View" onClick={() => setExploreView('map')} /> */}
+          {/* <ButtonGroup variant='outlined' aria-label='text button group'> */}
+          { exploreView === 'list' ? (
+            <>
+              <Button sx={{ marginRight: 0.5 }} variant='contained' color='success' onClick={() => setExploreView('list')}> 
+                List View 
+              </Button>
+              <Button sx={{ marginLeft: 0.5 }} variant='contained' color='secondary' onClick={() => setExploreView('map')}> 
+                Map View 
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button sx={{ marginRight: 0.5 }} variant='contained' color='secondary' onClick={() => setExploreView('list')}> 
+                List View 
+              </Button>
+              <Button sx={{ marginLeft: 0.5 }} variant='contained' color='success' onClick={() => setExploreView('map')}> 
+                Map View 
+              </Button>
+            </>
+          )}
+          {/* </ButtonGroup> */}
         </div>
 
         {/* If in list view, show list of National Parks with search bar */}
