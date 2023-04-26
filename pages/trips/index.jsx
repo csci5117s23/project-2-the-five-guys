@@ -16,6 +16,7 @@ import {
   Button,
   Autocomplete,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Container from "@mui/material/Container";
@@ -25,7 +26,6 @@ import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
 import TripCard from "../../components/TripCard";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Link from "next/link";
 
 export default function TripListPage({ parks }) {
   const [trips, setTrips] = useState([]);
@@ -34,6 +34,7 @@ export default function TripListPage({ parks }) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const { isLoaded, userId, getToken } = useAuth();
 
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function TripListPage({ parks }) {
       if (token) {
         const trips = await getTrips(token);
         setTrips(updateTripList(trips, parks));
+        setLoading(false);
       }
     };
     loadTrips();
@@ -57,7 +59,6 @@ export default function TripListPage({ parks }) {
   };
 
   const handleSubmit = async () => {
-    console.log("test");
     if (park && startDate && endDate) {
       const trip = {
         nationalPark_id: park.id,
@@ -99,14 +100,24 @@ export default function TripListPage({ parks }) {
                 </Stack>
               </ListItem>
               <Divider />
-              <ListItem>
-                <Grid container spacing={2} justifyContent="center">
-                  {trips.map((trip) => (
-                    <Grid item xs={12} md={6} key={trip._id}>
-                      <TripCard trip={trip} />
-                    </Grid>
-                  ))}
-                </Grid>
+              <ListItem
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {loading ? (
+                  <CircularProgress />
+                ) : (
+                  <Grid container spacing={2} justifyContent="center">
+                    {trips.map((trip) => (
+                      <Grid item xs={12} md={6} key={trip._id}>
+                        <TripCard trip={trip} />
+                      </Grid>
+                    ))}
+                  </Grid>
+                )}
               </ListItem>
             </List>
           </Container>
@@ -120,8 +131,12 @@ export default function TripListPage({ parks }) {
                 disablePortal
                 options={parks}
                 getOptionLabel={(park) => park.fullName}
-                getOptionSelected={(option, value) => option.fullName === value.fullName }
-                renderInput={(params) => <TextField {...params} label="Park" fullWidth />}
+                getOptionSelected={(option, value) =>
+                  option.fullName === value.fullName
+                }
+                renderInput={(params) => (
+                  <TextField {...params} label="Park" fullWidth />
+                )}
                 value={park}
                 onChange={(event, newValue) => setPark(newValue)}
               />
@@ -158,6 +173,8 @@ const updateTripList = (trips, parks) => {
     const { fullName, images } = park;
     const imageUrl = images[0].url;
     return { ...trip, fullName, imageUrl };
+  }).sort((a, b) => {
+    return new Date(a.startDate) - new Date(b.startDate);
   });
 }
 
