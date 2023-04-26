@@ -53,7 +53,7 @@ export default function Home() {
       console.log("Data: ", data);
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
       //Need to update this to get the id of the trip from the route
-      const dummyTripId = "6446f960c03608412d91d157";
+      const dummyTripId = "6448d3567c720e9bef8516c9";
       await fetchItemData(userId, dummyTripId, setItinerary, token);
       console.log("Itenary information: ", itinerary);
       setNationalParks(filteredParks);
