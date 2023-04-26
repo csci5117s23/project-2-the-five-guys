@@ -1,0 +1,29 @@
+[
+  [
+    "tripItem",
+    {
+      "187b4defe38-4j4bbzyqz4p3rh": {
+        "endDate": "2022-02-01T06:00:00.000Z",
+        "startDate": "2022-01-01T06:00:00.000Z",
+        "nationalPark_id": "77E0D7F0-1942-494A-ACE2-9004D2BDC59E",
+        "userId": "user_2OYxpddR9zLFbz2Me3gC9wTTE9y",
+        "_id": "187b4defe38-4j4bbzyqz4p3rh"
+      },
+      "187b5122286-queu0caadntci2": {
+        "itinerary": [
+          {
+            "location": "Place A",
+            "description": "Nothing for now",
+            "endDate": "2023-01-07T06:00:00.000Z",
+            "startDate": "2023-01-01T06:00:00.000Z"
+          }
+        ],
+        "endDate": "2022-02-01T06:00:00.000Z",
+        "startDate": "2023-01-01T06:00:00.000Z",
+        "nationalPark_id": "77E0D7F0-1942-494A-ACE2-9004D2BDC59E",
+        "userId": "user_2OYxpddR9zLFbz2Me3gC9wTTE9y",
+        "_id": "187b5122286-queu0caadntci2"
+      }
+    }
+  ]
+]

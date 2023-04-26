@@ -10,6 +10,7 @@ import { Button, Modal, Box, IconButton, CircularProgress} from '@mui/material';
 import NationalParkItem from '@/components/NationalParkItem';
 import CloseIcon from '@mui/icons-material/Close';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
+
 //button cant be a child of mapcomponent or causes errors, must be a sibling, so separate from map component
 function GoToCurrentLocationButton(props) {
     //button that goes to current user location on map, keeps same zoom in
@@ -33,6 +34,7 @@ export default function MapComponent(props)
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPark, setSelectedPark] = useState(null);
   const usLatLongMin = [12, -180];
+
   const usLatLongMax = [75, -60];
   const [userLocation, setUserLocation] = useState(null)
   //map bounds
