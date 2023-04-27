@@ -9,6 +9,7 @@ import jwtDecode from "jwt-decode";
 
 const tripYup = object({
   userId: string().required(),
+  title: string(),
   nationalPark_id: string().required(),
   startDate: date().required(),
   endDate: date().required(),

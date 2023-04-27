@@ -1,10 +1,17 @@
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from "@mui/material";
-import { formatDate } from "../modules/util"
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Link,
+  Typography,
+} from "@mui/material";
+import { formatDate } from "../modules/util";
 
 export default function TripCard({ trip }) {
   return (
     <Card>
-      <CardActionArea>
+      <CardActionArea component={Link} href={`/trip/${trip._id}`}>
         <CardMedia
           component="img"
           height="140"

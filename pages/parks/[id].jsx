@@ -7,46 +7,8 @@ import RedirectToHome from '@/components/RedirectToHome';
 import { CircularProgress, IconButton } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-export default function Home() {
+export default function Home({ park }) {
   const router = useRouter();
-  const [itemId, setItemId] = useState("");
-
-  const [nationalParks, setNationalParks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [park, setPark] = useState(null);
-
-  useEffect(() => {
-    if(router.query.id){
-      setItemId(router.query.id);
-    }
-  },[router.query]);
-  
-  useEffect(()=> {
-    async function loadNationalParkData()
-    {
-      let data = await getNationalParks();
-      let filteredParks = data.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood")|| element.fullName.includes("American Samoa"));
-      setNationalParks(filteredParks);
-      setLoading(false);
-    }
-    loadNationalParkData();
-  },[]);
-
-  useEffect(()=> {
-    if(nationalParks && itemId){
-      setPark(nationalParks.find(park => park.id === itemId));
-    }
-  }, [nationalParks, itemId]); 
-
-  if(loading || !park){
-    return(
-      <div className='centered'>
-        <CircularProgress style={{color: "#1B742E"}}/>
-        <div>Loading Park...</div>
-      </div>
-    );
-  }
-
   return (
     <>
       <SignedIn>
@@ -61,4 +23,28 @@ export default function Home() {
       </SignedOut>
     </>
   )
+}
+
+export async function getStaticPaths() {
+  const unfilteredParks = await getNationalParks();
+  const filteredParks = unfilteredParks.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood")|| element.fullName.includes("American Samoa"));
+  const paths = filteredParks.map((park) => ({
+    params: { id: park.id },
+  }))
+
+  // { fallback: false } means other routes should 404
+  return { paths, fallback: false }
+}
+
+// This also gets called at build time
+export async function getStaticProps({ params }) {
+  // params contains the post `id`.
+  // If the route is like /posts/1, then params.id is 1
+  const unfilteredParks = await getNationalParks();
+  const filteredParks = unfilteredParks.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood")|| element.fullName.includes("American Samoa"));
+
+  const park = filteredParks.find((park) => park.id === params.id);
+
+  // Pass post data to the page via props
+  return { props: { park } }
 }
