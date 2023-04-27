@@ -71,19 +71,9 @@ export default function Home() {
       // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S 
       const tripId = "64496dabe30f5119ffa72a9b";
       console.log("trip id: ", tripId);
-      await fetchItemData(userId, tripId, setItinerary, token);
-      console.log("Itenary information: ", itinerary);
-      if (itinerary != undefined) {
-        const startDates = itinerary.map((event) => new Date(event.startDate));
-        const endDates = itinerary.map((event) => new Date(event.endDate));
-        const earliestStartDate = new Date(Math.min(...startDates)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-        const latestEndDate = new Date(Math.max(...endDates)).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-        setOverallStartDate(earliestStartDate);
-        setOverallEndDate(latestEndDate);
-      }
+      await fetchItemData(userId, tripId, setTrip, token);
       setNationalParks(filteredParks);
       setNewUpdate(false);
-      
     }
     loadData();
   }, [userId, newUpdate]);
