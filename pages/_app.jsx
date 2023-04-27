@@ -82,7 +82,7 @@ export default function App({ Component, pageProps }) {
                   if (newValue == 0) {
                     router.push("/parks");
                   } else if (newValue == 1) {
-                    router.push("/parks");
+                    router.push("/trips");
                   }
                   setBottomChoice(newValue);
                 }}
