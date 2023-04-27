@@ -10,10 +10,11 @@ import ItineraryList from "../../components/itineraryList";
 import ShareComponent from "@/components/ShareComponent";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete"
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { fetchItemData } from "../../modules/data";
+import { fetchItemData, deleteTrip } from "../../modules/data";
 import { useRouter } from "next/router";
 import dayjs from 'dayjs';
 
@@ -43,6 +44,14 @@ export default function Home() {
   // opens the editor for name,startDate,endDate
   function handleOpenEditName(){
     setOnOpenEditName(true);
+  }
+
+  async function handleDeleteTrip(){
+    // call the deleteTrip function then redirect the user the /trips
+    // const token = await getToken({ template: "codehooks" });
+    // await updateTrip(token, trip._id);
+    // router.push("/trips");
+
   }
 
 //updates database with PATCH request for startDate, endDate, title. Updates after a second or two (on reload)
@@ -175,6 +184,7 @@ export default function Home() {
 
         {/* If in map view, show map */}
         {pageView === "map" && <Map parks={nationalParks} />}
+        <IconButton className={myTripStyles.edit} onClick={handleDeleteTrip}><DeleteIcon/></IconButton>
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
           <DialogTitle>Edit Trip Details</DialogTitle>
           <DialogContent>
