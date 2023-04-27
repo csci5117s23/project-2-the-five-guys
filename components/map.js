@@ -13,7 +13,7 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 //button cant be a child of mapcomponent or causes errors, must be a sibling, so separate from map component
 function GoToCurrentLocationButton(props) {
     //button that goes to current user location on map, keeps same zoom in
-    const {userLocation} = props;
+    const {userLocation, error} = props;
     const map = useMap();
     function locationChange()
     {
@@ -22,9 +22,9 @@ function GoToCurrentLocationButton(props) {
     }
     return (
       <Control prepend position='topleft'>
-        <button onClick={() => locationChange()} className='locationButton' color='inherit'>
+        {!error && (<button onClick={() => locationChange()} className='locationButton' color='inherit'>
           <MyLocationIcon />
-        </button>
+        </button>)}
       </Control>
     )
   }
@@ -90,7 +90,7 @@ export default function MapComponent(props)
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
-      <GoToCurrentLocationButton userLocation={userLocation}/>
+      <GoToCurrentLocationButton userLocation={userLocation} error={errorMessage}/>
       {parks.map(park => (
         //custom markers
         <Marker key={park.id} position={[park.latitude, park.longitude]} icon={divIcon({
