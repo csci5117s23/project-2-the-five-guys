@@ -30,6 +30,7 @@ export default function Home() {
   useEffect(() => {
     async function loadData() {
       if (!userId) {
+        console.log("NO USER ID");
         return;
       }
       console.log("userid: ", userId);
@@ -41,6 +42,7 @@ export default function Home() {
       //Need to update this to get the id of the trip from the route
       // const tripId = router.query["id"];
       //User this dummyID for testing purposes with itinerary until event page is up
+      // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S 
       const tripId = "64496dabe30f5119ffa72a9b";
       console.log("trip id: ", tripId);
       await fetchItemData(userId, tripId, setItinerary, token);
