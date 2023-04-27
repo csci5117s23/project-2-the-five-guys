@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import myTripStyles from "@/styles/MyTrip.module.css";
 import homeStyles from "@/styles/Home.module.css";
 import ItineraryList from "../../components/itineraryList";
+import ShareComponent from "@/components/ShareComponent";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import Grid from "@mui/material/Grid";
@@ -29,6 +30,7 @@ export default function Home() {
   const [newTitle, setNewTitle]= useState("");
   const [title, setTitle] = useState("");
   const [newUpdate, setNewUpdate] = useState(false);
+  const [park, setPark] = useState(null);
 
   const [trip, setTrip] = useState(null);
   const router = useRouter();
@@ -63,7 +65,7 @@ export default function Home() {
       const token = await getToken({ template: "codehooks" });
       // console.log("Token: ", token);
       let data = await getNationalParks();
-      let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
+      let filteredParks = data.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood") || element.fullName.includes("American Samoa"));
       //Need to update this to get the id of the trip from the route
       // const tripId = router.query["id"];
       //User this dummyID for testing purposes with itinerary until event page is up
@@ -80,10 +82,17 @@ export default function Home() {
   useEffect(() => {
     if(trip){
       // set trip hooks if title is not null
+      nationalParks.map(np => {
+        // console.log(np.id);
+        if(np.id == trip.nationalPark_id){
+          setPark(np)
+        }
+      });  
       if(trip.title){
         setTitle(trip.title);
         setNewTitle(trip.title);
       }
+      
       // set all the date hooks
       setOverallStartDate(trip.startDate);
       setNewStartDate(trip.startDate);
@@ -92,7 +101,7 @@ export default function Home() {
 
       setLoading(false);
     }
-  }, [trip]);
+  }, [trip, nationalParks]);
 
 
   // Return loading text if currently loading
@@ -123,7 +132,7 @@ export default function Home() {
       <SignedIn>
         <Box sx={{ flexGrow: 2 }}>
           <Grid container spacing={2}>
-            <Grid item xs={8}>
+            <Grid item xs={6}>
               {" "}
               <h1 className={myTripStyles.myTrip}>{title}</h1>
             </Grid>
@@ -136,6 +145,11 @@ export default function Home() {
               {" "}
               {/* Need to edit this later so that there is a link to the add events page */}
               <IconButton className={myTripStyles.edit}><AddIcon/></IconButton>
+            </Grid>
+            <Grid item xs={2}>
+              {" "}
+              {/* Need to edit this later so that there is a link to the add events page */}
+              <ShareComponent trip={trip} park={park}/>
             </Grid>
           </Grid>
         </Box>

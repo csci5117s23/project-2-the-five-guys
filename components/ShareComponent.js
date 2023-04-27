@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 export default function ShareComponent(props) {
     const trip = props.trip;
     const park = props.park;
+    if(trip && park){
     let itineraryListText = "";
     trip.itinerary.map(item => {
       itineraryListText += item.startDate + " - " + item.endDate + ": " + item.description + "\n"
@@ -27,4 +28,10 @@ export default function ShareComponent(props) {
         <Button variant="text" onClick={shareTrip} endIcon={<SendIcon />}>Share</Button>
         </>
       )
+    }else{
+      return(
+        <>
+        </>
+      )
+    }
 }
