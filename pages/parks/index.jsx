@@ -18,10 +18,30 @@ import { SignedIn, SignedOut } from '@clerk/nextjs';
 import RedirectToHome from '@/components/RedirectToHome';
 import dynamic from 'next/dynamic';
 import { fetchAllItems } from '../../modules/data';
+import { useAuth } from '@clerk/nextjs';
 
-export default function Home({ nationalParks, visitedParks }) {
+export default function Home({ nationalParks }) {
   const [exploreView, setExploreView] = useState("list");
   const [searchValue, setSearchValue] = useState("");
+  const [visitedParks, setVisitedParks] = useState([]);
+  const { userId, getToken } = useAuth();
+
+  useEffect(() => {
+    async function grabTrips(){
+      // Grab all trips and store in visited parks array
+      const token = await getToken({ template: "codehooks" });
+      const trips = await fetchAllItems(userId, setVisitedParks, token);
+      let data = [];
+      if(trips){
+        data = trips.map((item) => {
+          return item.nationalPark_id;
+        });
+      }
+      setVisitedParks(data);
+    }
+    grabTrips();
+  }, []);
+
   console.log(visitedParks);
 
   //leaflet react doest work well with server side rendering(nextjs)
@@ -136,19 +156,9 @@ export async function getStaticProps() {
     element.fullName.includes("American Samoa")
   );
 
-  // Grab all trips and store 
-  const trips = await fetchAllItems();
-  let visitedParks = [];
-  if(trips){
-    visitedParks = trips.map((item) => {
-      return item.nationalPark_id;
-    });
-  }
-
   return {
     props: {
       nationalParks,
-      visitedParks,
     },
   };
 }
