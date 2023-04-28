@@ -1,6 +1,6 @@
 import ExploreParkItem from "./ExploreParkItem";
 import { ListItem, Grid } from "@mui/material";
-import abbrState from "./GetFullStateName";
+import abbrState from "../modules/util";
 
 export default function ExploreParkItemList(props) {  
   let nationalParks = props.nationalParks;
@@ -32,7 +32,7 @@ export default function ExploreParkItemList(props) {
   const parkList = nationalParks.map((park, index)=> {
     return(
       <Grid item xs={12} md={6} key={index}>
-        <ExploreParkItem nationalPark={park} visited={true}/>
+        <ExploreParkItem nationalPark={park} visited={visitedParks.includes(park.id)}/>
       </Grid>
     );
   });

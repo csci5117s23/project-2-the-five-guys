@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import Carousel from 'react-material-ui-carousel';
 import Skeleton from '@mui/material/Skeleton';
-import abbrState from './GetFullStateName';
+import abbrState from '../modules/util';
 
 export default function NationalParkItem(props)
 {

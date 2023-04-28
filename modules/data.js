@@ -9,6 +9,7 @@ export async function fetchAllItems(userId, setData, authToken) {
       headers: { Authorization: "Bearer " + authToken, Accept: "application/json" },
     });
     const data = await response.json();
+    console.log(data);
     return setData(data);
   }
 }

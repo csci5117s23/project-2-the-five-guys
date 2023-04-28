@@ -31,9 +31,11 @@ export default function Home({ nationalParks }) {
       // Grab all trips and store in visited parks array
       const token = await getToken({ template: "codehooks" });
       const trips = await fetchAllItems(userId, setVisitedParks, token);
-      let data = [];
-      if(trips){
-        data = trips.map((item) => {
+
+      // Parse through 
+      let data = visitedParks;
+      if(visitedParks){
+        data = visitedParks.map((item) => {
           return item.nationalPark_id;
         });
       }
@@ -69,29 +71,25 @@ export default function Home({ nationalParks }) {
       <SignedIn>
         {/* Buttons to toggle list or map view */}
         <div className='exploreSelector'>
-          {/* <Chip label="List View" onClick={() => setExploreView('list')} />
-          <Chip label="Map View" onClick={() => setExploreView('map')} /> */}
-          {/* <ButtonGroup variant='outlined' aria-label='text button group'> */}
-          { exploreView === 'list' ? (
+          {/* { exploreView === 'list' ? ( */}
             <>
-              <Button sx={{ marginRight: 0.5 }} variant='contained' color='success' onClick={() => setExploreView('list')}> 
+              <Button sx={{ marginRight: 0.5, color: exploreView === 'list' ? 'success' : 'secondary' }} variant='contained' onClick={() => setExploreView('list')}> 
                 List View 
               </Button>
-              <Button sx={{ marginLeft: 0.5 }} variant='contained' color='secondary' onClick={() => setExploreView('map')}> 
+              <Button sx={{ marginLeft: 0.5, color: exploreView === 'map' ? 'success' : 'secondary' }} variant='contained' color='secondary' onClick={() => setExploreView('map')}> 
                 Map View 
               </Button>
             </>
-          ) : (
-            <>
+          {/* ) : ( */}
+            {/* <>
               <Button sx={{ marginRight: 0.5 }} variant='contained' color='secondary' onClick={() => setExploreView('list')}> 
                 List View 
               </Button>
               <Button sx={{ marginLeft: 0.5 }} variant='contained' color='success' onClick={() => setExploreView('map')}> 
                 Map View 
               </Button>
-            </>
-          )}
-          {/* </ButtonGroup> */}
+            </> */}
+          {/* )} */}
         </div>
 
         {/* If in list view, show list of National Parks with search bar */}
