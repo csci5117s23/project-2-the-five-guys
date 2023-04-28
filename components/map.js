@@ -34,7 +34,7 @@ export default function MapComponent(props)
   const [selectedPark, setSelectedPark] = useState(null);
   const [errorPopup, errorPopupShow] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
-  const usLatLongMin = [12, -180];
+  const usLatLongMin = [-20, -180];
   const usLatLongMax = [75, -60];
   const [userLocation, setUserLocation] = useState(null)
   //map bounds
@@ -78,10 +78,12 @@ export default function MapComponent(props)
   return (
     <>
     {errorPopup && errorMessage && (
-        <Alert severity="error" onClose={() => {errorPopupShow(false)}}>
-          <AlertTitle>ERROR: Unable to retrieve your location</AlertTitle>
-          {errorMessage.message}
-        </Alert>
+      <div className='alertContainer'>
+          <Alert severity="error" onClose={() => {errorPopupShow(false)}}>
+            <AlertTitle>ERROR: Unable to retrieve your location</AlertTitle>
+            {errorMessage.message}
+          </Alert>
+      </div>
       )}
     <MapContainer className='mapContainer' center={[userLocation.coords.latitude, userLocation.coords.longitude]} zoom={6} scrollWheelZoom={true} bounds={bounds} maxBounds={bounds} maxBoundsViscosity={1.0} minZoom={4} maxZoom={8}>
       {!userLocation && (<SetUserLocation/>)}

@@ -11,7 +11,6 @@ import abbrState from './GetFullStateName';
 export default function NationalParkItem(props)
 {
   const {nationalPark} = props;
-
   const ParkMap = dynamic(
     () => import('@/components/parkMap'),
     {
