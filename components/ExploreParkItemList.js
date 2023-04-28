@@ -32,7 +32,7 @@ export default function ExploreParkItemList(props) {
   const parkList = nationalParks.map((park, index)=> {
     return(
       <Grid item xs={12} md={6} key={index}>
-        <ExploreParkItem nationalPark={park} visited={visitedParks.includes(park.id)}/>
+        <ExploreParkItem nationalPark={park} visited={visitedParks ? visitedParks.includes(park.id) : false}/>
       </Grid>
     );
   });

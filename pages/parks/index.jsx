@@ -1,6 +1,4 @@
 import {
-  Chip,
-  Stack,
   TextField,
   CircularProgress, 
   ListItem, 
@@ -9,7 +7,6 @@ import {
   List, 
   Typography, 
   Divider,
-  ButtonGroup, 
   Button} from '@mui/material';
 import {useEffect, useState} from "react";
 import ExploreParkItemList from "@/components/ExploreParkItemList";
@@ -17,32 +14,27 @@ import { getNationalParks } from '@/modules/requests';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import RedirectToHome from '@/components/RedirectToHome';
 import dynamic from 'next/dynamic';
-import { fetchAllItems } from '../../modules/data';
+import { fetchVisitedParks } from '../../modules/data';
 import { useAuth } from '@clerk/nextjs';
 
 export default function Home({ nationalParks }) {
   const [exploreView, setExploreView] = useState("list");
   const [searchValue, setSearchValue] = useState("");
   const [visitedParks, setVisitedParks] = useState([]);
+  const [loading, setLoading] = useState(true);
   const { userId, getToken } = useAuth();
 
+  // Grab data pertaining to which parks this user has visited
   useEffect(() => {
     async function grabTrips(){
       // Grab all trips and store in visited parks array
       const token = await getToken({ template: "codehooks" });
-      const trips = await fetchAllItems(userId, setVisitedParks, token);
-
-      // Parse through 
-      let data = visitedParks;
-      if(visitedParks){
-        data = visitedParks.map((item) => {
-          return item.nationalPark_id;
-        });
-      }
-      setVisitedParks(data);
+      const visits = await fetchVisitedParks(userId, token);
+      setVisitedParks(visits);
+      setLoading(false);
     }
     grabTrips();
-  }, []);
+  }, [loading]);
 
   console.log(visitedParks);
 
@@ -52,7 +44,8 @@ export default function Home({ nationalParks }) {
   const Map = dynamic(
     () => import('@/components/map'),
     {
-      loading: () => <div className='centered'>
+      loading: () => 
+        <div className='centered'>
           <CircularProgress style={{color: "#1B742E"}}/>
           <div>Loading Map...</div>
         </div>,
@@ -64,6 +57,16 @@ export default function Home({ nationalParks }) {
   function handleSearch(e) {
     const input = e.target.value.toString();
     setSearchValue(input);
+  }
+
+  // If loading, return loading screen
+  if(loading){
+    return (
+      <div className='centered'>
+          <CircularProgress style={{color: "#1B742E"}}/>
+          <div>Loading National Parks...</div>
+      </div>
+    );
   }
 
   return (
