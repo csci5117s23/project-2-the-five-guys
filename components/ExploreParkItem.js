@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
-import abbrState from './GetFullStateName';
+import abbrState from '../modules/util';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 export default function ExploreParkItem(props) {
   // Set appropriate park link based on props
-  const {nationalPark} = props;
+  const nationalPark = props.nationalPark;
   let parkLink = "parks/" + nationalPark.id;
 
-  // const maxDescriptionLength = 300;
+  // Read in whether or not this park has been visited
+  const visited = props.visited
 
   // Convert state abbreviations into full names
   let statesList = nationalPark.states.split(',');
@@ -15,15 +17,9 @@ export default function ExploreParkItem(props) {
     return abbrState(state);
   });
 
-  // Truncate description if too long
-  let parkDescription = nationalPark.description;
-  // if(parkDescription.length > maxDescriptionLength){
-  //   parkDescription = parkDescription.slice(0, maxDescriptionLength) + '...';
-  // }
-
   return(
     <Link className='exploreParkLink' href={parkLink}>
-      <Card> {/* style={{ height: '25rem' }} */}
+      <Card style={{ border: visited? '1px solid #1B742E' : '' }}>
         <CardActionArea>
           {/* Main image of park */}
           <CardMedia
@@ -33,19 +29,22 @@ export default function ExploreParkItem(props) {
             alt={nationalPark.images[0].alt}
           />
           <CardContent>
-            {/* Title of park */}
-            <Typography gutterBottom variant='h5' component='div' noWrap>
+            {/* Title of park and checkmark if this park has been visited */}
+            <Typography variant='h5' component='div'>
               {nationalPark.name}
+              { visited && (
+                <CheckCircleIcon color='primary' style={{ marginLeft: '5px' }} />
+              )}
             </Typography>
             
             {/* Location of park */}
-            <Typography gutterBottom>
+            <Typography variant='subtitle1'>
               {statesList.join(', ')}
             </Typography> 
 
             {/* Description of park */}
-            <Typography variant='body2' color='#1B742E'>
-              {parkDescription}
+            <Typography variant='body2'>
+              {nationalPark.description}
             </Typography>
           </CardContent>
         </CardActionArea>

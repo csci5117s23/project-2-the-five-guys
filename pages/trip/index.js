@@ -2,10 +2,9 @@ import { useEffect, useState } from "react";
 import { getNationalParks, updateTrip } from "@/modules/requests";
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
-import { Chip, Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import dynamic from "next/dynamic";
 import myTripStyles from "@/styles/MyTrip.module.css";
-import homeStyles from "@/styles/Home.module.css";
 import ItineraryList from "../../components/itineraryList";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
@@ -57,6 +56,7 @@ export default function Home() {
     async function loadData() {
       // console.log("userid: ", userId);
       if (!userId) {
+        console.log("NO USER ID");
         return;
       }
       // console.log("userid: ", userId);
@@ -67,12 +67,12 @@ export default function Home() {
       //Need to update this to get the id of the trip from the route
       // const tripId = router.query["id"];
       //User this dummyID for testing purposes with itinerary until event page is up
-      const tripId = "64497f1316fe241ec4eb59c5";
-      // console.log("trip id: ", tripId);
+      // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S 
+      const tripId = "64496dabe30f5119ffa72a9b";
+      console.log("trip id: ", tripId);
       await fetchItemData(userId, tripId, setTrip, token);
       setNationalParks(filteredParks);
       setNewUpdate(false);
-      
     }
     loadData();
   }, [userId, newUpdate]);
@@ -100,7 +100,7 @@ export default function Home() {
     return (
       <div className="centered">
         <CircularProgress style={{ color: "#1B742E" }} />
-        <div>Loading The Trip...</div>
+        <div>Loading trip...</div>
       </div>
     );
   }
