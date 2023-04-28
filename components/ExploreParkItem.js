@@ -5,8 +5,11 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 export default function ExploreParkItem(props) {
   // Set appropriate park link based on props
-  const {nationalPark} = props;
+  const nationalPark = props.nationalPark;
   let parkLink = "parks/" + nationalPark.id;
+
+  // Read in whether or not this park has been visited
+  const visited = props.visited
 
   // const maxDescriptionLength = 300;
 
@@ -24,7 +27,7 @@ export default function ExploreParkItem(props) {
 
 
   // Check if this park has been visited by this user
-  let visited = true;
+  // let visited = true;
 
   return(
     <Link className='exploreParkLink' href={parkLink}>

@@ -4,6 +4,7 @@ import abbrState from "./GetFullStateName";
 
 export default function ExploreParkItemList(props) {  
   let nationalParks = props.nationalParks;
+  let visitedParks = props.visitedParks;
   const searchValue = props.searchValue.toLowerCase();
 
   // Callback function to filter parks by both the states they are
@@ -31,7 +32,7 @@ export default function ExploreParkItemList(props) {
   const parkList = nationalParks.map((park, index)=> {
     return(
       <Grid item xs={12} md={6} key={index}>
-        <ExploreParkItem nationalPark={park} />
+        <ExploreParkItem nationalPark={park} visited={true}/>
       </Grid>
     );
   });

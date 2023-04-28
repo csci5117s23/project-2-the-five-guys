@@ -17,10 +17,12 @@ import { getNationalParks } from '@/modules/requests';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import RedirectToHome from '@/components/RedirectToHome';
 import dynamic from 'next/dynamic';
+import { fetchAllItems } from '../../modules/data';
 
-export default function Home({ nationalParks }) {
+export default function Home({ nationalParks, visitedParks }) {
   const [exploreView, setExploreView] = useState("list");
   const [searchValue, setSearchValue] = useState("");
+  console.log(visitedParks);
 
   //leaflet react doest work well with server side rendering(nextjs)
   //credit to fixing the issue: https://stackoverflow.com/questions/57704196/leaflet-with-next-js
@@ -104,7 +106,7 @@ export default function Home({ nationalParks }) {
                   </ListItem>
 
                   {/* List of national parks */}
-                  <ExploreParkItemList nationalParks={nationalParks} searchValue={searchValue}/>
+                  <ExploreParkItemList nationalParks={nationalParks} visitedParks={visitedParks} searchValue={searchValue}/>
                 </List>
               </Container>
             </Box>
@@ -126,11 +128,27 @@ export default function Home({ nationalParks }) {
 }
 
 export async function getStaticProps() {
+  // Grab all parks and filter
   const unfilteredParks = await getNationalParks();
-  const nationalParks = unfilteredParks.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood")|| element.fullName.includes("American Samoa"));
+  const nationalParks = unfilteredParks.data.filter((element) => 
+    element.designation.includes("National Park") ||
+    element.fullName.includes("Redwood") ||
+    element.fullName.includes("American Samoa")
+  );
+
+  // Grab all trips and store 
+  const trips = await fetchAllItems();
+  let visitedParks = [];
+  if(trips){
+    visitedParks = trips.map((item) => {
+      return item.nationalPark_id;
+    });
+  }
+
   return {
     props: {
       nationalParks,
+      visitedParks,
     },
   };
 }
