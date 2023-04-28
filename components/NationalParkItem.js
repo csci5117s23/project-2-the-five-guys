@@ -1,16 +1,21 @@
-import { Accordion, AccordionDetails, AccordionSummary} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Modal, Box, Typography, IconButton} from '@mui/material';
 import Stack from '@mui/joy/Stack';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Typography from '@mui/material/Typography';
 import Carousel from 'react-material-ui-carousel';
 import Skeleton from '@mui/material/Skeleton';
 import abbrState from './GetFullStateName';
+import { useState } from 'react';
+import Image from 'next/image';
+import CloseIcon from '@mui/icons-material/Close';
+
 
 export default function NationalParkItem(props)
 {
   const {nationalPark} = props;
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState(null);
 
   const ParkMap = dynamic(
     () => import('@/components/parkMap'),
@@ -25,6 +30,65 @@ export default function NationalParkItem(props)
   statesList = statesList.map((state) => {
     return abbrState(state);
   });
+
+  function openImageModal(image)
+  {
+    setModalOpen(true);
+    setModalImage(image);
+  }
+
+  function closeImageModal()
+  {
+    setModalOpen(false);
+  }
+
+  function ImageModal(props)
+  {
+      const {image} = props
+      return(
+        <>
+          {image && (<Modal
+            open={modalOpen}
+            onClose={closeImageModal}
+            style={{borderRadius: '1rem'}}
+          >
+            <Box className="imageModal">
+              <IconButton aria-label="back" size='large' onClick={() => closeImageModal()}>
+                  <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
+              </IconButton>
+              <div style={{height: '40vw', width: '70vw', position: 'relative'}}>
+                <Image
+                  src={image.url}
+                  layout='fill'
+                  objectFit='contain'
+                />
+              </div>
+              <div style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem', marginBotton: '1rem', maxWidth: 720}}>
+                <Accordion style={{border: "5px Solid #1B742E"}}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>
+                      <div style={{fontSize: '1rem'}}>
+                        {image.title}
+                      </div>
+                      <div style={{fontSize: '.7rem'}}>
+                        {image.credit}
+                      </div>
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack spacing={1}>
+                      <div style={{fontSize: '.9rem'}}>
+                        {image.caption}
+                      </div>
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+              </div>
+            </Box>
+          </Modal>)}
+        </>
+      )
+  }
 
   return (
     <div className="nationalParkItemContainer">
@@ -48,21 +112,23 @@ export default function NationalParkItem(props)
           {/* Park images carousel */}
           <div className='parkItemImages'>
             <div className='imagesCarouselContainer'>
-              <Carousel className='imagesCarousel' animation='slide' swipe navButtonsAlwaysVisible>
+              <Carousel className='imagesCarousel' animation='slide' swipe navButtonsAlwaysVisible autoPlay='false'>
                 {
                   nationalPark.images.map((image, index) => {
                     return(
                       <>
                         <div key={index}>
-                          <img className="carouselImage" src={image.url} alt={image.title} />
+                          <img className="carouselImage" src={image.url} alt={image.title} onClick={() => openImageModal(image)}/>
                           <Stack direction="column">
                             <div style={{paddingLeft: "1rem", fontSize: "1.3rem"}}>{image.title}</div>
                             <div style={{paddingLeft: "1rem", fontSize: ".8rem"}}>{image.credit}</div>
                             {/* <div style={{paddingLeft: "1rem"}}>{image.description}</div> */}
                           </Stack>
                         </div>
+                        <ImageModal image={modalImage} />
                       </>
                     )
+                    
                   })
                 }
               </Carousel>
