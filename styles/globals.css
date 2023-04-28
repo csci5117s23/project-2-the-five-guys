@@ -343,6 +343,15 @@
   display: flex;
 }
 
+.alertContainer {
+  position: absolute;
+  top: 100;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  box-shadow: 1px 1px 5px black;
+}
+
 .imageModal {
   display: inline-block;
   position: absolute;

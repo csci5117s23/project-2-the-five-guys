@@ -15,7 +15,7 @@ export default function NationalParkItem(props)
   const {nationalPark} = props;
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
-
+  
   const ParkMap = dynamic(
     () => import('@/components/parkMap'),
     {
