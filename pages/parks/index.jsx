@@ -18,7 +18,7 @@ import { fetchVisitedParks } from '../../modules/data';
 import { useAuth } from '@clerk/nextjs';
 
 export default function Home({ nationalParks }) {
-  const [exploreView, setExploreView] = useState("list");
+  const [isListView, setIsListView] = useState(true);
   const [searchValue, setSearchValue] = useState("");
   const [visitedParks, setVisitedParks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,29 +74,18 @@ export default function Home({ nationalParks }) {
       <SignedIn>
         {/* Buttons to toggle list or map view */}
         <div className='exploreSelector'>
-          {/* { exploreView === 'list' ? ( */}
-            <>
-              <Button sx={{ marginRight: 0.5, color: exploreView === 'list' ? 'success' : 'secondary' }} variant='contained' onClick={() => setExploreView('list')}> 
-                List View 
-              </Button>
-              <Button sx={{ marginLeft: 0.5, color: exploreView === 'map' ? 'success' : 'secondary' }} variant='contained' color='secondary' onClick={() => setExploreView('map')}> 
-                Map View 
-              </Button>
-            </>
-          {/* ) : ( */}
-            {/* <>
-              <Button sx={{ marginRight: 0.5 }} variant='contained' color='secondary' onClick={() => setExploreView('list')}> 
-                List View 
-              </Button>
-              <Button sx={{ marginLeft: 0.5 }} variant='contained' color='success' onClick={() => setExploreView('map')}> 
-                Map View 
-              </Button>
-            </> */}
-          {/* )} */}
+          <>
+            <Button sx={{ marginRight: 0.5 }} variant='contained' onClick={() => setIsListView(!isListView)} color={isListView ? 'success' : 'secondary'}> 
+              List View 
+            </Button>
+            <Button sx={{ marginLeft: 0.5 }} variant='contained' onClick={() => setIsListView(!isListView)} color={!isListView ? 'success' : 'secondary'}> 
+              Map View 
+            </Button>
+          </>
         </div>
 
         {/* If in list view, show list of National Parks with search bar */}
-        {exploreView === 'list' && (
+        {isListView && (
           <>
             <Box>
               <Container>
@@ -135,7 +124,7 @@ export default function Home({ nationalParks }) {
         )}
 
         {/* If in map view, show map */}
-        {exploreView === 'map' && (
+        {!isListView && (
           <Map parks={nationalParks}/>
         )}
       </SignedIn>
