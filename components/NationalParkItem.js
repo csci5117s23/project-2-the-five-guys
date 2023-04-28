@@ -5,11 +5,10 @@ import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Carousel from 'react-material-ui-carousel';
 import Skeleton from '@mui/material/Skeleton';
-import abbrState from './GetFullStateName';
 import { useState } from 'react';
 import Image from 'next/image';
 import CloseIcon from '@mui/icons-material/Close';
-
+import abbrState from '../modules/util';
 
 export default function NationalParkItem(props)
 {

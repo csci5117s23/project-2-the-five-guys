@@ -31,10 +31,10 @@ export default function App({ Component, pageProps }) {
         main: "#387238",
       },
       secondary: {
-        main: "#ef6c00",
+        main: "#fff",
       },
       success: {
-        main: "#85a085",
+        main: "#1B742E",
       },
     },
   });
@@ -88,10 +88,7 @@ export default function App({ Component, pageProps }) {
                 }}
               >
                 <BottomNavigationAction label="Explore" icon={<MapIcon />} />
-                <BottomNavigationAction
-                  label="My Trips"
-                  icon={<FavoriteIcon />}
-                />
+                <BottomNavigationAction label="My Trips" icon={<FavoriteIcon />} />
                 <SignedIn>
                   <BottomNavigationAction icon={<UserButton />} />
                 </SignedIn>
