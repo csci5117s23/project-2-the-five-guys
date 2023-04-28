@@ -28,11 +28,6 @@
   width: 10%;
 }
 
-
-
-
-
-
 /* Home page layout */
 .home-page{
   justify-content: center;
@@ -346,4 +341,19 @@
 
 .leaflet-control-container {
   display: flex;
+}
+
+.imageModal {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-height: 80vh;
+  background-color: white;
+  box-shadow: 2px 2px 5px black;
+  outline: 7px solid #1B742E;
+  overflow-y: scroll;
+  padding: 4px;
+  border-radius: 1rem;
 }
