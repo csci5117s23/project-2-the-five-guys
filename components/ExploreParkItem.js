@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
 import abbrState from '../modules/util';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import Image from 'next/image';
 
 export default function ExploreParkItem(props) {
   // Set appropriate park link based on props
@@ -23,11 +24,12 @@ export default function ExploreParkItem(props) {
         <CardActionArea>
           {/* Main image of park */}
           <CardMedia
-            component='img'
+            component={Image}
             height='140'
             loading='lazy'
             image={nationalPark.images[0].url}
             alt={nationalPark.images[0].alt}
+            placeholder="empty"
           />
           <CardContent>
             {/* Title of park and checkmark if this park has been visited */}
@@ -37,11 +39,11 @@ export default function ExploreParkItem(props) {
                 <CheckCircleIcon color='primary' style={{ marginLeft: '5px' }} />
               )}
             </Typography>
-            
+
             {/* Location of park */}
             <Typography variant='subtitle1'>
               {statesList.join(', ')}
-            </Typography> 
+            </Typography>
 
             {/* Description of park */}
             <Typography variant='body2'>
