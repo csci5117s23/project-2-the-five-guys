@@ -1,13 +1,17 @@
 import {
   TextField,
-  CircularProgress, 
-  ListItem, 
-  Box, 
-  Container, 
-  List, 
-  Typography, 
+  CircularProgress,
+  ListItem,
+  Box,
+  Container,
+  List,
+  Typography,
   Divider,
-  Button} from '@mui/material';
+  Button,
+  FormGroup,
+  Checkbox,
+  FormControlLabel,
+  Stack} from '@mui/material';
 import {useEffect, useState} from "react";
 import ExploreParkItemList from "@/components/ExploreParkItemList";
 import { getNationalParks } from '@/modules/requests';
@@ -22,6 +26,7 @@ export default function Home({ nationalParks }) {
   const [searchValue, setSearchValue] = useState("");
   const [visitedParks, setVisitedParks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [filterVisited, setFilterVisitied] = useState(false);
   const { userId, getToken } = useAuth();
 
   // Grab data pertaining to which parks this user has visited
@@ -44,7 +49,7 @@ export default function Home({ nationalParks }) {
   const Map = dynamic(
     () => import('@/components/map'),
     {
-      loading: () => 
+      loading: () =>
         <div className='centered'>
           <CircularProgress style={{color: "#1B742E"}}/>
           <div>Loading Map...</div>
@@ -73,13 +78,13 @@ export default function Home({ nationalParks }) {
     <>
       <SignedIn>
         {/* Buttons to toggle list or map view */}
-        <div className='exploreSelector'>
+        <div className="exploreSelector">
           <>
-            <Button sx={{ marginRight: 0.5 }} variant='contained' onClick={() => setIsListView(!isListView)} color={isListView ? 'success' : 'secondary'}> 
-              List View 
+            <Button sx={{ marginRight: 0.5 }} variant="contained" onClick={() => setIsListView(!isListView)} color={isListView ? "success" : "secondary"}>
+              List View
             </Button>
-            <Button sx={{ marginLeft: 0.5 }} variant='contained' onClick={() => setIsListView(!isListView)} color={!isListView ? 'success' : 'secondary'}> 
-              Map View 
+            <Button sx={{ marginLeft: 0.5 }} variant="contained" onClick={() => setIsListView(!isListView)} color={!isListView ? "success" : "secondary"}>
+              Map View
             </Button>
           </>
         </div>
@@ -89,7 +94,7 @@ export default function Home({ nationalParks }) {
           <>
             <Box>
               <Container>
-                <List className='parkStackWrapper'>
+                <List className="parkStackWrapper">
                   {/* Header above list */}
                   <ListItem>
                     <Typography variant="h3"> National Parks </Typography>
@@ -99,24 +104,28 @@ export default function Home({ nationalParks }) {
 
                   {/* Search field */}
                   <ListItem>
-                    <TextField
-                      id='outlined-basic'
-                      label='Search parks or states'
-                      variant='outlined'
-                      value={searchValue}
-                      sx={{
-                        boxShadow: 1,
-                        borderRadius: 2,
-                        minWidth: 200,
-                        width: 0.5,
-                        margin: 'auto',
-                      }}
-                      onChange={ e => handleSearch(e) }
-                    />
+                    <Stack direction="row" spacing={2} sx={{width: "100%"}}>
+                      <TextField
+                        id="outlined-basic"
+                        label="Search parks or states"
+                        variant="outlined"
+                        value={searchValue}
+                        fullWidth
+                        sx={{
+                          boxShadow: 1,
+                          borderRadius: 2,
+                          margin: "auto",
+                        }}
+                        onChange={(e) => handleSearch(e)}
+                      />
+                      <FormGroup>
+                        <FormControlLabel control={<Checkbox checked={filterVisited} onChange={() => setFilterVisitied(!filterVisited)}/>} label="Filter by visited" />
+                      </FormGroup>
+                    </Stack>
                   </ListItem>
 
                   {/* List of national parks */}
-                  <ExploreParkItemList nationalParks={nationalParks} visitedParks={visitedParks} searchValue={searchValue}/>
+                  <ExploreParkItemList nationalParks={nationalParks} visitedParks={visitedParks} searchValue={searchValue} filterVisited={filterVisited}/>
                 </List>
               </Container>
             </Box>
@@ -124,9 +133,7 @@ export default function Home({ nationalParks }) {
         )}
 
         {/* If in map view, show map */}
-        {!isListView && (
-          <Map parks={nationalParks}/>
-        )}
+        {!isListView && <Map parks={nationalParks} />}
       </SignedIn>
 
       {/* Don't allow non-signed in users to view this page */}
@@ -134,13 +141,13 @@ export default function Home({ nationalParks }) {
         <RedirectToHome />
       </SignedOut>
     </>
-  )
+  );
 }
 
 export async function getStaticProps() {
   // Grab all parks and filter
   const unfilteredParks = await getNationalParks();
-  const nationalParks = unfilteredParks.data.filter((element) => 
+  const nationalParks = unfilteredParks.data.filter((element) =>
     element.designation.includes("National Park") ||
     element.fullName.includes("Redwood") ||
     element.fullName.includes("American Samoa")

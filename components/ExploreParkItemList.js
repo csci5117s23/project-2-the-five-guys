@@ -2,9 +2,10 @@ import ExploreParkItem from "./ExploreParkItem";
 import { ListItem, Grid } from "@mui/material";
 import abbrState from "../modules/util";
 
-export default function ExploreParkItemList(props) {  
+export default function ExploreParkItemList(props) {
   let nationalParks = props.nationalParks;
   let visitedParks = props.visitedParks;
+  let filterVisited = props.filterVisited;
   const searchValue = props.searchValue.toLowerCase();
 
   // Callback function to filter parks by both the states they are
@@ -26,10 +27,11 @@ export default function ExploreParkItemList(props) {
   if(searchValue.length > 0){
     const result = nationalParks.filter(filterElements);
     nationalParks = result;
-  } 
+  }
 
   // Build list of parks using MUI Grid component
   const parkList = nationalParks.map((park, index)=> {
+    if (filterVisited && !visitedParks.includes(park.id)) return;
     return(
       <Grid item xs={12} md={6} key={index}>
         <ExploreParkItem nationalPark={park} visited={visitedParks ? visitedParks.includes(park.id) : false}/>
