@@ -46,7 +46,8 @@ export default function NationalParkItem(props)
       const {image} = props
       return(
         <>
-          {image && (<Modal
+          {image && (
+          <Modal
             open={modalOpen}
             onClose={closeImageModal}
             style={{borderRadius: '1rem'}}
@@ -58,8 +59,9 @@ export default function NationalParkItem(props)
               <div style={{height: '40vw', width: '70vw', position: 'relative'}}>
                 <Image
                   src={image.url}
-                  layout='fill'
+                  fill
                   objectFit='contain'
+                  alt={image.alt}
                 />
               </div>
               <div style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem', marginBotton: '1rem', maxWidth: 720}}>
@@ -84,7 +86,8 @@ export default function NationalParkItem(props)
                 </Accordion>
               </div>
             </Box>
-          </Modal>)}
+          </Modal>
+          )}
         </>
       )
   }
@@ -104,7 +107,7 @@ export default function NationalParkItem(props)
           <div style={{fontSize:"1.1rem"}}> Located in: {statesList.join(', ')} </div>
 
           {/* Link to official park page */}
-          <div div style={{fontSize:"1.1rem"}}> <Link style={{color: "#1B742E"}} href={nationalPark.url}>Official Park Page</Link> </div>
+          <div style={{fontSize:"1.1rem"}}> <Link style={{color: "#1B742E"}} href={nationalPark.url}>Official Park Page</Link> </div>
         </Stack>
 
         <div>
@@ -117,11 +120,12 @@ export default function NationalParkItem(props)
                     return(
                       <>
                         <div key={index}>
-                          <img className="carouselImage" src={image.url} alt={image.title} onClick={() => openImageModal(image)}/>
+                          <img className="carouselImage" src={image.url} alt={image.title} loading='lazy' onClick={() => openImageModal(image)}/>
+                          {/* <Image src={image.url} alt={image.alt} fill style={{ objectFit: 'cover' }}  onClick={() => openImageModal(image)}/> */}
                           <Stack direction="column">
                             <div style={{paddingLeft: "1rem", fontSize: "1.3rem"}}>{image.title}</div>
                             <div style={{paddingLeft: "1rem", fontSize: ".8rem"}}>{image.credit}</div>
-                            {/* <div style={{paddingLeft: "1rem"}}>{image.description}</div> */}
+                            <div style={{paddingLeft: "1rem"}}>{image.description}</div>
                           </Stack>
                         </div>
                         <ImageModal image={modalImage} />

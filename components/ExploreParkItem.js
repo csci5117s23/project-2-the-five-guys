@@ -25,6 +25,7 @@ export default function ExploreParkItem(props) {
           <CardMedia
             component='img'
             height='140'
+            loading='lazy'
             image={nationalPark.images[0].url}
             alt={nationalPark.images[0].alt}
           />

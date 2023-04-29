@@ -15,6 +15,7 @@ export default function TripCard({ trip }) {
         <CardMedia
           component="img"
           height="140"
+          loading="lazy"
           image={trip.imageUrl}
           alt="trip image"
         />
