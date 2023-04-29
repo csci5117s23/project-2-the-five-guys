@@ -16,10 +16,12 @@ export default function ExploreParkItemList(props) {
       return abbrState(state);
     });
 
-    return element.name.toLowerCase().includes(searchValue) ||
-            statesList.some(function(elem) {
-              return elem.toLowerCase().includes(searchValue);
-            });
+    return (
+      element.name.toLowerCase().includes(searchValue) ||
+      statesList.some(function(elem) {
+        return elem.toLowerCase().includes(searchValue);
+      })
+    );
   }
 
   // Filter national parks by search item
@@ -32,6 +34,7 @@ export default function ExploreParkItemList(props) {
   const parkList = nationalParks.map((park, index)=> {
     return(
       <Grid item xs={12} md={6} key={index}>
+        {/* TODO: might have to fix following line that checks whether visitedParks contains the park id */}
         <ExploreParkItem nationalPark={park} visited={visitedParks ? visitedParks.includes(park.id) : false}/>
       </Grid>
     );

@@ -60,7 +60,7 @@ export default function NationalParkItem(props)
                 <Image
                   src={image.url}
                   fill
-                  objectFit='contain'
+                  style={{ objectFit: 'contain' }}
                   alt={image.alt}
                 />
               </div>

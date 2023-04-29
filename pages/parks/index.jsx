@@ -30,6 +30,10 @@ export default function Home({ nationalParks }) {
       // Grab all trips and store in visited parks array
       const token = await getToken({ template: "codehooks" });
       const visits = await fetchVisitedParks(userId, token);
+      // Index 0 = national park ID
+      // Index 1 = start date
+      // Index 2 = end date
+      // Index 3 = trip id
       setVisitedParks(visits);
       setLoading(false);
     }

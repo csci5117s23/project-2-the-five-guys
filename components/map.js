@@ -85,7 +85,17 @@ export default function MapComponent(props)
           </Alert>
       </div>
       )}
-    <MapContainer className='mapContainer' center={[userLocation.coords.latitude, userLocation.coords.longitude]} zoom={6} scrollWheelZoom={true} bounds={bounds} maxBounds={bounds} maxBoundsViscosity={1.0} minZoom={4} maxZoom={8}>
+    <MapContainer 
+      className='mapContainer' 
+      center={[userLocation.coords.latitude, userLocation.coords.longitude]} 
+      zoom={6} 
+      scrollWheelZoom={true} 
+      bounds={bounds} 
+      maxBounds={bounds} 
+      maxBoundsViscosity={1.0} 
+      minZoom={4} 
+      maxZoom={8}
+    >
       {!userLocation && (<SetUserLocation/>)}
       <TileLayer
         //using OSM for map
@@ -109,10 +119,10 @@ export default function MapComponent(props)
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description">
                   <Box className="modalContentsContainer">
-                   <IconButton aria-label="back" size='large' onClick={() => handleClose()}>
-                      <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
-                   </IconButton>
-                    <NationalParkItem nationalPark={selectedPark}></NationalParkItem>
+                    <IconButton aria-label="back" size='large' onClick={() => handleClose()}>
+                        <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
+                    </IconButton>
+                    <NationalParkItem nationalPark={selectedPark} />
                   </Box>
             </Modal>
           </Popup>

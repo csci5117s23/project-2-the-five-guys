@@ -6,9 +6,37 @@ import { getNationalParks } from '@/modules/requests';
 import RedirectToHome from '@/components/RedirectToHome';
 import { CircularProgress, IconButton } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useAuth } from "@clerk/nextjs";
+import { fetchVisitedParks } from "../../modules/data";
 
 export default function Home({ park }) {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const { userId, getToken } = useAuth();
+  const [visitedParks, setVisitedParks] = useState([]);
+
+  // Grab data pertaining to which parks this user has visited
+  useEffect(() => {
+    async function grabTrips(){
+      // Grab all trips and store in visited parks array
+      const token = await getToken({ template: "codehooks" });
+      const visits = await fetchVisitedParks(userId, token);
+      setVisitedParks(visits);
+      setLoading(false);
+    }
+    grabTrips();
+  }, [loading]);
+
+  // If loading, return loading screen
+  if(loading){
+    return (
+      <div className='centered'>
+          <CircularProgress style={{color: "#1B742E"}}/>
+          <div>Loading {park.fullName}...</div>
+      </div>
+    );
+  }
+
   return (
     <>
       <SignedIn>
