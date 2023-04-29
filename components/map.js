@@ -57,7 +57,7 @@ export default function MapComponent(props)
     {
       //if user location is out of map bounds give error popup
       if(userLocation.coords.latitude < usLatLongMin[0] || userLocation.coords.longitude < usLatLongMin[1]
-        || userLocation.coords.latitude > usLatLongMax[0] || userLocation.coords.longitude[1])
+        || userLocation.coords.latitude > usLatLongMax[0] || userLocation.coords.longitude > usLatLongMax[1])
       {
         const msg = {message: 'Outside of map bounds'}
         setErrorMessage(msg);
