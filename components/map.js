@@ -52,6 +52,20 @@ export default function MapComponent(props)
     errorPopupShow(true);
   }, [errorMessage])
 
+  useEffect(() => {
+    if(userLocation)
+    {
+      //if user location is out of map bounds give error popup
+      if(userLocation.coords.latitude < usLatLongMin[0] || userLocation.coords.longitude < usLatLongMin[1]
+        || userLocation.coords.latitude > usLatLongMax[0] || userLocation.coords.longitude > usLatLongMax[1])
+      {
+        const msg = {message: 'Outside of map bounds'}
+        setErrorMessage(msg);
+        errorPopupShow(true);
+      }
+    }
+  }, [userLocation])
+
   function SetUserLocation() {
     const map = useMap();
     let userLatLong = [userLocation.coords.latitude, userLocation.coords.longitude];
@@ -75,6 +89,7 @@ export default function MapComponent(props)
       </div>
       )
   }
+
   return (
     <>
     {errorPopup && errorMessage && (
