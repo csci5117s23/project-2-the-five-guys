@@ -11,7 +11,7 @@ import { formatDate } from "../modules/util";
 export default function TripCard({ trip }) {
   return (
     <Card>
-      <CardActionArea component={Link} href={`/trip/${trip._id}`}>
+      <CardActionArea component={Link} href={`/trips/${trip._id}`}>
         <CardMedia
           component="img"
           height="140"
