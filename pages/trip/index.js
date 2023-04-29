@@ -11,10 +11,10 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { fetchItemData } from "../../modules/data";
 import { useRouter } from "next/router";
-import dayjs from 'dayjs';
+import dayjs from "dayjs";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -24,29 +24,29 @@ export default function Home() {
   const [overallStartDate, setOverallStartDate] = useState("");
   const [overallEndDate, setOverallEndDate] = useState("");
   const [onOpenEditName, setOnOpenEditName] = useState(false);
-  const [newStartDate, setNewStartDate]= useState(null);
-  const [newEndDate, setNewEndDate]= useState(null);
-  const [newTitle, setNewTitle]= useState("");
+  const [newStartDate, setNewStartDate] = useState(null);
+  const [newEndDate, setNewEndDate] = useState(null);
+  const [newTitle, setNewTitle] = useState("");
   const [title, setTitle] = useState("");
   const [newUpdate, setNewUpdate] = useState(false);
 
   const [trip, setTrip] = useState(null);
   const router = useRouter();
 
-   // closes the editor for name,startDate,endDate
-  function handleCloseEditName(){
+  // closes the editor for name,startDate,endDate
+  function handleCloseEditName() {
     setOnOpenEditName(false);
   }
 
   // opens the editor for name,startDate,endDate
-  function handleOpenEditName(){
+  function handleOpenEditName() {
     setOnOpenEditName(true);
   }
 
-//updates database with PATCH request for startDate, endDate, title. Updates after a second or two (on reload)
-  async function handleSubmitEditName(){
+  //updates database with PATCH request for startDate, endDate, title. Updates after a second or two (on reload)
+  async function handleSubmitEditName() {
     const token = await getToken({ template: "codehooks" });
-    const result = await updateTrip(token, trip._id, {"title": newTitle, "startDate": newStartDate, "endDate": newEndDate});
+    const result = await updateTrip(token, trip._id, { title: newTitle, startDate: newStartDate, endDate: newEndDate });
     setOnOpenEditName(false);
     setNewUpdate(true);
   }
@@ -57,43 +57,50 @@ export default function Home() {
     async function loadData() {
       // console.log("userid: ", userId);
       if (!userId) {
+        console.log("No token");
         return;
       }
-      // console.log("userid: ", userId);
+      console.log("userid: ", userId);
       const token = await getToken({ template: "codehooks" });
-      // console.log("Token: ", token);
+      console.log("Token: ", token);
       let data = await getNationalParks();
+      // console.log("Data: ", data);
+
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
       //Need to update this to get the id of the trip from the route
       // const tripId = router.query["id"];
       //User this dummyID for testing purposes with itinerary until event page is up
-      const tripId = "64497f1316fe241ec4eb59c5";
+      const tripId = "64496dabe30f5119ffa72a9b";
       // console.log("trip id: ", tripId);
       await fetchItemData(userId, tripId, setTrip, token);
       setNationalParks(filteredParks);
       setNewUpdate(false);
-      
     }
     loadData();
   }, [userId, newUpdate]);
 
   useEffect(() => {
-    if(trip){
+    if (trip) {
       // set trip hooks if title is not null
-      if(trip.title){
+      if (trip.title) {
         setTitle(trip.title);
         setNewTitle(trip.title);
       }
+
+      const startDate = new Date(trip.startDate);
+      const endDate = new Date(trip.endDate);
+      const formattedStartDate = startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+      const formattedEndDate = endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+
       // set all the date hooks
-      setOverallStartDate(trip.startDate);
+      setOverallStartDate(formattedStartDate);
       setNewStartDate(trip.startDate);
-      setOverallEndDate(trip.endDate);
+      setOverallEndDate(formattedEndDate);
       setNewEndDate(trip.endDate);
 
       setLoading(false);
     }
   }, [trip]);
-
 
   // Return loading text if currently loading
   if (loading) {
@@ -130,12 +137,16 @@ export default function Home() {
             <Grid item xs={2}>
               {" "}
               {/* <EditIcon className={myTripStyles.edit} /> */}
-              <IconButton className={myTripStyles.edit} onClick={handleOpenEditName}><EditIcon/></IconButton>
+              <IconButton className={myTripStyles.edit} onClick={handleOpenEditName}>
+                <EditIcon />
+              </IconButton>
             </Grid>
             <Grid item xs={2}>
               {" "}
               {/* Need to edit this later so that there is a link to the add events page */}
-              <IconButton className={myTripStyles.edit}><AddIcon/></IconButton>
+              <IconButton className={myTripStyles.edit}>
+                <AddIcon />
+              </IconButton>
             </Grid>
           </Grid>
         </Box>
@@ -165,28 +176,12 @@ export default function Home() {
           <DialogTitle>Edit Trip Details</DialogTitle>
           <DialogContent>
             {/* <DialogContentText> */}
-              {/* Edit Trip Details
+            {/* Edit Trip Details
             </DialogContentText> */}
             <Stack spacing={2} pt={1}>
-              <TextField
-                id="name"
-                label="New Title"
-                fullWidth
-                value={newTitle}
-                onChange={event => setNewTitle(event.target.value)}
-              />
-              <DatePicker
-                label="Start Date"
-                fullWidth
-                value={dayjs(overallStartDate)}
-                onChange={(newValue) => setNewStartDate(newValue.toJSON())}
-              />
-              <DatePicker
-                label="End Date"
-                fullWidth
-                value={dayjs(overallEndDate)}
-                onChange={(newValue) => setNewEndDate(newValue.toJSON())}
-              />
+              <TextField id="name" label="New Title" fullWidth value={newTitle} onChange={(event) => setNewTitle(event.target.value)} />
+              <DatePicker label="Start Date" fullWidth value={dayjs(overallStartDate)} onChange={(newValue) => setNewStartDate(newValue.toJSON())} />
+              <DatePicker label="End Date" fullWidth value={dayjs(overallEndDate)} onChange={(newValue) => setNewEndDate(newValue.toJSON())} />
             </Stack>
           </DialogContent>
           <DialogActions>
