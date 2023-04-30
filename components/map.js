@@ -138,22 +138,22 @@ export default function MapComponent(props)
         <Marker key={park.id} position={[park.latitude, park.longitude]} icon={divIcon({
           className: 'icon',
           html: ReactDOMServer.renderToString(
-            <MapIcon parkInfo={park}/>
+            <MapIcon parkInfo={park} visitedParks={visitedParks} />
           )
         })}>
           <Popup>
-           <Button style={{color: "#1B742E"}} onClick={() => handleOpen(park)}>{park.name}</Button>
-              <Modal
-                  open={modalOpen}
-                  onClose={() => handleClose()}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description">
-                  <Box className="modalContentsContainer">
-                    <IconButton aria-label="back" size='large' onClick={() => handleClose()}>
-                        <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
-                    </IconButton>
-                    <NationalParkItem nationalPark={selectedPark} tripId={tripId}/>
-                  </Box>
+            <Button style={{color: "#1B742E"}} onClick={() => handleOpen(park)}>{park.name}</Button>
+            <Modal
+              open={modalOpen}
+              onClose={() => handleClose()}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description">
+              <Box className="modalContentsContainer">
+                <IconButton aria-label="back" size='large' onClick={() => handleClose()}>
+                  <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
+                </IconButton>
+                <NationalParkItem nationalPark={selectedPark} tripId={tripId}/>
+              </Box>
             </Modal>
           </Popup>
         </Marker>

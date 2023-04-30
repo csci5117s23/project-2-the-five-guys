@@ -4,6 +4,7 @@ import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
 import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import dynamic from "next/dynamic";
+import ShareComponent from "@/components/ShareComponent"
 import myTripStyles from "@/styles/MyTrip.module.css";
 import ItineraryList from "@/components/itineraryList";
 import EditIcon from "@mui/icons-material/Edit";
@@ -31,6 +32,7 @@ export default function Home() {
   const [newUpdate, setNewUpdate] = useState(false);
   const [tripId, setTripId] = useState("");
   const [deleting, setDeleting]=useState(false);
+  const [park, setPark]=useState(null);
 
   const [trip, setTrip] = useState(null);
   const router = useRouter();
@@ -110,8 +112,14 @@ export default function Home() {
   }, [userId, newUpdate]);
 
   useEffect(() => {
-    if (trip) {
-      // set trip hooks if title is not null      
+    if (trip && nationalParks) {
+      nationalParks.map(np => {
+        // console.log(np.id);
+        if(np.id == trip.nationalPark_id){
+          setPark(np)
+        }
+      });  
+      // set trip hooks if title is not null
       if (trip.title) {
         setTitle(trip.title);
         setNewTitle(trip.title);
@@ -130,7 +138,7 @@ export default function Home() {
 
       setLoading(false);
     }
-  }, [trip]);
+  }, [trip, nationalParks]);
 
   // Return loading text if currently loading
   if (loading) {
@@ -212,6 +220,9 @@ export default function Home() {
         {pageView === "agenda" && 
           <div className={myTripStyles.myTrip}>
             {trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}
+            <div className={myTripStyles.deleteButtonWrapper}>
+              <ShareComponent start={overallStartDate} end={overallEndDate} trip={trip} park={park}/>
+            </div>
             <div className={myTripStyles.deleteButtonWrapper}>
               <Button variant="outlined" className={myTripStyles.deleteButton} onClick={handleDelete} startIcon={<DeleteIcon />}>
                       Delete Trip
