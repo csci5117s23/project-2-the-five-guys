@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useAuth } from "@clerk/nextjs";
 import { updateTrip } from "@/modules/requests";
 
-export default function ItineraryList({ itineraryList, tripId, loadData }) {
+export default function ItineraryList({ itineraryList, tripId, loadData, notes }) {
   const [days, setDays] = useState([]);
   const [day, setEditDay] = useState(-1);
   const [newDescription, setNewDescription] = useState("");
@@ -16,6 +16,7 @@ export default function ItineraryList({ itineraryList, tripId, loadData }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newUpdate, setNewUpdate] = useState(false);
   const { getToken } = useAuth();
+  const [newNotes, setNewNotes] = useState(notes);
 
   //closes the editor for itinerary's descriptions
   function handleCloseEditDescription() {
@@ -63,6 +64,17 @@ export default function ItineraryList({ itineraryList, tripId, loadData }) {
       setNewUpdate(true);
     } catch (error) {
       console.error("Delete error: ", error);
+    }
+  }
+
+  async function handleNotes() {
+    try {
+      const token = await getToken({ template: "codehooks" });
+
+      await updateTrip(token, tripId, { notes: newNotes });
+      setNewUpdate(true);
+    } catch (error) {
+      console.error("Notes error: ", error);
     }
   }
 
@@ -176,6 +188,8 @@ export default function ItineraryList({ itineraryList, tripId, loadData }) {
           </DialogActions>
         </Dialog>
       )}
+      <TextField label="Log the Trip!" multiline fullWidth value={newNotes} onChange={(e) => setNewNotes(e.target.value)} />
+      <Button onClick={() => handleNotes()}>Save</Button>
     </Stack>
   );
 }
