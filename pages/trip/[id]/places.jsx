@@ -10,7 +10,7 @@ import { ArrowBack } from "@mui/icons-material";
 import { useRouter } from "next/router";
 
 export default function Places({ parkPlaces, trip }) {
-  console.log(parkPlaces);
+  //console.log(parkPlaces);
   const [searchValue, setSearchValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -52,7 +52,7 @@ export default function Places({ parkPlaces, trip }) {
         description: dialogPlace.listDescription,
         location: dialogPlace.title,
         latitude: dialogPlace.latitude,
-        longtitude: dialogPlace.longtitude,
+        longitude: dialogPlace.longitude,
         startDate: startDate.toJSON(),
         endDate: endDate.toJSON()
       };

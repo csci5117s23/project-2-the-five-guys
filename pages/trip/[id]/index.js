@@ -4,14 +4,16 @@ import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
 import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Container, Typography, List, ListItem, Fab, Tabs, Tab } from "@mui/material";
 import dynamic from "next/dynamic";
+import ShareComponent from "@/components/ShareComponent"
 import myTripStyles from "@/styles/MyTrip.module.css";
-import ItineraryList from "../../../components/itineraryList";
+import ItineraryList from "@/components/itineraryList";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { fetchItemData } from "../../../modules/data";
+import { fetchItemData, deleteTrip } from "@/modules/data";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -31,6 +33,8 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [newUpdate, setNewUpdate] = useState(false);
   const [tripId, setTripId] = useState("");
+  const [deleting, setDeleting]=useState(false);
+  const [park, setPark]=useState(null);
   const [tab, setTab] = useState(0);
 
   const [trip, setTrip] = useState(null);
@@ -46,6 +50,13 @@ export default function Home() {
     setOnOpenEditName(true);
   }
 
+  async function handleDelete(){
+    const token = await getToken({ template: "codehooks" });
+    const result = await deleteTrip(token, trip._id);
+    setDeleting(true);
+    router.push("/trips");
+  }
+
   //updates database with PATCH request for startDate, endDate, title. Updates after a second or two (on reload)
   async function handleSubmitEditName() {
     const token = await getToken({ template: "codehooks" });
@@ -54,14 +65,13 @@ export default function Home() {
     setNewUpdate(true);
   }
   async function loadData() {
-    // console.log("userid: ", userId);
     if (!userId) {
       console.log("No token");
       return;
     }
-    console.log("userid: ", userId);
+    // console.log("userid: ", userId);
     const token = await getToken({ template: "codehooks" });
-    console.log("Token: ", token);
+    // console.log("Token: ", token);
     let data = await getNationalParks();
     // console.log("Data: ", data);
 
@@ -73,7 +83,7 @@ export default function Home() {
     // const tripId = "64496dabe30f5119ffa72a9b";
     // console.log("trip id: ", tripId);
     await fetchItemData(userId, tripId, setTrip, token);
-    console.log("New Trip check: ", trip);
+    // console.log("New Trip check: ", trip);
     setNationalParks(filteredParks);
     setNewUpdate(false);
   }
@@ -84,7 +94,7 @@ export default function Home() {
     async function loadData() {
       // console.log("userid: ", userId);
       if (!userId) {
-        console.log("NO USER ID");
+        // console.log("NO USER ID");
         return;
       }
       // console.log("userid: ", userId);
@@ -96,7 +106,7 @@ export default function Home() {
       const tripId = router.query["id"];
       //User this dummyID for testing purposes with itinerary until event page is up
       // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S
-      console.log("trip id: ", tripId);
+      // console.log("trip id: ", tripId);
       await fetchItemData(userId, tripId, setTrip, token);
       setNationalParks(filteredParks);
       setNewUpdate(false);
@@ -105,7 +115,13 @@ export default function Home() {
   }, [userId, newUpdate]);
 
   useEffect(() => {
-    if (trip) {
+    if (trip && nationalParks) {
+      nationalParks.map(np => {
+        // console.log(np.id);
+        if(np.id == trip.nationalPark_id){
+          setPark(np)
+        }
+      });
       // set trip hooks if title is not null
       if (trip.title) {
         setTitle(trip.title);
@@ -125,7 +141,7 @@ export default function Home() {
 
       setLoading(false);
     }
-  }, [trip]);
+  }, [trip, nationalParks]);
 
   // Return loading text if currently loading
   if (loading) {
@@ -136,19 +152,29 @@ export default function Home() {
       </div>
     );
   }
+  if (deleting) {
+    return (
+      <div className="centered">
+        <CircularProgress style={{ color: "#1B742E" }} />
+        <div>Deleting Trip...</div>
+      </div>
+    );
+  }
 
   //leaflet react doest work well with server side rendering(nextjs)
   //credit to fixing the issue: https://stackoverflow.com/questions/57704196/leaflet-with-next-js
   //answer is "answer for 2020"
-  const Map = dynamic(() => import("@/components/map"), {
-    loading: () => (
-      <div className="centered">
-        <CircularProgress style={{ color: "#1B742E" }} />
-        <div>Loading Map...</div>
-      </div>
-    ),
-    ssr: false, // line prevents server-side render
-  });
+  const ItineraryMap = dynamic(
+    () => import('@/components/itineraryMap'),
+    {
+      loading: () =>
+        <div className='centered'>
+          <CircularProgress style={{color: "#1B742E"}}/>
+          <div>Loading Map...</div>
+        </div>,
+      ssr: false // line prevents server-side render
+    }
+  )
 
   return (
     <>
@@ -180,10 +206,21 @@ export default function Home() {
           </Tabs>
 
           {/* If in agenda view, show itinerary */}
-          {tab === 0 && <div>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}</div>}
+          {tab === 0 &&
+          <div>
+            {trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}
+            <div className={myTripStyles.deleteButtonWrapper}>
+              <ShareComponent start={overallStartDate} end={overallEndDate} trip={trip} park={park}/>
+            </div>
+            <div className={myTripStyles.deleteButtonWrapper}>
+              <Button variant="outlined" className={myTripStyles.deleteButton} onClick={handleDelete} startIcon={<DeleteIcon />}>
+                      Delete Trip
+              </Button>
+            </div>
+          </div>}
 
           {/* If in map view, show map */}
-          {tab === 1 && <Map parks={nationalParks} />}
+          {tab === 1 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]}/>}
         </Container>
 
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>

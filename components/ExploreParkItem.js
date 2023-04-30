@@ -1,13 +1,14 @@
 import Link from 'next/link';
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Tooltip, Typography } from '@mui/material';
 import abbrState from '../modules/util';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EventNoteIcon from '@mui/icons-material/EventNote';
 import Image from 'next/image';
 import { useState } from 'react';
 
 export default function ExploreParkItem(props) {
-  // const [visited, setVisited] = useState(false);
   let visited = false;
+  let isPastTrip = false;
 
   // Set appropriate park link based on props
   const nationalPark = props.nationalPark;
@@ -21,13 +22,26 @@ export default function ExploreParkItem(props) {
   });
 
   // Check whether the user has visited this park
+  // If they have, check whether it is a past or upcoming trip
   if(visitedParks){
-    visited = visitedParks.some(visit => visit[0] === nationalPark.id);
+    const visit = visitedParks.find(visit => visit[0] === nationalPark.id);
+    if(visit){
+      visited = true;
+      if(Date.now() > new Date(visit[2]).getTime()){
+        isPastTrip = true;
+      }
+    }
   }
+
+  // Styling for explore park item depending on past or upcoming visit
+  const borderStyling={
+    border: (visited && isPastTrip) ? '1px solid #1B742E' : 
+            (visited && !isPastTrip) ? '1px solid gray' : ''
+  };
 
   return(
     <Link className='exploreParkLink' href={parkLink}>
-      <Card style={{ border: visited? '1px solid #1B742E' : '' }}>
+      <Card style={borderStyling}>
         <CardActionArea>
           {/* Main image of park */}
           <CardMedia
@@ -41,7 +55,17 @@ export default function ExploreParkItem(props) {
             <Typography variant='h5' component='div'>
               {nationalPark.name}
               { visited && (
-                <CheckCircleIcon color='primary' style={{ marginLeft: '5px' }} />
+                <>
+                  {isPastTrip ? (
+                    <Tooltip title='Past trip'>
+                      <CheckCircleIcon color='primary' style={{ marginLeft: '5px' }} />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip title='Upcoming trip'>
+                      <EventNoteIcon style={{ marginLeft: '5px', color: 'gray' }} />
+                    </Tooltip>
+                  )}
+                </>
               )}
             </Typography>
 
