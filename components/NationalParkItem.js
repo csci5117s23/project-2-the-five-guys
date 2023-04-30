@@ -18,7 +18,7 @@ export default function NationalParkItem(props)
 {
   const nationalPark = props.nationalPark;
   const tripId = props.tripId;
-  const tripLink = '/trips/' + tripId;
+  const tripLink = '/trip/' + tripId;
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const {userId, getToken } = useAuth();
