@@ -9,36 +9,33 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from "@clerk/nextjs";
 import { fetchVisitedParks } from "../../modules/data";
 
-export default function Home({ park, params }) {
+export default function Home({ park }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const { userId, getToken } = useAuth();
-  // const [visitedParks, setVisitedParks] = useState([]);
-  // const [visited, setVisited] = useState(false);
   const [tripId, setTripId] = useState(null);
-  console.log(userId);
 
   // Grab data pertaining to which parks this user has visited
   useEffect(() => {
     async function grabTrips(){
       // Grab all trips and store in visited parks array
       const token = await getToken({ template: "codehooks" });
-      console.log(token);
       const visits = await fetchVisitedParks(userId, token);
 
-      // Check whether the user has visited this park
-      for(const visit in visits) {
-        if(visit[0] === params.id){
-          setTripId(visit[3]);
-          break;
-        }
+      // Check whether the user has visited this park, 
+      // If they have, store that trip id 
+      if(visits){
+        const trip = visits.find(visit => visit[0] === park.id);
+        setTripId(trip[3]);
       }
 
-      // setVisitedParks(visits);
       setLoading(false);
     }
     grabTrips();
   }, [loading]);
+
+  console.log("TRIP ID");
+  console.log(tripId);
 
   // If loading, return loading screen
   if(loading){
@@ -56,7 +53,7 @@ export default function Home({ park, params }) {
         <IconButton aria-label="back" size="large" onClick={() => {router.back()}}>
           <ArrowBackIcon style={{fontSize: "3rem", color: "#1B742E"}}/>
         </IconButton>
-        <NationalParkItem nationalPark={park} tripId={tripId}/>
+        <NationalParkItem nationalPark={park} tripId={tripId}  />
       </SignedIn>
 
       <SignedOut>
@@ -95,5 +92,5 @@ export async function getStaticProps({ params }) {
   const park = filteredParks.find((park) => park.id === params.id);
 
   // Pass post data to the page via props
-  return { props: { park, params } }
+  return { props: { park } }
 }

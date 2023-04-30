@@ -11,21 +11,34 @@ import CloseIcon from '@mui/icons-material/Close';
 import abbrState from '../modules/util';
 import { useEffect } from 'react';
 import { useAuth } from '@clerk/nextjs';
+import { fetchItemData } from '../modules/data';
+import { formatDate } from '../modules/util';
 
 export default function NationalParkItem(props)
 {
   const nationalPark = props.nationalPark;
   const tripId = props.tripId;
+  const tripLink = '/trips/' + tripId;
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const {userId, getToken } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [tripData, setTripData] = useState(null);
   
   useEffect(() => {
     async function fetchTrip(){
-      const token = await
+      const token = await getToken({ template: "codehooks" });
+      const trip = await fetchItemData(userId, tripId, setTripData, token);
+      setLoading(false);
     }
-    fetchTrip();
-  }, []);
+    if(tripId){
+      fetchTrip();
+    } else {
+      setLoading(false);
+    }
+  }, [loading]);
+
+  console.log(tripData);
 
   const ParkMap = dynamic(
     () => import('@/components/parkMap'),
@@ -113,7 +126,15 @@ export default function NationalParkItem(props)
         <Stack style={{fontSize:"1.3rem"}} spacing={2}>
           {/* Link to most recent trip to park */}
           {tripId && (
-            <div className='parkName'> {tripId} </div>
+            <>
+              <div className='parkName'> 
+                Previous Visit: 
+                <br />
+                <Link className='exploreParkLink' href={tripLink}>
+                  {formatDate(tripData.startDate)} - {formatDate(tripData.endDate)}
+                </Link>
+              </div>
+            </>
           )}
 
           {/* Description of park from API */}
