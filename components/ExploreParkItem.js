@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Tooltip, Typography } from '@mui/material';
 import abbrState from '../modules/util';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import EventNoteIcon from '@mui/icons-material/EventNote';
@@ -57,9 +57,13 @@ export default function ExploreParkItem(props) {
               { visited && (
                 <>
                   {isPastTrip ? (
-                    <CheckCircleIcon color='primary' style={{ marginLeft: '5px' }} />
+                    <Tooltip title='Past trip'>
+                      <CheckCircleIcon color='primary' style={{ marginLeft: '5px' }} />
+                    </Tooltip>
                   ) : (
-                    <EventNoteIcon style={{ marginLeft: '5px', color: 'gray' }} />
+                    <Tooltip title='Upcoming trip'>
+                      <EventNoteIcon style={{ marginLeft: '5px', color: 'gray' }} />
+                    </Tooltip>
                   )}
                 </>
               )}
