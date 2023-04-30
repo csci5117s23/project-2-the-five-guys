@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useAuth } from "@clerk/nextjs";
 import { updateTrip } from "@/modules/requests";
 
-export default function ItineraryList({ itineraryList, tripId }) {
+export default function ItineraryList({ itineraryList, tripId, loadData }) {
   const [days, setDays] = useState([]);
   const [day, setEditDay] = useState(-1);
   const [newDescription, setNewDescription] = useState("");
@@ -29,14 +29,14 @@ export default function ItineraryList({ itineraryList, tripId }) {
   }
 
   //updates database with PATCH request for itinerary's descriptions. Updates after a second or two (on reload)
-  async function handleSubmitEditDescription(day, description) {
+  async function handleSubmitEditDescription(daytoUpdate, description) {
     try {
       const token = await getToken({ template: "codehooks" });
-      const updatedItinerary = newItinerary.map((event, index) => {
-        if (index === day) {
-          return { ...event, description };
+      const updatedItinerary = newItinerary.map((day) => {
+        if (day.id === daytoUpdate) {
+          return { ...day, description };
         }
-        return event;
+        return day;
       });
       await updateTrip(token, tripId, { itinerary: updatedItinerary });
       console.log("Updated itenrary: ", updatedItinerary);
@@ -49,16 +49,16 @@ export default function ItineraryList({ itineraryList, tripId }) {
     }
   }
 
-  async function handleDeleteDay(day) {
+  async function handleDeleteDay(dayToDelete) {
     try {
       const token = await getToken({ template: "codehooks" });
-      console.log("Day: ", day);
 
-      const updatedItinerary = newItinerary.filter((_, index) => index !== day);
+      console.log("Day to delete: ", dayToDelete);
+
+      const updatedItinerary = newItinerary.filter((day) => (console.log("Day Id check: ", day.id), day.id !== dayToDelete));
+
+      await updateTrip(token, tripId, { itinerary: updatedItinerary });
       console.log("Updated Itinerary: ", updatedItinerary);
-
-      const result = await updateTrip(token, tripId, { itinerary: updatedItinerary });
-      console.log("Updated itenrary: ", updatedItinerary);
       setNewItinerary(updatedItinerary);
       setNewUpdate(true);
     } catch (error) {
@@ -68,6 +68,10 @@ export default function ItineraryList({ itineraryList, tripId }) {
 
   useEffect(() => {
     console.log("updated value check: ", newUpdate);
+    console.log("new itinerary check: ", newItinerary);
+
+    loadData();
+
     setNewUpdate(false);
     async function extractDays() {
       console.log("Itinerary list: ", newItinerary);
@@ -93,8 +97,9 @@ export default function ItineraryList({ itineraryList, tripId }) {
       setNewItinerary(sortedItinerary);
 
       const updatedDays = Object.keys(sortedItinerary).map((day) => {
-        console.log("Day: ", typeof day);
+        // console.log("Day: ", typeof day);
         const dayInt = parseInt(day);
+        const dayId = sortedItinerary[day].id;
         setEditDay(dayInt);
         const startDate = new Date(sortedItinerary[dayInt].startDate);
         const endDate = new Date(sortedItinerary[dayInt].endDate);
@@ -113,7 +118,7 @@ export default function ItineraryList({ itineraryList, tripId }) {
                     </Typography>
                   </Grid>
                   <Grid item xs={1}>
-                    <IconButton onClick={() => handleDeleteDay(dayInt)}>
+                    <IconButton onClick={() => handleDeleteDay(dayId)}>
                       <DeleteIcon />
                     </IconButton>
                   </Grid>
@@ -135,7 +140,7 @@ export default function ItineraryList({ itineraryList, tripId }) {
                         </AccordionDetails>
                       </Grid>
                       <Grid item xs={1}>
-                        <IconButton onClick={() => handleOpenEditDescription(dayInt)}>
+                        <IconButton onClick={() => handleOpenEditDescription(dayId)}>
                           <EditIcon />
                         </IconButton>
                       </Grid>
@@ -160,8 +165,6 @@ export default function ItineraryList({ itineraryList, tripId }) {
           <DialogTitle>Edit Itinerary Description</DialogTitle>
           <DialogContent>
             {console.log("Day check: ", day)}
-            {console.log("Event check: ", newItinerary)}
-            {console.log("Event day check: ", newItinerary[day])}
             {console.log("New Description: ", newDescription)}
             <Stack spacing={2} pt={1}>
               <TextField label="New Description" multiline fullWidth value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />

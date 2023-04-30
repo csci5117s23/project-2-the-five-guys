@@ -51,33 +51,34 @@ export default function Home() {
     setOnOpenEditName(false);
     setNewUpdate(true);
   }
+  async function loadData() {
+    // console.log("userid: ", userId);
+    if (!userId) {
+      console.log("No token");
+      return;
+    }
+    console.log("userid: ", userId);
+    const token = await getToken({ template: "codehooks" });
+    console.log("Token: ", token);
+    let data = await getNationalParks();
+    // console.log("Data: ", data);
+
+    let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
+    //Need to update this to get the id of the trip from the route
+    const tripId = router.query["id"];
+    setTripId(tripId);
+    //User this dummyID for testing purposes with itinerary until event page is up
+    // const tripId = "64496dabe30f5119ffa72a9b";
+    // console.log("trip id: ", tripId);
+    await fetchItemData(userId, tripId, setTrip, token);
+    console.log("New Trip check: ", trip);
+    setNationalParks(filteredParks);
+    setNewUpdate(false);
+  }
 
   // Grab national park data from National Park Service API
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
   useEffect(() => {
-    async function loadData() {
-      // console.log("userid: ", userId);
-      if (!userId) {
-        console.log("No token");
-        return;
-      }
-      console.log("userid: ", userId);
-      const token = await getToken({ template: "codehooks" });
-      console.log("Token: ", token);
-      let data = await getNationalParks();
-      // console.log("Data: ", data);
-
-      let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
-      //Need to update this to get the id of the trip from the route
-      const tripId = router.query["id"];
-      setTripId(tripId);
-      //User this dummyID for testing purposes with itinerary until event page is up
-      // const tripId = "64496dabe30f5119ffa72a9b";
-      // console.log("trip id: ", tripId);
-      await fetchItemData(userId, tripId, setTrip, token);
-      setNationalParks(filteredParks);
-      setNewUpdate(false);
-    }
     loadData();
   }, [userId, newUpdate]);
 
@@ -170,7 +171,7 @@ export default function Home() {
         </div>
 
         {/* If in agenda view, show itinerary */}
-        {pageView === "agenda" && <div className={myTripStyles.myTrip}>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} /> : <h2>No Agenda!</h2>}</div>}
+        {pageView === "agenda" && <div className={myTripStyles.myTrip}>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} /> : <h2>No Agenda!</h2>}</div>}
 
         {/* If in map view, show map */}
         {pageView === "map" && <Map parks={nationalParks} />}
