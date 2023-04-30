@@ -31,6 +31,7 @@ export default function TripListPage({ parks }) {
   const [trips, setTrips] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [park, setPark] = useState(null);
+  const [name, setName] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [error, setError] = useState(null);
@@ -59,10 +60,11 @@ export default function TripListPage({ parks }) {
   };
 
   const handleSubmit = async () => {
-    if (park && startDate && endDate) {
+    if (park && startDate && endDate && name) {
       const trip = {
         nationalPark_id: park.id,
         parkCode: park.parkCode,
+        title: name,
         startDate: startDate.toJSON(),
         endDate: endDate.toJSON()
       };
@@ -128,6 +130,7 @@ export default function TripListPage({ parks }) {
           <DialogContent>
             {error && <Alert severity="error">{error}</Alert>}
             <Stack spacing={2} pt={1}>
+              <TextField label="Name" variant="outlined" value={name} onChange={(event) => setName(event.target.value)} fullWidth/>
               <Autocomplete
                 disablePortal
                 options={parks}
