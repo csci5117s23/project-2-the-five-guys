@@ -61,3 +61,13 @@ export async function updateParkItem(updatedTrip, authToken) {
   });
   return await response.json();
 }
+
+//delete a trip
+// delete trip with tripId
+export async function deleteTrip(authToken, tripId){
+  const response = await fetch(`${backend_base}/trips/${tripId}`, {
+      method: 'DELETE',
+      headers: {'Authorization': 'Bearer ' + authToken}
+  });
+  return await response.json();
+}

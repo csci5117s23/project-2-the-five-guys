@@ -1,7 +1,18 @@
-import { Card, CardActionArea, CardContent, CardMedia, Link, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, CardMedia, Link, Typography, IconButton, Box } from "@mui/material";
 import { formatDate } from "../modules/util";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useAuth } from "@clerk/nextjs";
+import { deleteTrip } from "@/modules/data";
 
-export default function TripCard({ trip }) {
+
+export default function TripCard({ trip, setReload }) {
+  const { isLoaded, userId, getToken } = useAuth();
+  async function handleDelete(){
+    const token = await getToken({ template: "codehooks" });
+    const result = await deleteTrip(token, trip._id);
+    setReload(true);
+  }
+
   return (
     <Card>
       <CardActionArea component={Link} href={`/trip/${trip._id}`}>
@@ -18,6 +29,11 @@ export default function TripCard({ trip }) {
           </Typography>
         </CardContent>
       </CardActionArea>
+      <Box m={1} display="flex" justifyContent="flex-end" alignItems="flex-end" >
+        <IconButton onClick={handleDelete}>
+          <DeleteIcon />
+        </IconButton>
+      </Box>
     </Card>
   );
 }

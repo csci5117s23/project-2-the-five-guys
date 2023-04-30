@@ -5,13 +5,14 @@ import RedirectToHome from "@/components/RedirectToHome";
 import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import dynamic from "next/dynamic";
 import myTripStyles from "@/styles/MyTrip.module.css";
-import ItineraryList from "../../../components/itineraryList";
+import ItineraryList from "@/components/itineraryList";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { fetchItemData } from "../../../modules/data";
+import { fetchItemData, deleteTrip } from "@/modules/data";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 
@@ -29,6 +30,7 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [newUpdate, setNewUpdate] = useState(false);
   const [tripId, setTripId] = useState("");
+  const [deleting, setDeleting]=useState(false);
 
   const [trip, setTrip] = useState(null);
   const router = useRouter();
@@ -43,6 +45,13 @@ export default function Home() {
     setOnOpenEditName(true);
   }
 
+  async function handleDelete(){
+    const token = await getToken({ template: "codehooks" });
+    const result = await deleteTrip(token, trip._id);
+    setDeleting(true);
+    router.push("/trips");
+  }
+
   //updates database with PATCH request for startDate, endDate, title. Updates after a second or two (on reload)
   async function handleSubmitEditName() {
     const token = await getToken({ template: "codehooks" });
@@ -51,14 +60,13 @@ export default function Home() {
     setNewUpdate(true);
   }
   async function loadData() {
-    // console.log("userid: ", userId);
     if (!userId) {
       console.log("No token");
       return;
     }
-    console.log("userid: ", userId);
+    // console.log("userid: ", userId);
     const token = await getToken({ template: "codehooks" });
-    console.log("Token: ", token);
+    // console.log("Token: ", token);
     let data = await getNationalParks();
     // console.log("Data: ", data);
 
@@ -70,7 +78,7 @@ export default function Home() {
     // const tripId = "64496dabe30f5119ffa72a9b";
     // console.log("trip id: ", tripId);
     await fetchItemData(userId, tripId, setTrip, token);
-    console.log("New Trip check: ", trip);
+    // console.log("New Trip check: ", trip);
     setNationalParks(filteredParks);
     setNewUpdate(false);
   }
@@ -81,7 +89,7 @@ export default function Home() {
     async function loadData() {
       // console.log("userid: ", userId);
       if (!userId) {
-        console.log("NO USER ID");
+        // console.log("NO USER ID");
         return;
       }
       // console.log("userid: ", userId);
@@ -93,7 +101,7 @@ export default function Home() {
       const tripId = router.query["id"];
       //User this dummyID for testing purposes with itinerary until event page is up
       // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S
-      console.log("trip id: ", tripId);
+      // console.log("trip id: ", tripId);
       await fetchItemData(userId, tripId, setTrip, token);
       setNationalParks(filteredParks);
       setNewUpdate(false);
@@ -130,6 +138,14 @@ export default function Home() {
       <div className="centered">
         <CircularProgress style={{ color: "#1B742E" }} />
         <div>Loading trip...</div>
+      </div>
+    );
+  }
+  if (deleting) {
+    return (
+      <div className="centered">
+        <CircularProgress style={{ color: "#1B742E" }} />
+        <div>Deleting Trip...</div>
       </div>
     );
   }
@@ -177,6 +193,7 @@ export default function Home() {
           {overallStartDate} - {overallEndDate}
         </h2>
 
+        <div className={myTripStyles.agendaWrapper}>
         {/* Buttons to toggle agenda or map view */}
         <div className={myTripStyles.myTrip}>
           <Button variant="outlined" onClick={() => setPageView("agenda")}>
@@ -190,7 +207,16 @@ export default function Home() {
         </div>
 
         {/* If in agenda view, show itinerary */}
-        {pageView === "agenda" && <div className={myTripStyles.myTrip}>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}</div>}
+        {pageView === "agenda" && 
+          <div className={myTripStyles.myTrip}>
+            {trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}
+            <div className={myTripStyles.deleteButtonWrapper}>
+              <Button variant="outlined" className={myTripStyles.deleteButton} onClick={handleDelete} startIcon={<DeleteIcon />}>
+                      Delete Trip
+              </Button>
+            </div>
+          </div>}
+          </div>
 
         {/* If in map view, show map */}
         {pageView === "map" && <Map parks={nationalParks} />}
