@@ -12,7 +12,6 @@ export default function ItineraryList({ itineraryList, tripId }) {
   const [days, setDays] = useState([]);
   const [day, setEditDay] = useState(-1);
   const [newDescription, setNewDescription] = useState("");
-  const [eventValues, setEvents] = useState([]);
   const [newItinerary, setNewItinerary] = useState(itineraryList);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newUpdate, setNewUpdate] = useState(false);
@@ -31,57 +30,49 @@ export default function ItineraryList({ itineraryList, tripId }) {
 
   //updates database with PATCH request for itinerary's descriptions. Updates after a second or two (on reload)
   async function handleSubmitEditDescription(day, description) {
-    const token = await getToken({ template: "codehooks" });
-
-    console.log("Submit day check: ", typeof day);
-    console.log("Submit description check: ", description);
-
-    const updatedItinerary = eventValues.map((event, index) => {
-      console.log("Index: ", index);
-      if (index === day) {
-        console.log("Event information checking: ", { ...event });
-        return { ...event, description };
-      }
-      console.log("Event information false");
-      return event;
-    });
-    console.log("Updated itinerary: ", updatedItinerary);
-    const result = await updateTrip(token, tripId, { itinerary: updatedItinerary });
-    setNewItinerary(updatedItinerary);
-    setDialogOpen(false);
-    setNewUpdate(true);
-    console.log("Update check: ", newUpdate);
-    setNewDescription("");
+    try {
+      const token = await getToken({ template: "codehooks" });
+      const updatedItinerary = newItinerary.map((event, index) => {
+        if (index === day) {
+          return { ...event, description };
+        }
+        return event;
+      });
+      await updateTrip(token, tripId, { itinerary: updatedItinerary });
+      console.log("Updated itenrary: ", updatedItinerary);
+      setNewItinerary(updatedItinerary);
+      setNewUpdate(true);
+      setDialogOpen(false);
+      setNewDescription("");
+    } catch (error) {
+      console.error("submit description error: ", error);
+    }
   }
 
   async function handleDeleteDay(day) {
-    const token = await getToken({ template: "codehooks" });
-    console.log("Day: ", day);
+    try {
+      const token = await getToken({ template: "codehooks" });
+      console.log("Day: ", day);
 
-    // console.log("Event values: ", eventValues);
-    console.log("Event values again: ", newItinerary);
+      const updatedItinerary = newItinerary.filter((_, index) => index !== day);
+      console.log("Updated Itinerary: ", updatedItinerary);
 
-    const updatedItinerary = newItinerary.filter((event, index) => {
-      if (index != day) {
-        return event;
-      } else {
-        return null;
-      }
-    });
-
-    console.log("Updated Itinerary: ", updatedItinerary);
-
-    const result = await updateTrip(token, tripId, { itinerary: updatedItinerary });
-    setNewItinerary(updatedItinerary);
-    setNewUpdate(true);
+      const result = await updateTrip(token, tripId, { itinerary: updatedItinerary });
+      console.log("Updated itenrary: ", updatedItinerary);
+      setNewItinerary(updatedItinerary);
+      setNewUpdate(true);
+    } catch (error) {
+      console.error("Delete error: ", error);
+    }
   }
 
   useEffect(() => {
     console.log("updated value check: ", newUpdate);
+    setNewUpdate(false);
     async function extractDays() {
       console.log("Itinerary list: ", newItinerary);
 
-      const events = Object.values(newItinerary).sort((a, b) => {
+      const sortedItinerary = Object.values(newItinerary).sort((a, b) => {
         const startDateA = new Date(a.startDate);
         const startDateB = new Date(b.startDate);
         const endDateA = new Date(a.endDate);
@@ -98,20 +89,21 @@ export default function ItineraryList({ itineraryList, tripId }) {
         return 0;
       });
 
-      console.log("Events check: ", events);
-      setEvents(events);
+      console.log("Events check: ", sortedItinerary);
+      setNewItinerary(sortedItinerary);
 
-      const updatedDays = Object.keys(events).map((day) => {
-        // console.log("Day: ", day);
-        setEditDay(day);
-        const startDate = new Date(events[day].startDate);
-        const endDate = new Date(events[day].endDate);
+      const updatedDays = Object.keys(sortedItinerary).map((day) => {
+        console.log("Day: ", typeof day);
+        const dayInt = parseInt(day);
+        setEditDay(dayInt);
+        const startDate = new Date(sortedItinerary[dayInt].startDate);
+        const endDate = new Date(sortedItinerary[dayInt].endDate);
         const formattedStartDate = startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
         const formattedStartTime = startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         const formattedEndDate = endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
         const formattedEndTime = endDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         return (
-          <Accordion key={day}>
+          <Accordion key={dayInt}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Box sx={{ flexGrow: 2 }}>
                 <Grid container spacing={2}>
@@ -121,7 +113,7 @@ export default function ItineraryList({ itineraryList, tripId }) {
                     </Typography>
                   </Grid>
                   <Grid item xs={1}>
-                    <IconButton onClick={() => handleDeleteDay(parseInt(day))}>
+                    <IconButton onClick={() => handleDeleteDay(dayInt)}>
                       <DeleteIcon />
                     </IconButton>
                   </Grid>
@@ -131,19 +123,19 @@ export default function ItineraryList({ itineraryList, tripId }) {
             </AccordionSummary>
             <AccordionDetails>
               <Stack spacing={2}>
-                <Accordion key={events[day].location}>
+                <Accordion key={sortedItinerary[dayInt].location}>
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{events[day].location}</Typography>
+                    <Typography>{sortedItinerary[dayInt].location}</Typography>
                   </AccordionSummary>
                   <Box sx={{ flexGrow: 2 }}>
                     <Grid container spacing={2}>
                       <Grid item xs={11}>
                         <AccordionDetails>
-                          <Typography>{events[day].description}</Typography>
+                          <Typography>{sortedItinerary[dayInt].description}</Typography>
                         </AccordionDetails>
                       </Grid>
                       <Grid item xs={1}>
-                        <IconButton onClick={() => handleOpenEditDescription(day)}>
+                        <IconButton onClick={() => handleOpenEditDescription(dayInt)}>
                           <EditIcon />
                         </IconButton>
                       </Grid>
@@ -168,8 +160,8 @@ export default function ItineraryList({ itineraryList, tripId }) {
           <DialogTitle>Edit Itinerary Description</DialogTitle>
           <DialogContent>
             {console.log("Day check: ", day)}
-            {console.log("Event check: ", eventValues)}
-            {console.log("Event day check: ", eventValues[day])}
+            {console.log("Event check: ", newItinerary)}
+            {console.log("Event day check: ", newItinerary[day])}
             {console.log("New Description: ", newDescription)}
             <Stack spacing={2} pt={1}>
               <TextField label="New Description" multiline fullWidth value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
@@ -177,7 +169,7 @@ export default function ItineraryList({ itineraryList, tripId }) {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseEditDescription}>Cancel</Button>
-            <Button onClick={() => handleSubmitEditDescription(parseInt(day), newDescription)}>Save</Button>
+            <Button onClick={() => handleSubmitEditDescription(day, newDescription)}>Save</Button>
           </DialogActions>
         </Dialog>
       )}
