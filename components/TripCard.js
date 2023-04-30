@@ -8,6 +8,9 @@ export default function TripCard({ trip }) {
         <CardMedia component="img" height="140" loading="lazy" image={trip.imageUrl} alt="trip image" />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" noWrap>
+            {trip.title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
             {trip.fullName}
           </Typography>
           <Typography variant="body2" color="text.secondary">
