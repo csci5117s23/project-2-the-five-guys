@@ -18,14 +18,12 @@ export default function NationalParkItem(props)
 {
   const nationalPark = props.nationalPark;
   const tripId = props.tripId;
-  const tripLink = '/trips/' + tripId;
+  const tripLink = '/trip/' + tripId;
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const {userId, getToken } = useAuth();
   const [loading, setLoading] = useState(true);
   const [tripData, setTripData] = useState(null);
-
-  console.log(tripId);
 
   useEffect(() => {
     async function fetchTrip(){
@@ -137,12 +135,25 @@ export default function NationalParkItem(props)
           {/* Link to most recent trip to park */}
           {tripData && (
             <>
-              <div className='parkName'> 
-                Previous Visit: 
-                <br />
-                <Link className='exploreParkLink' href={tripLink}>
-                  {formatDate(tripData.startDate)} - {formatDate(tripData.endDate)}
-                </Link>
+              <div className='parkAbout'> 
+                { Date.now() < new Date(tripData.endDate).getTime() ? (
+                  <>
+                    Upcoming Visit:&nbsp; 
+                  </>
+                ) : (
+                  <>
+                    Previous Visit:&nbsp;
+                  </>
+                )}
+                <span className='parkAbout'>
+                  <Link style={{ color: '#000' }} href={tripLink}>
+                    {tripData.title && (
+                      <>
+                        {tripData.title}
+                      </>
+                    )}
+                  </Link>
+                </span>
               </div>
             </>
           )}

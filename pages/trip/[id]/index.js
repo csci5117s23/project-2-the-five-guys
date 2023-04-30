@@ -5,13 +5,14 @@ import RedirectToHome from "@/components/RedirectToHome";
 import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import dynamic from "next/dynamic";
 import myTripStyles from "@/styles/MyTrip.module.css";
-import ItineraryList from "../../components/itineraryList";
+import ItineraryList from "@/components/itineraryList";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { fetchItemData } from "../../modules/data";
+import { fetchItemData, deleteTrip } from "@/modules/data";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 
@@ -29,6 +30,7 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [newUpdate, setNewUpdate] = useState(false);
   const [tripId, setTripId] = useState("");
+  const [deleting, setDeleting]=useState(false);
 
   const [trip, setTrip] = useState(null);
   const router = useRouter();
@@ -43,6 +45,13 @@ export default function Home() {
     setOnOpenEditName(true);
   }
 
+  async function handleDelete(){
+    const token = await getToken({ template: "codehooks" });
+    const result = await deleteTrip(token, trip._id);
+    setDeleting(true);
+    router.push("/trips");
+  }
+
   //updates database with PATCH request for startDate, endDate, title. Updates after a second or two (on reload)
   async function handleSubmitEditName() {
     const token = await getToken({ template: "codehooks" });
@@ -51,68 +60,76 @@ export default function Home() {
     setNewUpdate(true);
   }
   async function loadData() {
-    // console.log("userid: ", userId);
     if (!userId) {
       console.log("No token");
       return;
     }
-    console.log("userid: ", userId);
+    // console.log("userid: ", userId);
     const token = await getToken({ template: "codehooks" });
-    console.log("Token: ", token);
+    // console.log("Token: ", token);
     let data = await getNationalParks();
-    console.log("Data: ", data);
+    // console.log("Data: ", data);
 
+    let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
     //Need to update this to get the id of the trip from the route
     const tripId = router.query["id"];
     setTripId(tripId);
-
     //User this dummyID for testing purposes with itinerary until event page is up
     // const tripId = "64496dabe30f5119ffa72a9b";
     // console.log("trip id: ", tripId);
     await fetchItemData(userId, tripId, setTrip, token);
-    console.log("New Trip check: ", trip);
+    // console.log("New Trip check: ", trip);
+    setNationalParks(filteredParks);
     setNewUpdate(false);
   }
 
   // Grab national park data from National Park Service API
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
   useEffect(() => {
+    async function loadData() {
+      // console.log("userid: ", userId);
+      if (!userId) {
+        // console.log("NO USER ID");
+        return;
+      }
+      // console.log("userid: ", userId);
+      const token = await getToken({ template: "codehooks" });
+      // console.log("Token: ", token);
+      let data = await getNationalParks();
+      let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
+      //Need to update this to get the id of the trip from the route
+      const tripId = router.query["id"];
+      //User this dummyID for testing purposes with itinerary until event page is up
+      // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S
+      // console.log("trip id: ", tripId);
+      await fetchItemData(userId, tripId, setTrip, token);
+      setNationalParks(filteredParks);
+      setNewUpdate(false);
+    }
     loadData();
   }, [userId, newUpdate]);
 
   useEffect(() => {
-    async function loadTrip() {
-      if (trip) {
-        // set trip hooks if title is not null
-        if (trip.title) {
-          setTitle(trip.title);
-          setNewTitle(trip.title);
-        }
-
-        const token = await getToken({ template: "codehooks" });
-        console.log("Token: ", token);
-        let data = await getNationalParks();
-        console.log("Data: ", data);
-
-        let filteredParks = data.data.filter((element) => (console.log("Info: ", element.id, trip.nationalPark_id), element.id === trip.nationalPark_id));
-        console.log("filtered parks: ", filteredParks);
-        setNationalParks(filteredParks);
-
-        const startDate = new Date(trip.startDate);
-        const endDate = new Date(trip.endDate);
-        const formattedStartDate = startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-        const formattedEndDate = endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-
-        // set all the date hooks
-        setOverallStartDate(formattedStartDate);
-        setNewStartDate(trip.startDate);
-        setOverallEndDate(formattedEndDate);
-        setNewEndDate(trip.endDate);
-
-        setLoading(false);
+    if (trip) {
+      // set trip hooks if title is not null      
+      if (trip.title) {
+        setTitle(trip.title);
+        setNewTitle(trip.title);
       }
+
+      const startDate = new Date(trip.startDate);
+      const endDate = new Date(trip.endDate);
+      const formattedStartDate = startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+      const formattedEndDate = endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+
+      // set all the date hooks
+      setOverallStartDate(formattedStartDate);
+      setNewStartDate(trip.startDate);
+      setOverallEndDate(formattedEndDate);
+      setNewEndDate(trip.endDate);
+
+      setLoading(false);
     }
-    loadTrip();
   }, [trip]);
 
   // Return loading text if currently loading
@@ -124,19 +141,29 @@ export default function Home() {
       </div>
     );
   }
+  if (deleting) {
+    return (
+      <div className="centered">
+        <CircularProgress style={{ color: "#1B742E" }} />
+        <div>Deleting Trip...</div>
+      </div>
+    );
+  }
 
   //leaflet react doest work well with server side rendering(nextjs)
   //credit to fixing the issue: https://stackoverflow.com/questions/57704196/leaflet-with-next-js
   //answer is "answer for 2020"
-  const ParkMapComponent = dynamic(() => import("@/components/parkMap"), {
-    loading: () => (
-      <div className="centered">
-        <CircularProgress style={{ color: "#1B742E" }} />
-        <div>Loading Map...</div>
-      </div>
-    ),
-    ssr: false, // line prevents server-side render
-  });
+  const ItineraryMap = dynamic(
+    () => import('@/components/itineraryMap'),
+    {
+      loading: () =>
+        <div className='centered'>
+          <CircularProgress style={{color: "#1B742E"}}/>
+          <div>Loading Map...</div>
+        </div>,
+      ssr: false // line prevents server-side render
+    }
+  )
 
   return (
     <>
@@ -168,6 +195,7 @@ export default function Home() {
           {overallStartDate} - {overallEndDate}
         </h2>
 
+        <div className={myTripStyles.agendaWrapper}>
         {/* Buttons to toggle agenda or map view */}
         <div className={myTripStyles.myTrip}>
           <Button variant="outlined" onClick={() => setPageView("agenda")}>
@@ -181,10 +209,19 @@ export default function Home() {
         </div>
 
         {/* If in agenda view, show itinerary */}
-        {pageView === "agenda" && <div className={myTripStyles.myTrip}>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}</div>}
+        {pageView === "agenda" && 
+          <div className={myTripStyles.myTrip}>
+            {trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}
+            <div className={myTripStyles.deleteButtonWrapper}>
+              <Button variant="outlined" className={myTripStyles.deleteButton} onClick={handleDelete} startIcon={<DeleteIcon />}>
+                      Delete Trip
+              </Button>
+            </div>
+          </div>}
+          </div>
 
         {/* If in map view, show map */}
-        {pageView === "map" && <ParkMapComponent parks={nationalParks} />}
+        {pageView === "map" && trip.itinerary ? <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]}/> : <h2>No Agenda!</h2>}
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
           <DialogTitle>Edit Trip Details</DialogTitle>
           <DialogContent>

@@ -30,6 +30,14 @@ export async function getTrips(authToken) {
   return await response.json();
 }
 
+export async function getTrip(id, authToken) {
+  const response = await fetch(`${BASE_API_URL}/trips/${id}`, {
+      method:'GET',
+      headers: {'Authorization': 'Bearer ' + authToken}
+  });
+  return await response.json();
+}
+
 export async function createTrip(authToken, trip) {
   const response = await fetch(`${BASE_API_URL}/trips`, {
     method: "POST",

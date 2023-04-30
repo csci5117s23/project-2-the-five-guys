@@ -11,6 +11,7 @@ const tripYup = object({
   userId: string().required(),
   title: string(),
   nationalPark_id: string().required(),
+  parkCode: string().required(),
   startDate: date().required(),
   endDate: date().required(),
   notes: string(),
@@ -21,7 +22,7 @@ const tripYup = object({
       endDate: date().required(),
       description: string().required(),
       latitude: number(),
-      longtitude: number(),
+      longitude: number(),
       notes: string(),
       location: string(),
     })

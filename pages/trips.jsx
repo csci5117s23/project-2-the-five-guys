@@ -21,22 +21,23 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import Container from "@mui/material/Container";
 import { useState, useEffect } from "react";
-import { getNationalParks, getTrips, createTrip } from "../../modules/requests";
+import { getNationalParks, getTrips, createTrip } from "../modules/requests";
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
-import TripCard from "../../components/TripCard";
+import TripCard from "../components/TripCard";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function TripListPage({ parks }) {
   const [trips, setTrips] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [park, setPark] = useState(null);
+  const [name, setName] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { isLoaded, userId, getToken } = useAuth();
-
+  const [reload, setReload]= useState(false);
   useEffect(() => {
     const loadTrips = async () => {
       const token = await getToken({ template: "codehooks" });
@@ -47,7 +48,8 @@ export default function TripListPage({ parks }) {
       }
     };
     loadTrips();
-  }, [isLoaded, userId, getToken, parks]);
+    setReload(false);
+  }, [isLoaded, userId, getToken, parks, reload]);
 
   const handleClickOpen = () => {
     setDialogOpen(true);
@@ -59,9 +61,11 @@ export default function TripListPage({ parks }) {
   };
 
   const handleSubmit = async () => {
-    if (park && startDate && endDate) {
+    if (park && startDate && endDate && name) {
       const trip = {
         nationalPark_id: park.id,
+        parkCode: park.parkCode,
+        title: name,
         startDate: startDate.toJSON(),
         endDate: endDate.toJSON()
       };
@@ -113,7 +117,7 @@ export default function TripListPage({ parks }) {
                   <Grid container spacing={2} justifyContent="center">
                     {trips.map((trip) => (
                       <Grid item xs={12} md={6} key={trip._id}>
-                        <TripCard trip={trip} />
+                        <TripCard trip={trip} setReload={setReload}/>
                       </Grid>
                     ))}
                   </Grid>
@@ -127,6 +131,7 @@ export default function TripListPage({ parks }) {
           <DialogContent>
             {error && <Alert severity="error">{error}</Alert>}
             <Stack spacing={2} pt={1}>
+              <TextField label="Name" variant="outlined" value={name} onChange={(event) => setName(event.target.value)} fullWidth/>
               <Autocomplete
                 disablePortal
                 options={parks}
