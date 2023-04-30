@@ -1,16 +1,44 @@
-import { Accordion, AccordionDetails, AccordionSummary} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Modal, Box, Typography, IconButton, CircularProgress } from '@mui/material';
 import Stack from '@mui/joy/Stack';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Typography from '@mui/material/Typography';
 import Carousel from 'react-material-ui-carousel';
 import Skeleton from '@mui/material/Skeleton';
-import abbrState from './GetFullStateName';
+import { useState } from 'react';
+import Image from 'next/image';
+import CloseIcon from '@mui/icons-material/Close';
+import abbrState from '../modules/util';
+import { useEffect } from 'react';
+import { useAuth } from '@clerk/nextjs';
+import { fetchItemData } from '../modules/data';
+import { formatDate } from '../modules/util';
 
 export default function NationalParkItem(props)
 {
-  const {nationalPark} = props;
+  const nationalPark = props.nationalPark;
+  const tripId = props.tripId;
+  const tripLink = '/trips/' + tripId;
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalImage, setModalImage] = useState(null);
+  const {userId, getToken } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [tripData, setTripData] = useState(null);
+
+  console.log(tripId);
+
+  useEffect(() => {
+    async function fetchTrip(){
+      const token = await getToken({ template: "codehooks" });
+      const data = await fetchItemData(userId, tripId, setTripData, token);
+      setLoading(false);
+    }
+    if(tripId){
+      fetchTrip();
+    } else {
+      setLoading(false);
+    }
+  }, [loading]);
 
   const ParkMap = dynamic(
     () => import('@/components/parkMap'),
@@ -26,43 +54,130 @@ export default function NationalParkItem(props)
     return abbrState(state);
   });
 
+  function openImageModal(image)
+  {
+    setModalOpen(true);
+    setModalImage(image);
+  }
+
+  function closeImageModal()
+  {
+    setModalOpen(false);
+  }
+
+  function ImageModal(props)
+  {
+      const {image} = props
+      return(
+        <>
+          {image && (
+          <Modal
+            open={modalOpen}
+            onClose={closeImageModal}
+            style={{borderRadius: '1rem'}}
+          >
+            <Box className="imageModal">
+              <IconButton aria-label="back" size='large' onClick={() => closeImageModal()}>
+                  <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
+              </IconButton>
+              <div style={{height: '40vw', width: '70vw', position: 'relative'}}>
+                <Image
+                  src={image.url}
+                  fill
+                  style={{ objectFit: 'contain' }}
+                  alt={image.alt}
+                />
+              </div>
+              <div style={{marginLeft: 'auto', marginRight: 'auto', marginTop: '1rem', marginBotton: '1rem', maxWidth: 720}}>
+                <Accordion style={{border: "5px Solid #1B742E"}}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>
+                      <div style={{fontSize: '1rem'}}>
+                        {image.title}
+                      </div>
+                      <div style={{fontSize: '.7rem'}}>
+                        {image.credit}
+                      </div>
+                    </Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Stack spacing={1}>
+                      <div style={{fontSize: '.9rem'}}>
+                        {image.caption}
+                      </div>
+                    </Stack>
+                  </AccordionDetails>
+                </Accordion>
+              </div>
+            </Box>
+          </Modal>
+          )}
+        </>
+      )
+  }
+
+  // If loading, return loading screen
+  if(loading){
+    return (
+      <div className='centered'>
+          <CircularProgress style={{color: "#1B742E"}}/>
+          <div>Loading {nationalPark.fullName}...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="nationalParkItemContainer">
       <div className="nationalParkItemContents">
         {/* Name of park and map of noteworthy locations */}
         <div className='parkName'> {nationalPark.fullName} </div>
         <div> <ParkMap park={nationalPark}/> </div>
-
         
         <Stack style={{fontSize:"1.3rem"}} spacing={2}>
+          {/* Link to most recent trip to park */}
+          {tripData && (
+            <>
+              <div className='parkName'> 
+                Previous Visit: 
+                <br />
+                <Link className='exploreParkLink' href={tripLink}>
+                  {formatDate(tripData.startDate)} - {formatDate(tripData.endDate)}
+                </Link>
+              </div>
+            </>
+          )}
+
           {/* Description of park from API */}
           <div className='parkAbout'> About: </div>
           <div style={{fontSize:"1rem"}}> {nationalPark.description} </div>
           <div style={{fontSize:"1.1rem"}}> Located in: {statesList.join(', ')} </div>
 
           {/* Link to official park page */}
-          <div div style={{fontSize:"1.1rem"}}> <Link style={{color: "#1B742E"}} href={nationalPark.url}>Official Park Page</Link> </div>
+          <div style={{fontSize:"1.1rem"}}> <Link style={{color: "#1B742E"}} href={nationalPark.url}>Official Park Page</Link> </div>
         </Stack>
 
         <div>
           {/* Park images carousel */}
           <div className='parkItemImages'>
             <div className='imagesCarouselContainer'>
-              <Carousel className='imagesCarousel' animation='slide' swipe navButtonsAlwaysVisible>
+              <Carousel className='imagesCarousel' animation='slide' swipe navButtonsAlwaysVisible autoPlay='false'>
                 {
                   nationalPark.images.map((image, index) => {
                     return(
                       <>
                         <div key={index}>
-                          <img className="carouselImage" src={image.url} alt={image.title} />
+                          <img className="carouselImage" src={image.url} alt={image.title} loading='lazy' onClick={() => openImageModal(image)}/>
+                          {/* <Image src={image.url} alt={image.alt} fill style={{ objectFit: 'cover' }}  onClick={() => openImageModal(image)}/> */}
                           <Stack direction="column">
                             <div style={{paddingLeft: "1rem", fontSize: "1.3rem"}}>{image.title}</div>
                             <div style={{paddingLeft: "1rem", fontSize: ".8rem"}}>{image.credit}</div>
-                            {/* <div style={{paddingLeft: "1rem"}}>{image.description}</div> */}
+                            <div style={{paddingLeft: "1rem"}}>{image.description}</div>
                           </Stack>
                         </div>
+                        <ImageModal image={modalImage} />
                       </>
                     )
+                    
                   })
                 }
               </Carousel>

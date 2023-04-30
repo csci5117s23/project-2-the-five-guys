@@ -13,6 +13,23 @@ export async function fetchAllItems(userId, setData, authToken) {
   }
 }
 
+//fetch all visited parks
+export async function fetchVisitedParks(userId, authToken) {
+  if (userId) {
+    const response = await fetch(backend_base + `/trips?userId=${userId}&sort=-endDate`, {
+      method: "GET",
+      headers: { Authorization: "Bearer " + authToken, Accept: "application/json" },
+    });
+    let data = await response.json();
+
+    // Return required data from the response
+    data = data.map((item) => {
+      return [item.nationalPark_id, item.startDate, item.endDate, item._id];
+    });
+    return data;
+  }
+}
+
 //fetch data specific trip
 export async function fetchItemData(userId, tripId, setData, authToken) {
   if (userId && tripId) {

@@ -4,25 +4,23 @@ import { useRouter } from "next/router";
 import "purecss/build/pure.css";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import { Box, Paper, ThemeProvider, createTheme } from "@mui/material";
+import { AppBar, Box, Paper, ThemeProvider, createTheme } from "@mui/material";
 import { useState } from "react";
 import MapIcon from "@mui/icons-material/Map";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from "next/image";
 import ParkTrackLogo from "@/public/ParkTrack.png";
 import Head from "next/head";
+import Link from "next/link";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 export default function App({ Component, pageProps }) {
-  const [bottomChoice, setBottomChoice] = useState(0);
-  const router = useRouter();
-
   // Styling for bottom navigation buttons
-  // const navBarSelected={
-  //   color: 'white',
-  //   '& .Mui-selected': {color:'white'}
-  // };
+  const navBarSelected={
+    color: 'white',
+    '& .Mui-selected': {color:'white'}
+  };
 
   const theme = createTheme({
     palette: {
@@ -31,10 +29,10 @@ export default function App({ Component, pageProps }) {
         main: "#387238",
       },
       secondary: {
-        main: "#ef6c00",
+        main: "#fff",
       },
       success: {
-        main: "#85a085",
+        main: "#1B742E",
       },
     },
   });
@@ -48,19 +46,17 @@ export default function App({ Component, pageProps }) {
             <title> ParkTrack </title>
           </Head>
 
-          <Box sx={{ pb: 7 }}>
-            {/* Header */}
-            <div className="topHeader">
-              {/* <Image src={ParkTrackLogo} alt='ParkTrack logo' height={241} width={883} /> */}
+          {/* Header */}
+          <AppBar component="nav" position="sticky" sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%'}}>
+            <Box sx={{py: 0.5}}>
               <Image
                 src={ParkTrackLogo}
                 alt="ParkTrack logo"
-                height={40.2}
-                width={147.2}
-                className="top-logo"
+                height={40}
               />
-            </div>
-
+            </Box>
+          </AppBar>
+          <Box sx={{ pb: 7}}>
             <Component {...pageProps} />
 
             {/* Bottom navigation bar */}
@@ -75,22 +71,22 @@ export default function App({ Component, pageProps }) {
               elevation={3}
             >
               <BottomNavigation
-                // sx={{bgcolor: '#1B742E'}}
+                sx={{bgcolor: 'primary.main'}}
                 showLabels
-                value={bottomChoice}
-                onChange={(event, newValue) => {
-                  if (newValue == 0) {
-                    router.push("/parks");
-                  } else if (newValue == 1) {
-                    router.push("/parks");
-                  }
-                  setBottomChoice(newValue);
-                }}
               >
-                <BottomNavigationAction label="Explore" icon={<MapIcon />} />
                 <BottomNavigationAction
+                  component={Link}
+                  href="/parks"
+                  label="Explore"
+                  icon={<MapIcon />}
+                  sx={navBarSelected}
+                />
+                <BottomNavigationAction
+                  component={Link}
+                  href="/trips"
                   label="My Trips"
                   icon={<FavoriteIcon />}
+                  sx={navBarSelected}
                 />
                 <SignedIn>
                   <BottomNavigationAction icon={<UserButton />} />
