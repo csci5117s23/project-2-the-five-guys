@@ -60,68 +60,59 @@ export default function Home() {
     const token = await getToken({ template: "codehooks" });
     console.log("Token: ", token);
     let data = await getNationalParks();
-    // console.log("Data: ", data);
+    console.log("Data: ", data);
 
-    let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
     //Need to update this to get the id of the trip from the route
     const tripId = router.query["id"];
     setTripId(tripId);
+
     //User this dummyID for testing purposes with itinerary until event page is up
     // const tripId = "64496dabe30f5119ffa72a9b";
     // console.log("trip id: ", tripId);
     await fetchItemData(userId, tripId, setTrip, token);
     console.log("New Trip check: ", trip);
-    setNationalParks(filteredParks);
     setNewUpdate(false);
   }
 
   // Grab national park data from National Park Service API
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
   useEffect(() => {
-    async function loadData() {
-      // console.log("userid: ", userId);
-      if (!userId) {
-        console.log("NO USER ID");
-        return;
-      }
-      // console.log("userid: ", userId);
-      const token = await getToken({ template: "codehooks" });
-      // console.log("Token: ", token);
-      let data = await getNationalParks();
-      let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
-      //Need to update this to get the id of the trip from the route
-      const tripId = router.query["id"];
-      //User this dummyID for testing purposes with itinerary until event page is up
-      // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S
-      console.log("trip id: ", tripId);
-      await fetchItemData(userId, tripId, setTrip, token);
-      setNationalParks(filteredParks);
-      setNewUpdate(false);
-    }
     loadData();
   }, [userId, newUpdate]);
 
   useEffect(() => {
-    if (trip) {
-      // set trip hooks if title is not null
-      if (trip.title) {
-        setTitle(trip.title);
-        setNewTitle(trip.title);
+    async function loadTrip() {
+      if (trip) {
+        // set trip hooks if title is not null
+        if (trip.title) {
+          setTitle(trip.title);
+          setNewTitle(trip.title);
+        }
+
+        const token = await getToken({ template: "codehooks" });
+        console.log("Token: ", token);
+        let data = await getNationalParks();
+        console.log("Data: ", data);
+
+        let filteredParks = data.data.filter((element) => (console.log("Info: ", element.id, trip.nationalPark_id), element.id === trip.nationalPark_id));
+        console.log("filtered parks: ", filteredParks);
+        setNationalParks(filteredParks);
+
+        const startDate = new Date(trip.startDate);
+        const endDate = new Date(trip.endDate);
+        const formattedStartDate = startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        const formattedEndDate = endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+
+        // set all the date hooks
+        setOverallStartDate(formattedStartDate);
+        setNewStartDate(trip.startDate);
+        setOverallEndDate(formattedEndDate);
+        setNewEndDate(trip.endDate);
+
+        setLoading(false);
       }
-
-      const startDate = new Date(trip.startDate);
-      const endDate = new Date(trip.endDate);
-      const formattedStartDate = startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-      const formattedEndDate = endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-
-      // set all the date hooks
-      setOverallStartDate(formattedStartDate);
-      setNewStartDate(trip.startDate);
-      setOverallEndDate(formattedEndDate);
-      setNewEndDate(trip.endDate);
-
-      setLoading(false);
     }
+    loadTrip();
   }, [trip]);
 
   // Return loading text if currently loading
@@ -137,7 +128,7 @@ export default function Home() {
   //leaflet react doest work well with server side rendering(nextjs)
   //credit to fixing the issue: https://stackoverflow.com/questions/57704196/leaflet-with-next-js
   //answer is "answer for 2020"
-  const Map = dynamic(() => import("@/components/map"), {
+  const ParkMapComponent = dynamic(() => import("@/components/parkMap"), {
     loading: () => (
       <div className="centered">
         <CircularProgress style={{ color: "#1B742E" }} />
@@ -193,7 +184,7 @@ export default function Home() {
         {pageView === "agenda" && <div className={myTripStyles.myTrip}>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}</div>}
 
         {/* If in map view, show map */}
-        {pageView === "map" && <Map parks={nationalParks} />}
+        {pageView === "map" && <ParkMapComponent parks={nationalParks} />}
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
           <DialogTitle>Edit Trip Details</DialogTitle>
           <DialogContent>
