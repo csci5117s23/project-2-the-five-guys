@@ -108,7 +108,7 @@ export default function Home({ nationalParks }) {
 
                   {/* Search field */}
                   <ListItem>
-                    <Stack direction="row" spacing={2} sx={{width: "100%"}}>
+                    <Stack direction="row" spacing={2} alignItems="center" sx={{width: "100%"}}>
                       <TextField
                         id="outlined-basic"
                         label="Search parks or states"
@@ -123,7 +123,7 @@ export default function Home({ nationalParks }) {
                         onChange={(e) => handleSearch(e)}
                       />
                       <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={filterVisited} onChange={() => setFilterVisitied(!filterVisited)}/>} label="Filter by visited" />
+                        <FormControlLabel control={<Checkbox checked={filterVisited} onChange={() => setFilterVisitied(!filterVisited)}/>} label="Visited Parks" />
                       </FormGroup>
                     </Stack>
                   </ListItem>

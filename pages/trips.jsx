@@ -64,6 +64,7 @@ export default function TripListPage({ parks }) {
       const trip = {
         nationalPark_id: park.id,
         parkCode: park.parkCode,
+        parkName: park.fullName,
         title: name,
         startDate: startDate.toJSON(),
         endDate: endDate.toJSON()
