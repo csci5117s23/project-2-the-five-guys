@@ -13,7 +13,7 @@ export default function PlaceCard({ place, handleOpen, handleCreateOpen }) {
   return (
     <Card>
       <CardActionArea onClick={() => handleOpen(place)}>
-        <CardMedia component="img" height="140" loading="lazy" image={place.images[0].url} alt="place image" />
+        <CardMedia component="img" height="140" loading="lazy" image={place.images[0].url} alt="place image" onError={(event) => event.target.style.display = 'none'} />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div" noWrap>
             {place.title}

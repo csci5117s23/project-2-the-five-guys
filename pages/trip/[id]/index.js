@@ -5,13 +5,13 @@ import RedirectToHome from "@/components/RedirectToHome";
 import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
 import dynamic from "next/dynamic";
 import myTripStyles from "@/styles/MyTrip.module.css";
-import ItineraryList from "../../components/itineraryList";
+import ItineraryList from "../../../components/itineraryList";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { fetchItemData } from "../../modules/data";
+import { fetchItemData } from "../../../modules/data";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
 

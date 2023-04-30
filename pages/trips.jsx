@@ -21,10 +21,10 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import Container from "@mui/material/Container";
 import { useState, useEffect } from "react";
-import { getNationalParks, getTrips, createTrip } from "../../modules/requests";
+import { getNationalParks, getTrips, createTrip } from "../modules/requests";
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
-import TripCard from "../../components/TripCard";
+import TripCard from "../components/TripCard";
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 export default function TripListPage({ parks }) {
