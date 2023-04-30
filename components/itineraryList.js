@@ -54,6 +54,28 @@ export default function ItineraryList({ itineraryList, tripId }) {
     setNewDescription("");
   }
 
+  async function handleDeleteDay(day) {
+    const token = await getToken({ template: "codehooks" });
+    console.log("Day: ", day);
+
+    // console.log("Event values: ", eventValues);
+    console.log("Event values again: ", newItinerary);
+
+    const updatedItinerary = newItinerary.filter((event, index) => {
+      if (index != day) {
+        return event;
+      } else {
+        return null;
+      }
+    });
+
+    console.log("Updated Itinerary: ", updatedItinerary);
+
+    const result = await updateTrip(token, tripId, { itinerary: updatedItinerary });
+    setNewItinerary(updatedItinerary);
+    setNewUpdate(true);
+  }
+
   useEffect(() => {
     console.log("updated value check: ", newUpdate);
     async function extractDays() {
@@ -76,7 +98,7 @@ export default function ItineraryList({ itineraryList, tripId }) {
         return 0;
       });
 
-      console.log("Events: ", events);
+      console.log("Events check: ", events);
       setEvents(events);
 
       const updatedDays = Object.keys(events).map((day) => {
@@ -99,7 +121,9 @@ export default function ItineraryList({ itineraryList, tripId }) {
                     </Typography>
                   </Grid>
                   <Grid item xs={1}>
-                    <DeleteIcon />
+                    <IconButton onClick={() => handleDeleteDay(parseInt(day))}>
+                      <DeleteIcon />
+                    </IconButton>
                   </Grid>
                   <Grid item xs={1}></Grid>
                 </Grid>
@@ -119,7 +143,7 @@ export default function ItineraryList({ itineraryList, tripId }) {
                         </AccordionDetails>
                       </Grid>
                       <Grid item xs={1}>
-                        <IconButton onClick={() => handleOpenEditDescription(parseInt(day))}>
+                        <IconButton onClick={() => handleOpenEditDescription(day)}>
                           <EditIcon />
                         </IconButton>
                       </Grid>
