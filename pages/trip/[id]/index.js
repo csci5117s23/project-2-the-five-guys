@@ -161,15 +161,17 @@ export default function Home() {
   //leaflet react doest work well with server side rendering(nextjs)
   //credit to fixing the issue: https://stackoverflow.com/questions/57704196/leaflet-with-next-js
   //answer is "answer for 2020"
-  const Map = dynamic(() => import("@/components/map"), {
-    loading: () => (
-      <div className="centered">
-        <CircularProgress style={{ color: "#1B742E" }} />
-        <div>Loading Map...</div>
-      </div>
-    ),
-    ssr: false, // line prevents server-side render
-  });
+  const ItineraryMap = dynamic(
+    () => import('@/components/itineraryMap'),
+    {
+      loading: () =>
+        <div className='centered'>
+          <CircularProgress style={{color: "#1B742E"}}/>
+          <div>Loading Map...</div>
+        </div>,
+      ssr: false // line prevents server-side render
+    }
+  )
 
   return (
     <>
@@ -230,7 +232,7 @@ export default function Home() {
           </div>
 
         {/* If in map view, show map */}
-        {pageView === "map" && <Map parks={nationalParks} />}
+        {pageView === "map" && trip.itinerary ? <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]}/> : <h2>No Agenda!</h2>}
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
           <DialogTitle>Edit Trip Details</DialogTitle>
           <DialogContent>
