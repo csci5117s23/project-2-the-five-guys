@@ -36,9 +36,6 @@ export default function Home({ park }) {
     grabTrips();
   }, [loading]);
 
-  console.log("TRIP ID");
-  console.log(tripId);
-
   // If loading, return loading screen
   if(loading){
     return (

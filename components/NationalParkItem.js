@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Modal, Box, Typography, IconButton} from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Modal, Box, Typography, IconButton, CircularProgress } from '@mui/material';
 import Stack from '@mui/joy/Stack';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
@@ -24,6 +24,8 @@ export default function NationalParkItem(props)
   const {userId, getToken } = useAuth();
   const [loading, setLoading] = useState(true);
   const [tripData, setTripData] = useState(null);
+
+  console.log(tripId);
 
   useEffect(() => {
     async function fetchTrip(){
@@ -112,6 +114,16 @@ export default function NationalParkItem(props)
           )}
         </>
       )
+  }
+
+  // If loading, return loading screen
+  if(loading){
+    return (
+      <div className='centered'>
+          <CircularProgress style={{color: "#1B742E"}}/>
+          <div>Loading {nationalPark.fullName}...</div>
+      </div>
+    );
   }
 
   return (
