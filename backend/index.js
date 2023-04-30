@@ -17,6 +17,7 @@ const tripYup = object({
   notes: string(),
   itinerary: array().of(
     object({
+      id: string().required(),
       startDate: date().required(),
       endDate: date().required(),
       description: string().required(),

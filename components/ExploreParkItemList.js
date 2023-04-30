@@ -17,10 +17,12 @@ export default function ExploreParkItemList(props) {
       return abbrState(state);
     });
 
-    return element.name.toLowerCase().includes(searchValue) ||
-            statesList.some(function(elem) {
-              return elem.toLowerCase().includes(searchValue);
-            });
+    return (
+      element.name.toLowerCase().includes(searchValue) ||
+      statesList.some(function(elem) {
+        return elem.toLowerCase().includes(searchValue);
+      })
+    );
   }
 
   // Filter national parks by search item
@@ -31,10 +33,10 @@ export default function ExploreParkItemList(props) {
 
   // Build list of parks using MUI Grid component
   const parkList = nationalParks.map((park, index)=> {
-    if (filterVisited && !visitedParks.includes(park.id)) return;
+    if (filterVisited && !visitedParks.some(visit => visit[0] === park.id)) return;
     return(
       <Grid item xs={12} md={6} key={index}>
-        <ExploreParkItem nationalPark={park} visited={visitedParks ? visitedParks.includes(park.id) : false}/>
+        <ExploreParkItem nationalPark={park} visitedParks={visitedParks}/>
       </Grid>
     );
   });
