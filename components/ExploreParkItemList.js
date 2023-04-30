@@ -34,8 +34,7 @@ export default function ExploreParkItemList(props) {
   const parkList = nationalParks.map((park, index)=> {
     return(
       <Grid item xs={12} md={6} key={index}>
-        {/* TODO: might have to fix following line that checks whether visitedParks contains the park id */}
-        <ExploreParkItem nationalPark={park} visited={visitedParks ? visitedParks.includes(park.id) : false}/>
+        <ExploreParkItem nationalPark={park} visitedParks={visitedParks}/>
       </Grid>
     );
   });

@@ -9,13 +9,24 @@ import { useState } from 'react';
 import Image from 'next/image';
 import CloseIcon from '@mui/icons-material/Close';
 import abbrState from '../modules/util';
+import { useEffect } from 'react';
+import { useAuth } from '@clerk/nextjs';
 
 export default function NationalParkItem(props)
 {
-  const {nationalPark} = props;
+  const nationalPark = props.nationalPark;
+  const tripId = props.tripId;
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
+  const {userId, getToken } = useAuth();
   
+  useEffect(() => {
+    async function fetchTrip(){
+      const token = await
+    }
+    fetchTrip();
+  }, []);
+
   const ParkMap = dynamic(
     () => import('@/components/parkMap'),
     {
@@ -98,9 +109,13 @@ export default function NationalParkItem(props)
         {/* Name of park and map of noteworthy locations */}
         <div className='parkName'> {nationalPark.fullName} </div>
         <div> <ParkMap park={nationalPark}/> </div>
-
         
         <Stack style={{fontSize:"1.3rem"}} spacing={2}>
+          {/* Link to most recent trip to park */}
+          {tripId && (
+            <div className='parkName'> {tripId} </div>
+          )}
+
           {/* Description of park from API */}
           <div className='parkAbout'> About: </div>
           <div style={{fontSize:"1rem"}}> {nationalPark.description} </div>

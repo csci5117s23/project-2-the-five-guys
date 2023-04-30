@@ -122,7 +122,7 @@ export default function MapComponent(props)
                     <IconButton aria-label="back" size='large' onClick={() => handleClose()}>
                         <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
                     </IconButton>
-                    <NationalParkItem nationalPark={selectedPark} />
+                    <NationalParkItem nationalPark={selectedPark} tripId={tripId}/>
                   </Box>
             </Modal>
           </Popup>

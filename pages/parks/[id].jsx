@@ -9,19 +9,32 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from "@clerk/nextjs";
 import { fetchVisitedParks } from "../../modules/data";
 
-export default function Home({ park }) {
+export default function Home({ park, params }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const { userId, getToken } = useAuth();
-  const [visitedParks, setVisitedParks] = useState([]);
+  // const [visitedParks, setVisitedParks] = useState([]);
+  // const [visited, setVisited] = useState(false);
+  const [tripId, setTripId] = useState(null);
+  console.log(userId);
 
   // Grab data pertaining to which parks this user has visited
   useEffect(() => {
     async function grabTrips(){
       // Grab all trips and store in visited parks array
       const token = await getToken({ template: "codehooks" });
+      console.log(token);
       const visits = await fetchVisitedParks(userId, token);
-      setVisitedParks(visits);
+
+      // Check whether the user has visited this park
+      for(const visit in visits) {
+        if(visit[0] === params.id){
+          setTripId(visit[3]);
+          break;
+        }
+      }
+
+      // setVisitedParks(visits);
       setLoading(false);
     }
     grabTrips();
@@ -43,7 +56,7 @@ export default function Home({ park }) {
         <IconButton aria-label="back" size="large" onClick={() => {router.back()}}>
           <ArrowBackIcon style={{fontSize: "3rem", color: "#1B742E"}}/>
         </IconButton>
-        <NationalParkItem nationalPark={park} />
+        <NationalParkItem nationalPark={park} tripId={tripId}/>
       </SignedIn>
 
       <SignedOut>
@@ -55,7 +68,11 @@ export default function Home({ park }) {
 
 export async function getStaticPaths() {
   const unfilteredParks = await getNationalParks();
-  const filteredParks = unfilteredParks.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood")|| element.fullName.includes("American Samoa"));
+  const filteredParks = unfilteredParks.data.filter((element) => 
+    element.designation.includes("National Park") || 
+    element.fullName.includes("Redwood")|| 
+    element.fullName.includes("American Samoa")
+  );
   const paths = filteredParks.map((park) => ({
     params: { id: park.id },
   }))
@@ -69,10 +86,14 @@ export async function getStaticProps({ params }) {
   // params contains the post `id`.
   // If the route is like /posts/1, then params.id is 1
   const unfilteredParks = await getNationalParks();
-  const filteredParks = unfilteredParks.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood")|| element.fullName.includes("American Samoa"));
+  const filteredParks = unfilteredParks.data.filter((element) => 
+    element.designation.includes("National Park") || 
+    element.fullName.includes("Redwood") || 
+    element.fullName.includes("American Samoa")
+  );
 
   const park = filteredParks.find((park) => park.id === params.id);
 
   // Pass post data to the page via props
-  return { props: { park } }
+  return { props: { park, params } }
 }
