@@ -30,6 +30,7 @@ function GoToCurrentLocationButton(props) {
   }
 export default function MapComponent(props)
 {
+  const [tripId, setTripId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPark, setSelectedPark] = useState(null);
   const [errorPopup, errorPopupShow] = useState(false);
@@ -39,7 +40,19 @@ export default function MapComponent(props)
   const [userLocation, setUserLocation] = useState(null)
   //map bounds
   const bounds = latLngBounds(usLatLongMin, usLatLongMax);
-  const {parks} = props;
+  const parks = props.parks;
+  const visitedParks = props.visitedParks;
+
+  useEffect(() => {
+    // Check whether the user has visited this park, 
+    // If they have, store that trip id 
+    if(visitedParks && selectedPark){
+      const trip = visitedParks.find(visit => visit[0] === selectedPark.id);
+      if(trip){
+        setTripId(trip[3]);
+      }
+    }
+  }, [selectedPark]);
 
   useEffect(() => {
     //on success will setUserLocation, otherwise error
@@ -100,7 +113,17 @@ export default function MapComponent(props)
           </Alert>
       </div>
       )}
-    <MapContainer className='mapContainer' center={[userLocation.coords.latitude, userLocation.coords.longitude]} zoom={6} scrollWheelZoom={true} bounds={bounds} maxBounds={bounds} maxBoundsViscosity={1.0} minZoom={4} maxZoom={8}>
+    <MapContainer 
+      className='mapContainer' 
+      center={[userLocation.coords.latitude, userLocation.coords.longitude]} 
+      zoom={6} 
+      scrollWheelZoom={true} 
+      bounds={bounds} 
+      maxBounds={bounds} 
+      maxBoundsViscosity={1.0} 
+      minZoom={4} 
+      maxZoom={8}
+    >
       {!userLocation && (<SetUserLocation/>)}
       <TileLayer
         //using OSM for map
@@ -124,10 +147,10 @@ export default function MapComponent(props)
                   aria-labelledby="modal-modal-title"
                   aria-describedby="modal-modal-description">
                   <Box className="modalContentsContainer">
-                   <IconButton aria-label="back" size='large' onClick={() => handleClose()}>
-                      <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
-                   </IconButton>
-                    <NationalParkItem nationalPark={selectedPark}></NationalParkItem>
+                    <IconButton aria-label="back" size='large' onClick={() => handleClose()}>
+                        <CloseIcon style={{fontSize: "2rem", color:"#1B742E"}}/>
+                    </IconButton>
+                    <NationalParkItem nationalPark={selectedPark} tripId={tripId}/>
                   </Box>
             </Modal>
           </Popup>

@@ -9,13 +9,35 @@ import { useState } from 'react';
 import Image from 'next/image';
 import CloseIcon from '@mui/icons-material/Close';
 import abbrState from '../modules/util';
+import { useEffect } from 'react';
+import { useAuth } from '@clerk/nextjs';
+import { fetchItemData } from '../modules/data';
+import { formatDate } from '../modules/util';
 
 export default function NationalParkItem(props)
 {
-  const {nationalPark} = props;
+  const nationalPark = props.nationalPark;
+  const tripId = props.tripId;
+  const tripLink = '/trips/' + tripId;
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
-  
+  const {userId, getToken } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [tripData, setTripData] = useState(null);
+
+  useEffect(() => {
+    async function fetchTrip(){
+      const token = await getToken({ template: "codehooks" });
+      const data = await fetchItemData(userId, tripId, setTripData, token);
+      setLoading(false);
+    }
+    if(tripId){
+      fetchTrip();
+    } else {
+      setLoading(false);
+    }
+  }, [loading]);
+
   const ParkMap = dynamic(
     () => import('@/components/parkMap'),
     {
@@ -60,7 +82,7 @@ export default function NationalParkItem(props)
                 <Image
                   src={image.url}
                   fill
-                  objectFit='contain'
+                  style={{ objectFit: 'contain' }}
                   alt={image.alt}
                 />
               </div>
@@ -98,9 +120,21 @@ export default function NationalParkItem(props)
         {/* Name of park and map of noteworthy locations */}
         <div className='parkName'> {nationalPark.fullName} </div>
         <div> <ParkMap park={nationalPark}/> </div>
-
         
         <Stack style={{fontSize:"1.3rem"}} spacing={2}>
+          {/* Link to most recent trip to park */}
+          {tripData && (
+            <>
+              <div className='parkName'> 
+                Previous Visit: 
+                <br />
+                <Link className='exploreParkLink' href={tripLink}>
+                  {formatDate(tripData.startDate)} - {formatDate(tripData.endDate)}
+                </Link>
+              </div>
+            </>
+          )}
+
           {/* Description of park from API */}
           <div className='parkAbout'> About: </div>
           <div style={{fontSize:"1rem"}}> {nationalPark.description} </div>

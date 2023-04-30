@@ -17,10 +17,12 @@ export default function ExploreParkItemList(props) {
       return abbrState(state);
     });
 
-    return element.name.toLowerCase().includes(searchValue) ||
-            statesList.some(function(elem) {
-              return elem.toLowerCase().includes(searchValue);
-            });
+    return (
+      element.name.toLowerCase().includes(searchValue) ||
+      statesList.some(function(elem) {
+        return elem.toLowerCase().includes(searchValue);
+      })
+    );
   }
 
   // Filter national parks by search item
@@ -34,7 +36,7 @@ export default function ExploreParkItemList(props) {
     if (filterVisited && !visitedParks.includes(park.id)) return;
     return(
       <Grid item xs={12} md={6} key={index}>
-        <ExploreParkItem nationalPark={park} visited={visitedParks ? visitedParks.includes(park.id) : false}/>
+        <ExploreParkItem nationalPark={park} visitedParks={visitedParks}/>
       </Grid>
     );
   });
