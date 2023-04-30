@@ -33,7 +33,7 @@ export default function ExploreParkItemList(props) {
 
   // Build list of parks using MUI Grid component
   const parkList = nationalParks.map((park, index)=> {
-    if (filterVisited && !visitedParks.includes(park.id)) return;
+    if (filterVisited && !visitedParks.some(visit => visit[0] === park.id)) return;
     return(
       <Grid item xs={12} md={6} key={index}>
         <ExploreParkItem nationalPark={park} visitedParks={visitedParks}/>
