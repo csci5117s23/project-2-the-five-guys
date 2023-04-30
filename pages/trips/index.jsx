@@ -62,6 +62,7 @@ export default function TripListPage({ parks }) {
     if (park && startDate && endDate) {
       const trip = {
         nationalPark_id: park.id,
+        parkCode: park.parkCode,
         startDate: startDate.toJSON(),
         endDate: endDate.toJSON()
       };
