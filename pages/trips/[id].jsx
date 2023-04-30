@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { getNationalParks, updateTrip } from "@/modules/requests";
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
@@ -65,10 +66,9 @@ export default function Home() {
       let data = await getNationalParks();
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
       //Need to update this to get the id of the trip from the route
-      // const tripId = router.query["id"];
+      const tripId = router.query["id"];
       //User this dummyID for testing purposes with itinerary until event page is up
-      // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S 
-      const tripId = "64496dabe30f5119ffa72a9b";
+      // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S
       console.log("trip id: ", tripId);
       await fetchItemData(userId, tripId, setTrip, token);
       setNationalParks(filteredParks);

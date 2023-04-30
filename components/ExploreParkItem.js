@@ -33,10 +33,8 @@ export default function ExploreParkItem(props) {
           <CardMedia
             component='img' // {Image}
             height='140'
-            loading='lazy'
             image={nationalPark.images[0].url}
             alt={nationalPark.images[0].alt}
-            placeholder="empty"
           />
           <CardContent>
             {/* Title of park and checkmark if this park has been visited */}

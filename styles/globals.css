@@ -181,7 +181,7 @@
   height: 5vh;
   background-color: white;
   margin-top: 10px;
-  justify-content: center; 
+  justify-content: center;
 }
 
 
@@ -192,6 +192,9 @@
 .mapContainer {
   width: 100%;
   height: 81vh;
+  position: fixed;
+  margin-top: 10px;
+  border-bottom: 3px solid #1B742E;
 }
 
 .ol-attribution {

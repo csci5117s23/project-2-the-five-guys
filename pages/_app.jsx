@@ -16,14 +16,11 @@ import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 export default function App({ Component, pageProps }) {
-  const [bottomChoice, setBottomChoice] = useState(0);
-  const router = useRouter();
-
   // Styling for bottom navigation buttons
-  // const navBarSelected={
-  //   color: 'white',
-  //   '& .Mui-selected': {color:'white'}
-  // };
+  const navBarSelected={
+    color: 'white',
+    '& .Mui-selected': {color:'white'}
+  };
 
   const theme = createTheme({
     palette: {
@@ -74,20 +71,23 @@ export default function App({ Component, pageProps }) {
               elevation={3}
             >
               <BottomNavigation
-                // sx={{bgcolor: '#1B742E'}}
+                sx={{bgcolor: 'primary.main'}}
                 showLabels
-                value={bottomChoice}
-                onChange={(event, newValue) => {
-                  if (newValue == 0) {
-                    router.push("/parks");
-                  } else if (newValue == 1) {
-                    router.push("/trips");
-                  }
-                  setBottomChoice(newValue);
-                }}
               >
-                <BottomNavigationAction label="Explore" icon={<MapIcon />} />
-                <BottomNavigationAction label="My Trips" icon={<FavoriteIcon />} />
+                <BottomNavigationAction
+                  component={Link}
+                  href="/parks"
+                  label="Explore"
+                  icon={<MapIcon />}
+                  sx={navBarSelected}
+                />
+                <BottomNavigationAction
+                  component={Link}
+                  href="/trips"
+                  label="My Trips"
+                  icon={<FavoriteIcon />}
+                  sx={navBarSelected}
+                />
                 <SignedIn>
                   <BottomNavigationAction icon={<UserButton />} />
                 </SignedIn>
