@@ -18,14 +18,14 @@ export default function NationalParkItem(props)
 {
   const nationalPark = props.nationalPark;
   const tripId = props.tripId;
-  const tripLink = '/trips/' + tripId;
+  const tripLink = '/trip/' + tripId;
   const [modalOpen, setModalOpen] = useState(false);
   const [modalImage, setModalImage] = useState(null);
   const {userId, getToken } = useAuth();
   const [loading, setLoading] = useState(true);
   const [tripData, setTripData] = useState(null);
 
-  console.log(tripId);
+  // console.log(tripId);
 
   useEffect(() => {
     async function fetchTrip(){

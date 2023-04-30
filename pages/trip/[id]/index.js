@@ -89,7 +89,7 @@ export default function Home() {
       }
       // console.log("userid: ", userId);
       const token = await getToken({ template: "codehooks" });
-      // console.log("Token: ", token);
+      console.log("Token: ", token);
       let data = await getNationalParks();
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
       //Need to update this to get the id of the trip from the route

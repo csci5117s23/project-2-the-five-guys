@@ -82,7 +82,7 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
     console.log("updated value check: ", newUpdate);
     console.log("new itinerary check: ", newItinerary);
 
-    loadData();
+    // loadData();
 
     setNewUpdate(false);
     async function extractDays() {
@@ -105,28 +105,52 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
         return 0;
       });
 
-      console.log("Events check: ", sortedItinerary);
       setNewItinerary(sortedItinerary);
+      console.log("Events check: ", sortedItinerary);
+      const groupedItinerary = {};
+      sortedItinerary.forEach((e) => {
+        const startDay = new Date(e.startDate).toLocaleDateString();
+        const endDay = new Date(e.endDate).toLocaleDateString();
 
-      const updatedDays = Object.keys(sortedItinerary).map((day) => {
-        // console.log("Day: ", typeof day);
-        const dayInt = parseInt(day);
-        const dayId = sortedItinerary[day].id;
-        setEditDay(dayInt);
-        const startDate = new Date(sortedItinerary[dayInt].startDate);
-        const endDate = new Date(sortedItinerary[dayInt].endDate);
-        const formattedStartDate = startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-        const formattedStartTime = startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-        const formattedEndDate = endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-        const formattedEndTime = endDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        if (startDay === endDay) {
+          // Single day event
+          if (!groupedItinerary[startDay]) {
+            groupedItinerary[startDay] = [];
+          }
+          groupedItinerary[startDay].push(e);
+        } else {
+          // Multi-day event
+          const startDate = new Date(e.startDate);
+          const endDate = new Date(e.endDate);
+          const numDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+          for (let i = 0; i < numDays; i++) {
+            const day = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000).toLocaleDateString();
+            if (!groupedItinerary[day]) {
+              groupedItinerary[day] = [];
+            }
+            groupedItinerary[day].push(e);
+          }
+        }
+      });
+
+      console.log("Grouped itienrary: ", groupedItinerary);
+
+      let dayNumber = 0;
+      const groupedUpdatedDays = Object.keys(groupedItinerary).map((day) => {
+        console.log("group day check: ", day);
+        dayNumber = dayNumber + 1;
+        const date = new Date(day);
+        let formattedDay = date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+
         return (
-          <Accordion key={dayInt}>
+          <Accordion key={dayNumber}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <Box sx={{ flexGrow: 2 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={10}>
                     <Typography>
-                      {formattedStartDate} {formattedStartTime} - {formattedEndDate} {formattedEndTime}
+                      Day {dayNumber} ( {formattedDay} )
                     </Typography>
                   </Grid>
                   <Grid item xs={1}>
@@ -140,31 +164,40 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
             </AccordionSummary>
             <AccordionDetails>
               <Stack spacing={2}>
-                <Accordion key={sortedItinerary[dayInt].location}>
-                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                    <Typography>{sortedItinerary[dayInt].location}</Typography>
-                  </AccordionSummary>
-                  <Box sx={{ flexGrow: 2 }}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={11}>
-                        <AccordionDetails>
-                          <Typography>{sortedItinerary[dayInt].description}</Typography>
-                        </AccordionDetails>
-                      </Grid>
-                      <Grid item xs={1}>
-                        <IconButton onClick={() => handleOpenEditDescription(dayId)}>
-                          <EditIcon />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-                  </Box>
-                </Accordion>
+                {groupedItinerary[day].map((event) => {
+                  {
+                    console.log("group event check: ", event);
+                  }
+                  return (
+                    <Accordion key={event.id}>
+                      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                        <Typography>{event.location}</Typography>
+                      </AccordionSummary>
+
+                      <Box sx={{ flexGrow: 2 }}>
+                        <Grid container spacing={2}>
+                          <Grid item xs={11}>
+                            <AccordionDetails>
+                              <Typography>{event.description}</Typography>
+                            </AccordionDetails>
+                          </Grid>
+                          <Grid item xs={1}>
+                            <IconButton onClick={() => handleOpenEditDescription(event.id)}>
+                              <EditIcon />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Accordion>
+                  );
+                })}
               </Stack>
             </AccordionDetails>
           </Accordion>
         );
       });
-      setDays(updatedDays);
+
+      setDays(groupedUpdatedDays);
     }
     extractDays();
   }, [newUpdate]);
