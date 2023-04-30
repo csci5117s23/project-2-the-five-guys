@@ -13,7 +13,7 @@ export default function ItineraryList({ itineraryList, tripId }) {
   const [day, setEditDay] = useState(-1);
   const [newDescription, setNewDescription] = useState("");
   const [eventValues, setEvents] = useState([]);
-  const [newItinerary, setNewItinerary] = useState([]);
+  const [newItinerary, setNewItinerary] = useState(itineraryList);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newUpdate, setNewUpdate] = useState(false);
   const { getToken } = useAuth();
@@ -36,9 +36,9 @@ export default function ItineraryList({ itineraryList, tripId }) {
     console.log("Submit day check: ", typeof day);
     console.log("Submit description check: ", description);
 
-    const updatedItinerary = itineraryList.map((event, index) => {
+    const updatedItinerary = eventValues.map((event, index) => {
       console.log("Index: ", index);
-      if (index === parseInt(day)) {
+      if (index === day) {
         console.log("Event information checking: ", { ...event });
         return { ...event, description };
       }
@@ -50,14 +50,16 @@ export default function ItineraryList({ itineraryList, tripId }) {
     setNewItinerary(updatedItinerary);
     setDialogOpen(false);
     setNewUpdate(true);
+    console.log("Update check: ", newUpdate);
     setNewDescription("");
   }
 
   useEffect(() => {
+    console.log("updated value check: ", newUpdate);
     async function extractDays() {
-      console.log("Itinerary list: ", itineraryList);
+      console.log("Itinerary list: ", newItinerary);
 
-      const events = Object.values(itineraryList).sort((a, b) => {
+      const events = Object.values(newItinerary).sort((a, b) => {
         const startDateA = new Date(a.startDate);
         const startDateB = new Date(b.startDate);
         const endDateA = new Date(a.endDate);
@@ -77,60 +79,59 @@ export default function ItineraryList({ itineraryList, tripId }) {
       console.log("Events: ", events);
       setEvents(events);
 
-      setDays(
-        Object.keys(events).map((day) => {
-          // console.log("Day: ", day);
-          setEditDay(day);
-          const startDate = new Date(events[day].startDate);
-          const endDate = new Date(events[day].endDate);
-          const formattedStartDate = startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-          const formattedStartTime = startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-          const formattedEndDate = endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-          const formattedEndTime = endDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-          return (
-            <Accordion key={day}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Box sx={{ flexGrow: 2 }}>
-                  <Grid container spacing={2}>
-                    <Grid item xs={10}>
-                      <Typography>
-                        {formattedStartDate} {formattedStartTime} - {formattedEndDate} {formattedEndTime}
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={1}>
-                      <DeleteIcon />
-                    </Grid>
-                    <Grid item xs={1}></Grid>
+      const updatedDays = Object.keys(events).map((day) => {
+        // console.log("Day: ", day);
+        setEditDay(day);
+        const startDate = new Date(events[day].startDate);
+        const endDate = new Date(events[day].endDate);
+        const formattedStartDate = startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        const formattedStartTime = startDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        const formattedEndDate = endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+        const formattedEndTime = endDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        return (
+          <Accordion key={day}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Box sx={{ flexGrow: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={10}>
+                    <Typography>
+                      {formattedStartDate} {formattedStartTime} - {formattedEndDate} {formattedEndTime}
+                    </Typography>
                   </Grid>
-                </Box>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack spacing={2}>
-                  <Accordion key={events[day].location}>
-                    <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                      <Typography>{events[day].location}</Typography>
-                    </AccordionSummary>
-                    <Box sx={{ flexGrow: 2 }}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={11}>
-                          <AccordionDetails>
-                            <Typography>{events[day].description}</Typography>
-                          </AccordionDetails>
-                        </Grid>
-                        <Grid item xs={1}>
-                          <IconButton onClick={() => handleOpenEditDescription(day)}>
-                            <EditIcon />
-                          </IconButton>
-                        </Grid>
+                  <Grid item xs={1}>
+                    <DeleteIcon />
+                  </Grid>
+                  <Grid item xs={1}></Grid>
+                </Grid>
+              </Box>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Stack spacing={2}>
+                <Accordion key={events[day].location}>
+                  <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                    <Typography>{events[day].location}</Typography>
+                  </AccordionSummary>
+                  <Box sx={{ flexGrow: 2 }}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={11}>
+                        <AccordionDetails>
+                          <Typography>{events[day].description}</Typography>
+                        </AccordionDetails>
                       </Grid>
-                    </Box>
-                  </Accordion>
-                </Stack>
-              </AccordionDetails>
-            </Accordion>
-          );
-        })
-      );
+                      <Grid item xs={1}>
+                        <IconButton onClick={() => handleOpenEditDescription(parseInt(day))}>
+                          <EditIcon />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  </Box>
+                </Accordion>
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
+        );
+      });
+      setDays(updatedDays);
     }
     extractDays();
   }, [newUpdate]);
@@ -152,7 +153,7 @@ export default function ItineraryList({ itineraryList, tripId }) {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseEditDescription}>Cancel</Button>
-            <Button onClick={() => handleSubmitEditDescription(day, newDescription)}>Save</Button>
+            <Button onClick={() => handleSubmitEditDescription(parseInt(day), newDescription)}>Save</Button>
           </DialogActions>
         </Dialog>
       )}
