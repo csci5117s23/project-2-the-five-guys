@@ -24,11 +24,11 @@ export default function NationalParkItem(props)
   const {userId, getToken } = useAuth();
   const [loading, setLoading] = useState(true);
   const [tripData, setTripData] = useState(null);
-  
+
   useEffect(() => {
     async function fetchTrip(){
       const token = await getToken({ template: "codehooks" });
-      const trip = await fetchItemData(userId, tripId, setTripData, token);
+      const data = await fetchItemData(userId, tripId, setTripData, token);
       setLoading(false);
     }
     if(tripId){
@@ -37,8 +37,6 @@ export default function NationalParkItem(props)
       setLoading(false);
     }
   }, [loading]);
-
-  console.log(tripData);
 
   const ParkMap = dynamic(
     () => import('@/components/parkMap'),
@@ -125,7 +123,7 @@ export default function NationalParkItem(props)
         
         <Stack style={{fontSize:"1.3rem"}} spacing={2}>
           {/* Link to most recent trip to park */}
-          {tripId && (
+          {tripData && (
             <>
               <div className='parkName'> 
                 Previous Visit: 

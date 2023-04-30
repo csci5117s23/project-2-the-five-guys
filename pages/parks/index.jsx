@@ -129,7 +129,7 @@ export default function Home({ nationalParks }) {
 
         {/* If in map view, show map */}
         {!isListView && (
-          <Map parks={nationalParks}/>
+          <Map parks={nationalParks} visitedParks={visitedParks}/>
         )}
       </SignedIn>
 

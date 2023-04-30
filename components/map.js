@@ -30,6 +30,7 @@ function GoToCurrentLocationButton(props) {
   }
 export default function MapComponent(props)
 {
+  const [tripId, setTripId] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedPark, setSelectedPark] = useState(null);
   const [errorPopup, errorPopupShow] = useState(false);
@@ -39,7 +40,19 @@ export default function MapComponent(props)
   const [userLocation, setUserLocation] = useState(null)
   //map bounds
   const bounds = latLngBounds(usLatLongMin, usLatLongMax);
-  const {parks} = props;
+  const parks = props.parks;
+  const visitedParks = props.visitedParks;
+
+  useEffect(() => {
+    // Check whether the user has visited this park, 
+    // If they have, store that trip id 
+    if(visitedParks && selectedPark){
+      const trip = visitedParks.find(visit => visit[0] === selectedPark.id);
+      if(trip){
+        setTripId(trip[3]);
+      }
+    }
+  }, [selectedPark]);
 
   useEffect(() => {
     //on success will setUserLocation, otherwise error

@@ -26,7 +26,9 @@ export default function Home({ park }) {
       // If they have, store that trip id 
       if(visits){
         const trip = visits.find(visit => visit[0] === park.id);
-        setTripId(trip[3]);
+        if(trip){
+          setTripId(trip[3]);
+        }
       }
 
       setLoading(false);
@@ -53,7 +55,7 @@ export default function Home({ park }) {
         <IconButton aria-label="back" size="large" onClick={() => {router.back()}}>
           <ArrowBackIcon style={{fontSize: "3rem", color: "#1B742E"}}/>
         </IconButton>
-        <NationalParkItem nationalPark={park} tripId={tripId}  />
+        <NationalParkItem nationalPark={park} tripId={tripId} />
       </SignedIn>
 
       <SignedOut>
