@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getNationalParks, updateTrip } from "@/modules/requests";
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
-import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Container, Typography, List, ListItem, Fab, Tabs, Tab } from "@mui/material";
 import dynamic from "next/dynamic";
 import myTripStyles from "@/styles/MyTrip.module.css";
 import ItineraryList from "../../../components/itineraryList";
@@ -14,6 +14,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { fetchItemData } from "../../../modules/data";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
+import Link from "next/link";
+import { ArrowBack } from "@mui/icons-material";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -29,6 +31,7 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [newUpdate, setNewUpdate] = useState(false);
   const [tripId, setTripId] = useState("");
+  const [tab, setTab] = useState(0);
 
   const [trip, setTrip] = useState(null);
   const router = useRouter();
@@ -150,50 +153,39 @@ export default function Home() {
   return (
     <>
       <SignedIn>
-        <Box sx={{ flexGrow: 2 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={8}>
-              {" "}
-              <h1 className={myTripStyles.myTrip}>{title}</h1>
-            </Grid>
-            <Grid item xs={2}>
-              {" "}
-              {/* <EditIcon className={myTripStyles.edit} /> */}
-              <IconButton className={myTripStyles.edit} onClick={handleOpenEditName}>
+        <Container>
+          <Box sx={{ flexGrow: 2, mt: 2 }}>
+            <Stack direction="row" justifyContent="space-between" spacing={2} alignItems="center">
+              <IconButton
+                aria-label="back"
+                size="large"
+                onClick={() => {
+                  router.back();
+                }}
+              >
+                <ArrowBack style={{ fontSize: "2rem", color: "#1B742E" }} />
+              </IconButton>
+              <Typography variant="h4">{title}</Typography>
+              <Fab color="primary" aria-label="edit" onClick={handleOpenEditName} sx={{ flexShrink: 0 }}>
                 <EditIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={2}>
-              {" "}
-              {/* Need to edit this later so that there is a link to the add events page */}
-              <IconButton className={myTripStyles.edit}>
-                <AddIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Box>
+              </Fab>
+            </Stack>
+          </Box>
+          <Typography variant="subtitle1">
+            {overallStartDate} - {overallEndDate}
+          </Typography>
+          <Tabs value={tab} onChange={(event, newValue) => setTab(newValue)} variant="fullWidth">
+            <Tab label="Agenda" />
+            <Tab label="Map" />
+          </Tabs>
 
-        <h2 className={myTripStyles.myTrip}>
-          {overallStartDate} - {overallEndDate}
-        </h2>
+          {/* If in agenda view, show itinerary */}
+          {tab === 0 && <div>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}</div>}
 
-        {/* Buttons to toggle agenda or map view */}
-        <div className={myTripStyles.myTrip}>
-          <Button variant="outlined" onClick={() => setPageView("agenda")}>
-            {" "}
-            Agenda View{" "}
-          </Button>
-          <Button variant="outlined" onClick={() => setPageView("map")}>
-            {" "}
-            Map View{" "}
-          </Button>
-        </div>
+          {/* If in map view, show map */}
+          {tab === 1 && <Map parks={nationalParks} />}
+        </Container>
 
-        {/* If in agenda view, show itinerary */}
-        {pageView === "agenda" && <div className={myTripStyles.myTrip}>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}</div>}
-
-        {/* If in map view, show map */}
-        {pageView === "map" && <Map parks={nationalParks} />}
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
           <DialogTitle>Edit Trip Details</DialogTitle>
           <DialogContent>
