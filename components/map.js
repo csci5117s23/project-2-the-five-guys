@@ -43,23 +43,23 @@ export default function MapComponent(props)
   const parks = props.parks;
   const visitedParks = props.visitedParks;
 
-  useEffect(() => {
-    // Check whether the user has visited this park, 
-    // If they have, store that trip id 
-    // console.log("park:");
-    // console.log(selectedPark);
-    if(visitedParks && selectedPark){
-      const trip = visitedParks.find(visit => visit[0] === selectedPark.id);
-      // console.log("trip:");
-      // console.log(trip);
-      if(trip){
-        setTripId(trip[3]);
-      } else {
-        // console.log('Setting trip id to null.');
-        setTripId(null);
-      }
-    }
-  }, [selectedPark]);
+  // useEffect(() => {
+  //   // Check whether the user has visited this park, 
+  //   // If they have, store that trip id 
+  //   console.log("park:");
+  //   console.log(selectedPark);
+  //   if(visitedParks && selectedPark){
+  //     const trip = visitedParks.find(visit => visit[0] === selectedPark.id);
+  //     console.log("trip:");
+  //     console.log(trip);
+  //     if(trip){
+  //       setTripId(trip[3]);
+  //     } else {
+  //       console.log('Setting trip id to null.');
+  //       setTripId(null);
+  //     }
+  //   }
+  // }, [selectedPark]);
 
   useEffect(() => {
     //on success will setUserLocation, otherwise error
@@ -93,10 +93,22 @@ export default function MapComponent(props)
   }
   function handleOpen(park) {
     setSelectedPark(park);
+    if(visitedParks){
+      const trip = visitedParks.find(visit => visit[0] === park.id);
+      console.log("trip:");
+      console.log(trip);
+      if(trip){
+        setTripId(trip[3]);
+      } else {
+        console.log('Setting trip id to null.');
+        setTripId(null);
+      }
+    }
     setModalOpen(true);
   }
   function handleClose() {
     setModalOpen(false);
+    setTripId(null);
     setSelectedPark(null);
   }
 

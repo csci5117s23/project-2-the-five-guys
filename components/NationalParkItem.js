@@ -25,7 +25,7 @@ export default function NationalParkItem(props)
   const [loading, setLoading] = useState(true);
   const [tripData, setTripData] = useState(null);
 
-  console.log(tripId);
+  // console.log(tripId);
 
   useEffect(() => {
     async function fetchTrip(){
