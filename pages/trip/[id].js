@@ -29,6 +29,7 @@ export default function Home() {
   const [newTitle, setNewTitle] = useState("");
   const [title, setTitle] = useState("");
   const [newUpdate, setNewUpdate] = useState(false);
+  const [tripId, setTripId] = useState("");
 
   const [trip, setTrip] = useState(null);
   const router = useRouter();
@@ -68,9 +69,10 @@ export default function Home() {
 
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
       //Need to update this to get the id of the trip from the route
-      // const tripId = router.query["id"];
+      const tripId = router.query["id"];
+      setTripId(tripId);
       //User this dummyID for testing purposes with itinerary until event page is up
-      const tripId = "64496dabe30f5119ffa72a9b";
+      // const tripId = "64496dabe30f5119ffa72a9b";
       // console.log("trip id: ", tripId);
       await fetchItemData(userId, tripId, setTrip, token);
       setNationalParks(filteredParks);
@@ -168,7 +170,7 @@ export default function Home() {
         </div>
 
         {/* If in agenda view, show itinerary */}
-        {pageView === "agenda" && <div className={myTripStyles.myTrip}>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} /> : <h2>No Agenda!</h2>}</div>}
+        {pageView === "agenda" && <div className={myTripStyles.myTrip}>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} /> : <h2>No Agenda!</h2>}</div>}
 
         {/* If in map view, show map */}
         {pageView === "map" && <Map parks={nationalParks} />}
