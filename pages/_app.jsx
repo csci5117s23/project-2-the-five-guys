@@ -1,11 +1,9 @@
 import "@/styles/globals.css";
 import { ClerkProvider, SignedIn, UserButton } from "@clerk/nextjs";
-import { useRouter } from "next/router";
 import "purecss/build/pure.css";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import { AppBar, Box, Paper, ThemeProvider, createTheme } from "@mui/material";
-import { useState } from "react";
 import MapIcon from "@mui/icons-material/Map";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Image from "next/image";
