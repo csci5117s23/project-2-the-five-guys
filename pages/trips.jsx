@@ -37,7 +37,7 @@ export default function TripListPage({ parks }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const { isLoaded, userId, getToken } = useAuth();
-
+  const [reload, setReload]= useState(false);
   useEffect(() => {
     const loadTrips = async () => {
       const token = await getToken({ template: "codehooks" });
@@ -48,7 +48,8 @@ export default function TripListPage({ parks }) {
       }
     };
     loadTrips();
-  }, [isLoaded, userId, getToken, parks]);
+    setReload(false);
+  }, [isLoaded, userId, getToken, parks, reload]);
 
   const handleClickOpen = () => {
     setDialogOpen(true);
@@ -116,7 +117,7 @@ export default function TripListPage({ parks }) {
                   <Grid container spacing={2} justifyContent="center">
                     {trips.map((trip) => (
                       <Grid item xs={12} md={6} key={trip._id}>
-                        <TripCard trip={trip} />
+                        <TripCard trip={trip} setReload={setReload}/>
                       </Grid>
                     ))}
                   </Grid>
