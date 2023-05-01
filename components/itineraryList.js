@@ -7,14 +7,14 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useAuth } from "@clerk/nextjs";
 import { updateTrip } from "@/modules/requests";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import dayjs from 'dayjs';
 
-export default function ItineraryList({ itineraryList, tripId, handleUpdateTrip }) {
+export default function ItineraryList({ itineraryList, trip, handleUpdateTrip }) {
   const [currentItem, setCurrentItem] = useState(null);
   const [newDescription, setNewDescription] = useState("");
-  const [newItinerary, setNewItinerary] = useState(itineraryList);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [newUpdate, setNewUpdate] = useState(false);
-  const { getToken } = useAuth();
+  const [newDate, setNewDate] = useState(null);
 
   //closes the editor for itinerary's descriptions
   function handleCloseEdit() {
@@ -31,12 +31,12 @@ export default function ItineraryList({ itineraryList, tripId, handleUpdateTrip 
   async function handleSubmitEdit(daytoUpdate, description) {
     try {
       const updatedItinerary = itineraryList.map((day) => {
-        if (day.id === daytoUpdate.id) {
-          return { ...day, description };
+        if (day.id === daytoUpdate.id && newDate) {
+          return { ...day, description, startDate: newDate, endDate: newDate };
         }
         return day;
       });
-      await handleUpdateTrip(tripId, { itinerary: updatedItinerary });
+      await handleUpdateTrip(trip._id, { itinerary: updatedItinerary });
       console.log("Updated itenrary: ", updatedItinerary);
       setDialogOpen(false);
       setNewDescription("");
@@ -50,9 +50,9 @@ export default function ItineraryList({ itineraryList, tripId, handleUpdateTrip 
 
       console.log("Day to delete: ", dayToDelete);
 
-      const updatedItinerary = newItinerary.filter((day) => (console.log("Day Id check: ", day.id), day.id !== dayToDelete.id));
+      const updatedItinerary = itineraryList.filter((day) => (console.log("Day Id check: ", day.id), day.id !== dayToDelete.id));
 
-      await handleUpdateTrip(tripId, { itinerary: updatedItinerary });
+      await handleUpdateTrip(trip._id, { itinerary: updatedItinerary });
     } catch (error) {
       console.error("Delete error: ", error);
     }
@@ -107,10 +107,11 @@ export default function ItineraryList({ itineraryList, tripId, handleUpdateTrip 
         </Box>
       ))}
       {dialogOpen && (
-        <Dialog open={dialogOpen} onClose={handleCloseEdit} BackdropProps={{ invisible: true }}>
+        <Dialog open={dialogOpen} onClose={handleCloseEdit} BackdropProps={{ invisible: true }} fullWidth>
           <DialogTitle>Edit Itinerary Description</DialogTitle>
           <DialogContent>
             <Stack spacing={2} pt={1}>
+              <DateTimePicker label="New Date and Time" fullWidth value={newDate} onChange={(newValue) => setNewDate(newValue)} minDate={dayjs(trip.startDate)} maxDate={dayjs(trip.endDate)}/>
               <TextField label="New Description" multiline fullWidth value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
             </Stack>
           </DialogContent>
