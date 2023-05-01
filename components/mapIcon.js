@@ -21,15 +21,27 @@ export default function MapIcon(props)
     }
 
     // Styling for explore park item depending on past or upcoming visit
-    const borderStyling={
+    let borderStyling={
         border: (visited && isPastTrip) ? '3px solid #1B742E' : 
                 (visited && !isPastTrip) ? '3px solid gray' : ''
     };
 
+    function hoverStyle() {
+        if(visited && isPastTrip)
+        {
+            borderStyling = {border: '5px solid #1B742E'}
+        }
+        if(visited && isPastTrip)
+        {
+            borderStyling = {border: '5px solid gray'}
+        }
+    }
+
+
     return (
         <>
             <div className="mapIcon">
-                <div className="mapIconImageContainer" style={borderStyling}>
+                <div className="mapIconImageContainer" onMouseOver={() => hoverStyle()} style={borderStyling}>
                     <Image 
                         className="mapIconImage" 
                         src={parkInfo.images[0].url}
