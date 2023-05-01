@@ -32,6 +32,7 @@ export async function getParkPlaces(parkCode) {
       "x-api-key": `${apiKey}`
     },
   });
+  console.log(response);
   return await response.json();
 }
 
