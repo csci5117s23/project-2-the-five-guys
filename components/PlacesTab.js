@@ -5,7 +5,7 @@ import PlaceCard from "./PlaceCard";
 import { useState, useEffect } from "react";
 import { DateTimePicker } from "@mui/x-date-pickers";
 
-export default function PlacesTab({ trip }) {
+export default function PlacesTab({ trip, handleUpdateTrip }) {
   //console.log(parkPlaces);
   const [searchValue, setSearchValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -62,13 +62,9 @@ export default function PlacesTab({ trip }) {
         startDate: startDate.toJSON(),
         endDate: endDate.toJSON()
       };
-      const token = await getToken({ template: "codehooks" });
-      if (token) {
-        const newItinerary = trip.itinerary ? [...trip.itinerary, itineraryItem] : [itineraryItem];
-        const newTrip = await updateTrip(token, trip._id, {...trip, itinerary: newItinerary});
-        trip = newTrip;
-        handleCreateClose();
-      }
+      const newItinerary = trip.itinerary ? [...trip.itinerary, itineraryItem] : [itineraryItem];
+      await handleUpdateTrip(trip._id, {...trip, itinerary: newItinerary});
+      handleCreateClose();
     } else {
       setError("Please fill out the form");
     }

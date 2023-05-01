@@ -52,6 +52,14 @@ export default function Home() {
     setOnOpenEditName(true);
   }
 
+  async function handleTripUpdates(id, updates) {
+      const token = await getToken({ template: "codehooks" });
+      if (token) {
+        const newTrip = await updateTrip(token, trip._id, updates);
+        setTrip(newTrip);
+      }
+  }
+
   async function handleDelete(){
     const token = await getToken({ template: "codehooks" });
     const result = await deleteTrip(token, trip._id);
@@ -231,7 +239,7 @@ export default function Home() {
             </div>
           }
 
-          {tab === 1 && <PlacesTab trip={trip} />}
+          {tab === 1 && <PlacesTab trip={trip} handleUpdateTrip={handleTripUpdates} />}
           {/* If in map view, show map */}
           {tab === 2 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]} />}
           {tab === 3 && <NotesTab trip={trip} />}

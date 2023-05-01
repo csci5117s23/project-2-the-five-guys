@@ -1,4 +1,4 @@
-import { Stack, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { Stack, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Divider } from "@mui/material";
 import { useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Grid from "@mui/material/Grid";
@@ -65,6 +65,15 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
       console.error("Delete error: ", error);
     }
   }
+
+  const group = {};
+  itineraryList.forEach(item => {
+    const date = new Date(item.startDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    if (!group[date]) {
+      group[date] = [];
+    }
+    group[date].push(item);
+  });
 
   useEffect(() => {
     console.log("updated value check: ", newUpdate);
@@ -191,8 +200,35 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
   }, [newUpdate]);
 
   return (
-    <Stack spacing={2}>
-      {days}
+    <Stack spacing={2} mt={2}>
+      {Object.entries(group).map(([date, items]) => (
+        <Box key={date}>
+          <Typography variant="h5">{date}:</Typography>
+          <Divider sx={{my: 1}}/>
+          {items.map((item) => (
+            <Accordion key={item.location}>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>{item.location} - {new Date(item.startDate).toLocaleTimeString("en-us", {hour: 'numeric', minute:'2-digit'})}</Typography>
+              </AccordionSummary>
+
+              <Box sx={{ flexGrow: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={11}>
+                    <AccordionDetails>
+                      <Typography>{item.description}</Typography>
+                    </AccordionDetails>
+                  </Grid>
+                  <Grid item xs={1}>
+                    <IconButton onClick={() => handleOpenEditDescription(item.id)}>
+                      <EditIcon />
+                    </IconButton>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Accordion>
+          ))}
+        </Box>
+      ))}
       {dialogOpen && (
         <Dialog open={dialogOpen} onClose={handleCloseEditDescription} BackdropProps={{ invisible: true }}>
           <DialogTitle>Edit Itinerary Description</DialogTitle>
