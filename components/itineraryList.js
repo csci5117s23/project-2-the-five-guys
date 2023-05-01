@@ -1,12 +1,9 @@
-import { Stack, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Divider, ButtonGroup } from "@mui/material";
+import { Stack, Accordion, AccordionSummary, AccordionDetails, Typography, TextField, Button, Dialog, DialogTitle, DialogContent, DialogActions, Divider, ButtonGroup } from "@mui/material";
 import { useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useAuth } from "@clerk/nextjs";
-import { updateTrip } from "@/modules/requests";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from 'dayjs';
 
@@ -43,7 +40,6 @@ export default function ItineraryList({ itineraryList, trip, handleUpdateTrip, p
         return day;
       });
       await handleUpdateTrip(trip._id, { itinerary: updatedItinerary });
-      console.log("Updated itenrary: ", updatedItinerary);
       setDialogOpen(false);
       setNewDescription("");
     } catch (error) {
@@ -53,8 +49,6 @@ export default function ItineraryList({ itineraryList, trip, handleUpdateTrip, p
 
   async function handleDeleteItem(dayToDelete) {
     try {
-
-      console.log("Day to delete: ", dayToDelete);
 
       const updatedItinerary = itineraryList.filter((day) => (console.log("Day Id check: ", day.id), day.id !== dayToDelete.id));
 

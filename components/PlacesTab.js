@@ -8,7 +8,6 @@ import { v4 as uuidv4 } from "uuid";
 import dayjs from "dayjs";
 
 export default function PlacesTab({ trip, handleUpdateTrip }) {
-  //console.log(parkPlaces);
   const [searchValue, setSearchValue] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);

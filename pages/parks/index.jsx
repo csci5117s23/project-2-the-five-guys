@@ -45,7 +45,6 @@ export default function Home({ nationalParks }) {
     grabTrips();
   }, [loading]);
 
-  // console.log(visitedParks);
 
   //leaflet react doest work well with server side rendering(nextjs)
   //credit to fixing the issue: https://stackoverflow.com/questions/57704196/leaflet-with-next-js

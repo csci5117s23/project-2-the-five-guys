@@ -85,14 +85,10 @@ export default function Home() {
   }
   async function loadData() {
     if (!userId) {
-      console.log("No token");
       return;
     }
-    // console.log("userid: ", userId);
     const token = await getToken({ template: "codehooks" });
-    // console.log("Token: ", token);
     let data = await getNationalParks();
-    // console.log("Data: ", data);
 
     const filteredParks = data.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood") || element.fullName.includes("American Samoa"));
     //Need to update this to get the id of the trip from the route
@@ -100,9 +96,7 @@ export default function Home() {
     setTripId(tripId);
     //User this dummyID for testing purposes with itinerary until event page is up
     // const tripId = "64496dabe30f5119ffa72a9b";
-    // console.log("trip id: ", tripId);
     await fetchItemData(userId, tripId, setTrip, token);
-    // console.log("New Trip check: ", trip);
     setNationalParks(filteredParks);
     setNewUpdate(false);
   }
@@ -111,12 +105,9 @@ export default function Home() {
   // Need to update this so that it only shows either the image of the map of the trip or the interactive map view itself based on trip id
   useEffect(() => {
     async function loadData() {
-      // console.log("userid: ", userId);
       if (!userId) {
-        // console.log("NO USER ID");
         return;
       }
-      // console.log("userid: ", userId);
       const token = await getToken({ template: "codehooks" });
       console.log("Token: ", token);
       let data = await getNationalParks();
@@ -124,8 +115,6 @@ export default function Home() {
       //Need to update this to get the id of the trip from the route
       const tripId = router.query["id"];
       //User this dummyID for testing purposes with itinerary until event page is up
-      // const tripId = "6449bf5e3cfb024bad7bb0d4"; MIKKEL'S
-      // console.log("trip id: ", tripId);
       await fetchItemData(userId, tripId, setTrip, token);
       setNationalParks(filteredParks);
       setNewUpdate(false);
@@ -136,7 +125,6 @@ export default function Home() {
   useEffect(() => {
     if (trip && nationalParks) {
       nationalParks.map(np => {
-        // console.log(np.id);
         if(np.id == trip.nationalPark_id){
           setPark(np)
         }

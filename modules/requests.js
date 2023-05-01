@@ -65,7 +65,6 @@ export async function createTrip(authToken, trip) {
 }
 
 export async function updateTrip(authToken, id, updates) {
-  console.log("Backend Check: ", updates);
   const response = await fetch(`${BASE_API_URL}/trips/${id}`, {
     method: "PATCH",
     headers: {
@@ -78,7 +77,6 @@ export async function updateTrip(authToken, id, updates) {
 }
 
 export async function updateTripPut(authToken, id, updates) {
-  console.log("Backend Check: ", updates);
   const response = await fetch(`${BASE_API_URL}/trips/${id}`, {
     method: "PUT",
     headers: {

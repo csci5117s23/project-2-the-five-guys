@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Grid, Fab, Modal, Box, Typography, IconButton, CircularProgress, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, TextField, Autocomplete, Button, Alert } from "@mui/material";
+import { Accordion, AccordionDetails, AccordionSummary, Grid, Fab, Modal, Box, Typography, IconButton, CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Alert } from "@mui/material";
 import Stack from "@mui/joy/Stack";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -12,7 +12,6 @@ import abbrState from "../modules/util";
 import { useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { fetchItemData } from "../modules/data";
-import { formatDate } from "../modules/util";
 import AddIcon from "@mui/icons-material/Add";
 import { getNationalParks, createTrip } from "../modules/requests";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -75,16 +74,12 @@ export default function NationalParkItem(props) {
       const token = await getToken({ template: "codehooks" });
       const data = await fetchItemData(userId, tripId, setTripData, token);
       if (selectedFromMap) {
-        console.log("National Park: ", nationalPark);
         setPark(nationalPark);
       } else {
         const unfilteredParks = await getNationalParks();
-        console.log("Router query: ", router.query);
         const park = unfilteredParks.data.filter((element) => {
           return element.id === router.query.id;
         });
-        console.log("Hello");
-        console.log("park: ", park[0]);
         setPark(park[0]);
       }
 
