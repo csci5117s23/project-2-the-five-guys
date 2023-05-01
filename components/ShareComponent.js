@@ -33,8 +33,9 @@ export default function ShareComponent(props) {
       }
       const shareData = {
           title: "Trip to " + park.name + " from " + start + " to " + end,
-          text: "Itinerary:\n"+ itineraryListText + "\n" + trip.notes
+          text: "Itinerary:\n"+ itineraryListText + "\n"
         };
+      if (trip.notes) shareData.text += trip.notes;
 
         async function shareTrip(){
           try {

@@ -62,6 +62,11 @@ export default function TripListPage({ parks }) {
 
   const handleSubmit = async () => {
     if (park && startDate && endDate && name) {
+      if (startDate > endDate) {
+        setError("Start date needs to be before the End date");
+        return;
+      }
+
       const trip = {
         nationalPark_id: park.id,
         parkCode: park.parkCode,
@@ -186,7 +191,7 @@ const updateTripList = (trips, parks) => {
 
 export async function getStaticProps() {
   const unfilteredParks = await getNationalParksStatic();
-  const parks = unfilteredParks.data.filter((element) => element.designation.includes("National Park"));
+  const parks = unfilteredParks.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood") || element.fullName.includes("American Samoa"));
   return {
     props: {
       parks,

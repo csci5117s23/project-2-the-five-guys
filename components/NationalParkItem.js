@@ -47,6 +47,10 @@ export default function NationalParkItem(props) {
 
   const handleSubmit = async () => {
     if (park && startDate && endDate && name) {
+      if (startDate > endDate) {
+        setError("Start date needs to be before the End date");
+        return;
+      }
       const trip = {
         nationalPark_id: park.id,
         parkCode: park.parkCode,

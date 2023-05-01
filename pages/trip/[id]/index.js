@@ -94,7 +94,7 @@ export default function Home() {
     let data = await getNationalParks();
     // console.log("Data: ", data);
 
-    let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
+    const filteredParks = data.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood") || element.fullName.includes("American Samoa"));
     //Need to update this to get the id of the trip from the route
     const tripId = router.query["id"];
     setTripId(tripId);
@@ -120,7 +120,7 @@ export default function Home() {
       const token = await getToken({ template: "codehooks" });
       console.log("Token: ", token);
       let data = await getNationalParks();
-      let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
+      const filteredParks = data.data.filter((element) => element.designation.includes("National Park") || element.fullName.includes("Redwood") || element.fullName.includes("American Samoa"));
       //Need to update this to get the id of the trip from the route
       const tripId = router.query["id"];
       //User this dummyID for testing purposes with itinerary until event page is up
