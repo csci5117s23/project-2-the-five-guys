@@ -192,12 +192,12 @@ export default function Home() {
                 <ArrowBack style={{ fontSize: "2rem", color: "#1B742E" }} />
               </IconButton>
               <Typography variant="h5">{title}</Typography>
-              <Fab color="primary" aria-label="edit" onClick={handleOpenEditName} sx={{ flexShrink: 0 }}>
+              <Fab color="primary" size="medium" aria-label="edit" onClick={handleOpenEditName} sx={{ flexShrink: 0 }}>
                 <EditIcon />
               </Fab>
             </Stack>
           </Box>
-          <Stack direction="row" divider={<Divider orientation="vertical" flexItem />} spacing={2} alignItems="center">
+          <Stack direction="row" sx={{mt: 1}} divider={<Divider orientation="vertical" flexItem />} spacing={2} alignItems="center" useFlexGap flexWrap="wrap">
             <MuiLink component={Link} href={`/parks/${trip.nationalPark_id}`}>
               {trip.parkName}
             </MuiLink>
@@ -205,25 +205,19 @@ export default function Home() {
               {overallStartDate} - {overallEndDate}
             </Typography>
           </Stack>
+          <Stack direction="row" sx={{mt: 1}} spacing={2} alignItems="center">
+            <ShareComponent start={overallStartDate} end={overallEndDate} trip={trip} park={park} />
+            <Button variant="outlined" onClick={handleDelete} startIcon={<DeleteIcon />}>
+              Delete Trip
+            </Button>
+          </Stack>
           <Tabs value={tab} onChange={(event, newValue) => setTab(newValue)} variant="fullWidth">
             <Tab label="Agenda" />
             <Tab label="Map" />
           </Tabs>
 
           {/* If in agenda view, show itinerary */}
-          {tab === 0 && (
-            <div>
-              {trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}
-              <div className={myTripStyles.deleteButtonWrapper}>
-                <ShareComponent start={overallStartDate} end={overallEndDate} trip={trip} park={park} />
-              </div>
-              <div className={myTripStyles.deleteButtonWrapper}>
-                <Button variant="outlined" className={myTripStyles.deleteButton} onClick={handleDelete} startIcon={<DeleteIcon />}>
-                  Delete Trip
-                </Button>
-              </div>
-            </div>
-          )}
+          {tab === 0 && <div>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}</div>}
 
           {/* If in map view, show map */}
           {tab === 1 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]} />}

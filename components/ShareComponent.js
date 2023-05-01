@@ -1,8 +1,11 @@
 import SendIcon from '@mui/icons-material/Send';
 import Button from '@mui/material/Button';
 import myTripStyles from "@/styles/MyTrip.module.css";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { useState } from 'react';
 
 export default function ShareComponent(props) {
+    const [open, setOpen] = useState(false);
     const trip = props.trip;
     const park = props.park;
     const start = props.start;
@@ -25,6 +28,9 @@ export default function ShareComponent(props) {
       }else{
         itineraryListText = "No itinerary!";
       }
+      function handleClose() {
+        setOpen(false);
+      }
       const shareData = {
           title: "Trip to " + park.name + " from " + start + " to " + end,
           text: "Itinerary:\n"+ itineraryListText + "\n" + trip.notes
@@ -33,15 +39,27 @@ export default function ShareComponent(props) {
         async function shareTrip(){
           try {
               await navigator.share(shareData);
-            } catch (err) {
+          } catch (err) {
+              setOpen(true);
               console.log(err)
-            }
+          }
         }
 
-        return(
+        return (
           <>
-          <Button className={myTripStyles.deleteButton} variant="outlined" onClick={shareTrip} startIcon={<SendIcon />}>Share Trip</Button>
+            <Button variant="outlined" onClick={shareTrip} startIcon={<SendIcon />}>
+              Share Trip
+            </Button>
+            <Dialog open={open} onClose={handleClose}>
+              <DialogTitle>Error</DialogTitle>
+              <DialogContent>
+                <DialogContentText>Sharing is not supported by your browser.</DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>OK</Button>
+              </DialogActions>
+            </Dialog>
           </>
-        )
+        );
     }
 }
