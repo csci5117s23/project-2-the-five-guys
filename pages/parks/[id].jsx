@@ -64,7 +64,7 @@ export default function Home({ park }) {
 }
 
 export async function getStaticPaths() {
-  const unfilteredParks = await getNationalParks();
+  const unfilteredParks = await getNationalParksStatic();
   const filteredParks = unfilteredParks.data.filter((element) =>
     element.designation.includes("National Park") ||
     element.fullName.includes("Redwood")||

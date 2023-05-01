@@ -14,7 +14,6 @@ import {
   Stack} from '@mui/material';
 import {useEffect, useState} from "react";
 import ExploreParkItemList from "@/components/ExploreParkItemList";
-import { getNationalParks } from '@/modules/requests';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import RedirectToHome from '@/components/RedirectToHome';
 import dynamic from 'next/dynamic';
