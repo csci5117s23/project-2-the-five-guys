@@ -51,7 +51,7 @@ Our homepage will show the user all national parks either in a list view or a ma
 
 **Is there anything special we need to know in order to effectively test your app? (optional):**
 
-* ...
+* Share feature requires a compatible browser [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API#browser_compatibility)
 
 
 
