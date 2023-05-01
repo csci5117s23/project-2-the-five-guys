@@ -20,6 +20,7 @@ import { useRouter } from "next/router";
 
 export default function NationalParkItem(props) {
   const nationalPark = props.nationalPark;
+  const selectedFromMap = props.selectedFromMap;
   const tripId = props.tripId;
   const tripLink = "/trip/" + tripId;
   const [modalOpen, setModalOpen] = useState(false);
@@ -33,7 +34,6 @@ export default function NationalParkItem(props) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [park, setPark] = useState(null);
-  const [parks, setParks] = useState(null);
   const router = useRouter();
 
   const handleClickOpen = () => {
@@ -48,8 +48,8 @@ export default function NationalParkItem(props) {
   const handleSubmit = async () => {
     if (park && startDate && endDate && name) {
       const trip = {
-        nationalPark_id: park[0].id,
-        parkCode: park[0].parkCode,
+        nationalPark_id: park.id,
+        parkCode: park.parkCode,
         title: name,
         startDate: startDate.toJSON(),
         endDate: endDate.toJSON(),
@@ -69,16 +69,20 @@ export default function NationalParkItem(props) {
     async function fetchTrip() {
       const token = await getToken({ template: "codehooks" });
       const data = await fetchItemData(userId, tripId, setTripData, token);
-      const unfilteredParks = await getNationalParks();
-      console.log("Router query: ", router.query);
-      const park = unfilteredParks.data.filter((element) => {
-        console.log("element id: ", element.id);
-        return element.id === router.query.id;
-      });
-      console.log("Hello");
-      console.log("park: ", park);
-      // setParks(parks);
-      setPark(park);
+      if (selectedFromMap) {
+        console.log("National Park: ", nationalPark);
+        setPark(nationalPark);
+      } else {
+        const unfilteredParks = await getNationalParks();
+        console.log("Router query: ", router.query);
+        const park = unfilteredParks.data.filter((element) => {
+          return element.id === router.query.id;
+        });
+        console.log("Hello");
+        console.log("park: ", park[0]);
+        setPark(park[0]);
+      }
+
       setLoading(false);
     }
     if (tripId || router.query) {
@@ -246,24 +250,24 @@ export default function NationalParkItem(props) {
                 </Stack>
               </AccordionDetails>
             </Accordion>
-
-            <Dialog open={dialogOpen} onClose={handleClose} fullWidth={true}>
-              <DialogTitle>New Trip</DialogTitle>
-              <DialogContent>
-                {error && <Alert severity="error">{error}</Alert>}
-                <Stack spacing={2} pt={1}>
-                  <TextField label="Name" variant="outlined" value={name} onChange={(event) => setName(event.target.value)} fullWidth />
-                  {console.log("Park full name: ", park[0].fullName)}
-                  <TextField variant="outlined" value={park[0].fullName} />
-                  <DatePicker label="Start Date" fullWidth value={startDate} onChange={(newValue) => setStartDate(newValue)} />
-                  <DatePicker label="End Date" fullWidth value={endDate} onChange={(newValue) => setEndDate(newValue)} />
-                </Stack>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={handleSubmit}>Create Trip</Button>
-              </DialogActions>
-            </Dialog>
+            {dialogOpen && (
+              <Dialog open={dialogOpen} onClose={handleClose} fullWidth={true}>
+                <DialogTitle>New Trip</DialogTitle>
+                <DialogContent>
+                  {error && <Alert severity="error">{error}</Alert>}
+                  <Stack spacing={2} pt={1}>
+                    <TextField label="Name" variant="outlined" value={name} onChange={(event) => setName(event.target.value)} fullWidth />
+                    <TextField variant="outlined" value={park.fullName} />
+                    <DatePicker label="Start Date" fullWidth value={startDate} onChange={(newValue) => setStartDate(newValue)} />
+                    <DatePicker label="End Date" fullWidth value={endDate} onChange={(newValue) => setEndDate(newValue)} />
+                  </Stack>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Cancel</Button>
+                  <Button onClick={handleSubmit}>Create Trip</Button>
+                </DialogActions>
+              </Dialog>
+            )}
           </div>
         </div>
       </div>
