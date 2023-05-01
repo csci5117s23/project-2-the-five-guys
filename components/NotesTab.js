@@ -3,14 +3,11 @@ import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { updateTrip } from "../modules/requests";
 
-export default function NotesTab({ trip }) {
+export default function NotesTab({ trip, handleUpdates }) {
   const [newNotes, setNewNotes] = useState(trip.notes);
-  const { getToken } = useAuth();
   async function handleNotes() {
     try {
-      const token = await getToken({ template: "codehooks" });
-
-      const response = await updateTrip(token, trip._id, { notes: newNotes });
+      const response = await handleUpdates(trip._id, { notes: newNotes });
       setNewNotes(response.notes);
     } catch (error) {
       console.error("Notes error: ", error);

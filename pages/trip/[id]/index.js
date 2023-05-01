@@ -251,7 +251,7 @@ export default function Home() {
           {tab === 1 && <PlacesTab trip={trip} handleUpdateTrip={handleTripUpdates} />}
           {/* If in map view, show map */}
           {tab === 2 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]} />}
-          {tab === 3 && <NotesTab trip={trip} />}
+          {tab === 3 && <NotesTab handleUpdates={handleTripUpdates} trip={trip} />}
         </Container>
 
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
