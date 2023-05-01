@@ -35,6 +35,16 @@ export default function ItineraryMapComponent(props)
     )
   }
 
+  //if no items on iternary dont display map
+  if(!itinerary.itinerary)
+  {
+    return (
+      <div className="centered">
+          <div>No agenda.</div>
+      </div>
+      )
+  }
+
   const minLatLong = {"minLat":75, "minLong":-66};
   const maxLatLong = {"maxLat":12, "maxLong": -180};
   places.forEach(place => {
