@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getNationalParks, updateTrip } from "@/modules/requests";
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
-import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@mui/material";
+import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Container, Typography, List, ListItem, Fab, Tabs, Tab, Divider, Link as MuiLink } from "@mui/material";
 import dynamic from "next/dynamic";
 import ShareComponent from "@/components/ShareComponent"
 import myTripStyles from "@/styles/MyTrip.module.css";
@@ -16,6 +16,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { fetchItemData, deleteTrip } from "@/modules/data";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
+import { ArrowBack } from "@mui/icons-material";
+import Link from "next/link";
+import PlacesTab from "../../../components/PlacesTab";
+import NotesTab from "../../../components/NotesTab";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -33,6 +37,7 @@ export default function Home() {
   const [tripId, setTripId] = useState("");
   const [deleting, setDeleting]=useState(false);
   const [park, setPark]=useState(null);
+  const [tab, setTab] = useState(0);
 
   const [trip, setTrip] = useState(null);
   const router = useRouter();
@@ -45,6 +50,14 @@ export default function Home() {
   // opens the editor for name,startDate,endDate
   function handleOpenEditName() {
     setOnOpenEditName(true);
+  }
+
+  async function handleTripUpdates(id, updates) {
+      const token = await getToken({ template: "codehooks" });
+      if (token) {
+        const newTrip = await updateTrip(token, trip._id, updates);
+        setTrip(newTrip);
+      }
   }
 
   async function handleDelete(){
@@ -96,7 +109,7 @@ export default function Home() {
       }
       // console.log("userid: ", userId);
       const token = await getToken({ template: "codehooks" });
-      // console.log("Token: ", token);
+      console.log("Token: ", token);
       let data = await getNationalParks();
       let filteredParks = data.data.filter((element) => element.designation.includes("National Park"));
       //Need to update this to get the id of the trip from the route
@@ -118,7 +131,7 @@ export default function Home() {
         if(np.id == trip.nationalPark_id){
           setPark(np)
         }
-      });  
+      });
       // set trip hooks if title is not null
       if (trip.title) {
         setTitle(trip.title);
@@ -176,63 +189,62 @@ export default function Home() {
   return (
     <>
       <SignedIn>
-        <Box sx={{ flexGrow: 2 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={8}>
-              {" "}
-              <h1 className={myTripStyles.myTrip}>{title}</h1>
-            </Grid>
-            <Grid item xs={2}>
-              {" "}
-              {/* <EditIcon className={myTripStyles.edit} /> */}
-              <IconButton className={myTripStyles.edit} onClick={handleOpenEditName}>
+        <Container>
+          <Box sx={{ flexGrow: 2, mt: 2 }}>
+            <Stack direction="row" justifyContent="space-between" spacing={2} alignItems="center">
+              <IconButton
+                aria-label="back"
+                size="large"
+                onClick={() => {
+                  router.back();
+                }}
+              >
+                <ArrowBack style={{ fontSize: "2rem", color: "#1B742E" }} />
+              </IconButton>
+              <Typography variant="h5">{title}</Typography>
+              <Fab color="primary" size="medium" aria-label="edit" onClick={handleOpenEditName} sx={{ flexShrink: 0 }}>
                 <EditIcon />
-              </IconButton>
-            </Grid>
-            <Grid item xs={2}>
-              {" "}
-              {/* Need to edit this later so that there is a link to the add events page */}
-              <IconButton className={myTripStyles.edit}>
-                <AddIcon />
-              </IconButton>
-            </Grid>
-          </Grid>
-        </Box>
+              </Fab>
+            </Stack>
+          </Box>
+          <Stack direction="row" sx={{mt: 1}} divider={<Divider orientation="vertical" flexItem />} spacing={2} alignItems="center" useFlexGap flexWrap="wrap">
+            <MuiLink component={Link} href={`/parks/${trip.nationalPark_id}`}>
+              {trip.parkName}
+            </MuiLink>
+            <Typography variant="body1">
+              {overallStartDate} - {overallEndDate}
+            </Typography>
+          </Stack>
+          <Stack direction="row" sx={{my: 1}} spacing={2} alignItems="center">
+            <ShareComponent start={overallStartDate} end={overallEndDate} trip={trip} park={park} />
+            <Button variant="outlined" onClick={handleDelete} startIcon={<DeleteIcon />}>
+              Delete Trip
+            </Button>
+          </Stack>
+          <Tabs value={tab} onChange={(event, newValue) => setTab(newValue)} variant="fullWidth">
+            <Tab label="Agenda" />
+            <Tab label="Places" />
+            <Tab label="Map" />
+            <Tab label="Notes" />
+          </Tabs>
 
-        <h2 className={myTripStyles.myTrip}>
-          {overallStartDate} - {overallEndDate}
-        </h2>
-
-        <div className={myTripStyles.agendaWrapper}>
-        {/* Buttons to toggle agenda or map view */}
-        <div className={myTripStyles.myTrip}>
-          <Button variant="outlined" onClick={() => setPageView("agenda")}>
-            {" "}
-            Agenda View{" "}
-          </Button>
-          <Button variant="outlined" onClick={() => setPageView("map")}>
-            {" "}
-            Map View{" "}
-          </Button>
-        </div>
-
-        {/* If in agenda view, show itinerary */}
-        {pageView === "agenda" && 
-          <div className={myTripStyles.myTrip}>
-            {trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}
-            <div className={myTripStyles.deleteButtonWrapper}>
-              <ShareComponent start={overallStartDate} end={overallEndDate} trip={trip} park={park}/>
+          {/* If in agenda view, show itinerary */}
+          {tab === 0 &&
+            <div>
+              {trip.itinerary ? (
+                <ItineraryList itineraryList={trip.itinerary} trip={trip} loadData={loadData} notes={trip.notes} handleUpdateTrip={handleTripUpdates} />
+              ) : (
+                <Typography variant="body1">No Agenda! Go to the places tab to start planning your trip.</Typography>
+              )}
             </div>
-            <div className={myTripStyles.deleteButtonWrapper}>
-              <Button variant="outlined" className={myTripStyles.deleteButton} onClick={handleDelete} startIcon={<DeleteIcon />}>
-                      Delete Trip
-              </Button>
-            </div>
-          </div>}
-          </div>
+          }
 
-        {/* If in map view, show map */}
-        {pageView === "map" && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]}/>}
+          {tab === 1 && <PlacesTab trip={trip} handleUpdateTrip={handleTripUpdates} />}
+          {/* If in map view, show map */}
+          {tab === 2 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]} />}
+          {tab === 3 && <NotesTab trip={trip} />}
+        </Container>
+
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
           <DialogTitle>Edit Trip Details</DialogTitle>
           <DialogContent>

@@ -14,12 +14,12 @@ import {
   Stack} from '@mui/material';
 import {useEffect, useState} from "react";
 import ExploreParkItemList from "@/components/ExploreParkItemList";
-import { getNationalParks } from '@/modules/requests';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import RedirectToHome from '@/components/RedirectToHome';
 import dynamic from 'next/dynamic';
 import { fetchVisitedParks } from '../../modules/data';
 import { useAuth } from '@clerk/nextjs';
+import { getNationalParksStatic } from '../../modules/requests';
 
 export default function Home({ nationalParks }) {
   const [isListView, setIsListView] = useState(true);
@@ -108,7 +108,7 @@ export default function Home({ nationalParks }) {
 
                   {/* Search field */}
                   <ListItem>
-                    <Stack direction="row" spacing={2} sx={{width: "100%"}}>
+                    <Stack direction="row" spacing={2} alignItems="center" sx={{width: "100%"}}>
                       <TextField
                         id="outlined-basic"
                         label="Search parks or states"
@@ -123,7 +123,7 @@ export default function Home({ nationalParks }) {
                         onChange={(e) => handleSearch(e)}
                       />
                       <FormGroup>
-                        <FormControlLabel control={<Checkbox checked={filterVisited} onChange={() => setFilterVisitied(!filterVisited)}/>} label="Filter by visited" />
+                        <FormControlLabel control={<Checkbox checked={filterVisited} onChange={() => setFilterVisitied(!filterVisited)}/>} label="Visited Parks" />
                       </FormGroup>
                     </Stack>
                   </ListItem>
@@ -152,7 +152,7 @@ export default function Home({ nationalParks }) {
 
 export async function getStaticProps() {
   // Grab all parks and filter
-  const unfilteredParks = await getNationalParks();
+  const unfilteredParks = await getNationalParksStatic();
   const nationalParks = unfilteredParks.data.filter((element) =>
     element.designation.includes("National Park") ||
     element.fullName.includes("Redwood") ||

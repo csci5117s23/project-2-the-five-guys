@@ -11,10 +11,11 @@ const tripYup = object({
   userId: string().required(),
   title: string(),
   nationalPark_id: string().required(),
+  parkName: string().required(),
   parkCode: string().required(),
   startDate: date().required(),
   endDate: date().required(),
-  notes: string(),
+  notes: string().default(""),
   itinerary: array().of(
     object({
       id: string().required(),

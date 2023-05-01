@@ -21,7 +21,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import Container from "@mui/material/Container";
 import { useState, useEffect } from "react";
-import { getNationalParks, getTrips, createTrip } from "../modules/requests";
+import { getNationalParks, getTrips, createTrip, getNationalParksStatic } from "../modules/requests";
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
 import TripCard from "../components/TripCard";
@@ -65,6 +65,7 @@ export default function TripListPage({ parks }) {
       const trip = {
         nationalPark_id: park.id,
         parkCode: park.parkCode,
+        parkName: park.fullName,
         title: name,
         startDate: startDate.toJSON(),
         endDate: endDate.toJSON()
@@ -184,7 +185,7 @@ const updateTripList = (trips, parks) => {
 }
 
 export async function getStaticProps() {
-  const unfilteredParks = await getNationalParks();
+  const unfilteredParks = await getNationalParksStatic();
   const parks = unfilteredParks.data.filter((element) => element.designation.includes("National Park"));
   return {
     props: {
