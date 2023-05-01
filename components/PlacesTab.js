@@ -4,6 +4,7 @@ import { Alert, Box, Button, CircularProgress, Container, Dialog, DialogActions,
 import PlaceCard from "./PlaceCard";
 import { useState, useEffect } from "react";
 import { DateTimePicker } from "@mui/x-date-pickers";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function PlacesTab({ trip, handleUpdateTrip }) {
   //console.log(parkPlaces);
@@ -60,7 +61,8 @@ export default function PlacesTab({ trip, handleUpdateTrip }) {
         latitude: dialogPlace.latitude,
         longitude: dialogPlace.longitude,
         startDate: startDate.toJSON(),
-        endDate: endDate.toJSON()
+        endDate: endDate.toJSON(),
+        id: uuidv4()
       };
       const newItinerary = trip.itinerary ? [...trip.itinerary, itineraryItem] : [itineraryItem];
       await handleUpdateTrip(trip._id, {...trip, itinerary: newItinerary});

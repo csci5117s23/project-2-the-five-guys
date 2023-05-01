@@ -232,7 +232,7 @@ export default function Home() {
           {tab === 0 &&
             <div>
               {trip.itinerary ? (
-                <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} />
+                <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} handleUpdateTrip={handleTripUpdates} />
               ) : (
                 <Typography variant="body1">No Agenda! Go to the places tab to start planning your trip.</Typography>
               )}

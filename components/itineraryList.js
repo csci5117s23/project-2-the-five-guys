@@ -1,4 +1,4 @@
-import { Stack, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Divider } from "@mui/material";
+import { Stack, Accordion, AccordionSummary, AccordionDetails, Typography, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Divider, ButtonGroup } from "@mui/material";
 import { useState, useEffect } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Grid from "@mui/material/Grid";
@@ -8,9 +8,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useAuth } from "@clerk/nextjs";
 import { updateTrip } from "@/modules/requests";
 
-export default function ItineraryList({ itineraryList, tripId, loadData, notes }) {
-  const [days, setDays] = useState([]);
-  const [day, setEditDay] = useState(-1);
+export default function ItineraryList({ itineraryList, tripId, handleUpdateTrip }) {
+  const [currentItem, setCurrentItem] = useState(null);
   const [newDescription, setNewDescription] = useState("");
   const [newItinerary, setNewItinerary] = useState(itineraryList);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -18,30 +17,27 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
   const { getToken } = useAuth();
 
   //closes the editor for itinerary's descriptions
-  function handleCloseEditDescription() {
+  function handleCloseEdit() {
     setDialogOpen(false);
   }
 
   // opens the editor for itinerary's descriptions
-  function handleOpenEditDescription(index) {
-    setEditDay(index);
+  function handleOpenEdit(item) {
+    setCurrentItem(item);
     setDialogOpen(true);
   }
 
   //updates database with PATCH request for itinerary's descriptions. Updates after a second or two (on reload)
-  async function handleSubmitEditDescription(daytoUpdate, description) {
+  async function handleSubmitEdit(daytoUpdate, description) {
     try {
-      const token = await getToken({ template: "codehooks" });
-      const updatedItinerary = newItinerary.map((day) => {
-        if (day.id === daytoUpdate) {
+      const updatedItinerary = itineraryList.map((day) => {
+        if (day.id === daytoUpdate.id) {
           return { ...day, description };
         }
         return day;
       });
-      await updateTrip(token, tripId, { itinerary: updatedItinerary });
+      await handleUpdateTrip(tripId, { itinerary: updatedItinerary });
       console.log("Updated itenrary: ", updatedItinerary);
-      setNewItinerary(updatedItinerary);
-      setNewUpdate(true);
       setDialogOpen(false);
       setNewDescription("");
     } catch (error) {
@@ -49,18 +45,14 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
     }
   }
 
-  async function handleDeleteDay(dayToDelete) {
+  async function handleDeleteItem(dayToDelete) {
     try {
-      const token = await getToken({ template: "codehooks" });
 
       console.log("Day to delete: ", dayToDelete);
 
-      const updatedItinerary = newItinerary.filter((day) => (console.log("Day Id check: ", day.id), day.id !== dayToDelete));
+      const updatedItinerary = newItinerary.filter((day) => (console.log("Day Id check: ", day.id), day.id !== dayToDelete.id));
 
-      await updateTrip(token, tripId, { itinerary: updatedItinerary });
-      console.log("Updated Itinerary: ", updatedItinerary);
-      setNewItinerary(updatedItinerary);
-      setNewUpdate(true);
+      await handleUpdateTrip(tripId, { itinerary: updatedItinerary });
     } catch (error) {
       console.error("Delete error: ", error);
     }
@@ -75,173 +67,56 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
     group[date].push(item);
   });
 
-  useEffect(() => {
-    console.log("updated value check: ", newUpdate);
-    console.log("new itinerary check: ", newItinerary);
-
-    // loadData();
-
-    setNewUpdate(false);
-    async function extractDays() {
-      console.log("Itinerary list: ", newItinerary);
-
-      const sortedItinerary = Object.values(newItinerary).sort((a, b) => {
-        const startDateA = new Date(a.startDate);
-        const startDateB = new Date(b.startDate);
-        const endDateA = new Date(a.endDate);
-        const endDateB = new Date(b.endDate);
-
-        if (startDateA.getTime() !== startDateB.getTime()) {
-          return startDateA - startDateB;
-        }
-
-        if (endDateA.getTime() !== endDateB.getTime()) {
-          return endDateA - endDateB;
-        }
-
-        return 0;
-      });
-
-      setNewItinerary(sortedItinerary);
-      console.log("Events check: ", sortedItinerary);
-      const groupedItinerary = {};
-      sortedItinerary.forEach((e) => {
-        const startDay = new Date(e.startDate).toLocaleDateString();
-        const endDay = new Date(e.endDate).toLocaleDateString();
-
-        if (startDay === endDay) {
-          // Single day event
-          if (!groupedItinerary[startDay]) {
-            groupedItinerary[startDay] = [];
-          }
-          groupedItinerary[startDay].push(e);
-        } else {
-          // Multi-day event
-          const startDate = new Date(e.startDate);
-          const endDate = new Date(e.endDate);
-          const numDays = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
-
-          for (let i = 0; i < numDays; i++) {
-            const day = new Date(startDate.getTime() + i * 24 * 60 * 60 * 1000).toLocaleDateString();
-            if (!groupedItinerary[day]) {
-              groupedItinerary[day] = [];
-            }
-            groupedItinerary[day].push(e);
-          }
-        }
-      });
-
-      console.log("Grouped itienrary: ", groupedItinerary);
-
-      let dayNumber = 0;
-      const groupedUpdatedDays = Object.keys(groupedItinerary).map((day) => {
-        console.log("group day check: ", day);
-        dayNumber = dayNumber + 1;
-        const date = new Date(day);
-        let formattedDay = date.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-
-        return (
-          <Accordion key={dayNumber}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-              <Box sx={{ flexGrow: 2 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={10}>
-                    <Typography>
-                      Day {dayNumber} ( {formattedDay} )
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={1}>
-                    <IconButton onClick={() => handleDeleteDay(dayId)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </Grid>
-                  <Grid item xs={1}></Grid>
-                </Grid>
-              </Box>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack spacing={2}>
-                {groupedItinerary[day].map((event) => {
-                  {
-                    console.log("group event check: ", event);
-                  }
-                  return (
-                    <Accordion key={event.id}>
-                      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography>{event.location}</Typography>
-                      </AccordionSummary>
-
-                      <Box sx={{ flexGrow: 2 }}>
-                        <Grid container spacing={2}>
-                          <Grid item xs={11}>
-                            <AccordionDetails>
-                              <Typography>{event.description}</Typography>
-                            </AccordionDetails>
-                          </Grid>
-                          <Grid item xs={1}>
-                            <IconButton onClick={() => handleOpenEditDescription(event.id)}>
-                              <EditIcon />
-                            </IconButton>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </Accordion>
-                  );
-                })}
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-        );
-      });
-
-      setDays(groupedUpdatedDays);
-    }
-    extractDays();
-  }, [newUpdate]);
+  const sortedDates = Object.keys(group).sort((a, b) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateA - dateB;
+  });
 
   return (
     <Stack spacing={2} mt={2}>
-      {Object.entries(group).map(([date, items]) => (
+      {sortedDates.map(date => (
         <Box key={date}>
           <Typography variant="h5">{date}:</Typography>
-          <Divider sx={{my: 1}}/>
-          {items.map((item) => (
-            <Accordion key={item.location}>
+          <Divider sx={{ my: 1 }} />
+          {group[date].sort((a, b) => {
+            const dateA = new Date(a.startDate);
+            const dateB = new Date(b.startDate);
+            return dateA - dateB;
+          }).map(item => (
+            <Accordion key={item.id}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <Typography>{item.location} - {new Date(item.startDate).toLocaleTimeString("en-us", {hour: 'numeric', minute:'2-digit'})}</Typography>
+                <Typography>
+                  {item.location} - {new Date(item.startDate).toLocaleTimeString("en-us", { hour: "numeric", minute: "2-digit" })}
+                </Typography>
               </AccordionSummary>
-
-              <Box sx={{ flexGrow: 2 }}>
-                <Grid container spacing={2}>
-                  <Grid item xs={11}>
-                    <AccordionDetails>
-                      <Typography>{item.description}</Typography>
-                    </AccordionDetails>
-                  </Grid>
-                  <Grid item xs={1}>
-                    <IconButton onClick={() => handleOpenEditDescription(item.id)}>
-                      <EditIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
-              </Box>
+              <AccordionDetails>
+                <ButtonGroup sx={{mb: 1}}>
+                  <Button variant="outlined" onClick={() => handleOpenEdit(item)} startIcon={<EditIcon />}>
+                    Edit
+                  </Button>
+                  <Button variant="outlined" onClick={() => handleDeleteItem(item)} startIcon={<DeleteIcon />}>
+                    Delete
+                  </Button>
+                </ButtonGroup>
+                <Typography>Description:</Typography>
+                <Typography>{item.description}</Typography>
+              </AccordionDetails>
             </Accordion>
           ))}
         </Box>
       ))}
       {dialogOpen && (
-        <Dialog open={dialogOpen} onClose={handleCloseEditDescription} BackdropProps={{ invisible: true }}>
+        <Dialog open={dialogOpen} onClose={handleCloseEdit} BackdropProps={{ invisible: true }}>
           <DialogTitle>Edit Itinerary Description</DialogTitle>
           <DialogContent>
-            {console.log("Day check: ", day)}
-            {console.log("New Description: ", newDescription)}
             <Stack spacing={2} pt={1}>
               <TextField label="New Description" multiline fullWidth value={newDescription} onChange={(e) => setNewDescription(e.target.value)} />
             </Stack>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseEditDescription}>Cancel</Button>
-            <Button onClick={() => handleSubmitEditDescription(day, newDescription)}>Save</Button>
+            <Button onClick={handleCloseEdit}>Cancel</Button>
+            <Button onClick={() => handleSubmitEdit(currentItem, newDescription)}>Save</Button>
           </DialogActions>
         </Dialog>
       )}
