@@ -24,6 +24,8 @@ export default function ItineraryList({ itineraryList, trip, handleUpdateTrip, p
   // opens the editor for itinerary's descriptions
   function handleOpenEdit(item) {
     setCurrentItem(item);
+    setNewDate(dayjs(item.startDate));
+    setNewDescription(item.description);
     setDialogOpen(true);
   }
 
