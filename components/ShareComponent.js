@@ -16,7 +16,9 @@ export default function ShareComponent(props) {
         trip.itinerary.map(item => {
           let startDate = new Date(item.startDate);
           let endDate = new Date(item.endDate);
-          itineraryListText += startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) + " - " + endDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+          //{ hour: "numeric", minute: "2-digit" }
+          // itineraryListText += startDate.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) 
+          itineraryListText += startDate.toLocaleDateString("en-US", { hour: "numeric", minute: "2-digit" });
           if(item.location){
             itineraryListText+=": " +item.location;
           }
