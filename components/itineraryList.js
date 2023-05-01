@@ -31,8 +31,12 @@ export default function ItineraryList({ itineraryList, trip, handleUpdateTrip })
   async function handleSubmitEdit(daytoUpdate, description) {
     try {
       const updatedItinerary = itineraryList.map((day) => {
-        if (day.id === daytoUpdate.id && newDate) {
-          return { ...day, description, startDate: newDate, endDate: newDate };
+        if (day.id === daytoUpdate.id) {
+          if (newDate) {
+            return { ...day, description, startDate: newDate, endDate: newDate };
+          } else {
+            return { ...day, description };
+          }
         }
         return day;
       });
