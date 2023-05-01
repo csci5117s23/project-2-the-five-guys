@@ -232,7 +232,7 @@ export default function Home() {
           </div>
 
         {/* If in map view, show map */}
-        {pageView === "map" && trip.itinerary ? <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]}/> : <h2>No Agenda!</h2>}
+        {pageView === "map" && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]}/>}
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
           <DialogTitle>Edit Trip Details</DialogTitle>
           <DialogContent>
