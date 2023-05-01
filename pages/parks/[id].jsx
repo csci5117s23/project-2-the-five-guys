@@ -53,7 +53,7 @@ export default function Home({ park }) {
         <IconButton aria-label="back" size="large" onClick={() => {router.back()}}>
           <ArrowBackIcon style={{fontSize: "3rem", color: "#1B742E"}}/>
         </IconButton>
-        <NationalParkItem nationalPark={park} tripId={tripId} />
+        <NationalParkItem nationalPark={park} tripId={tripId} selectedFromMap={false}/>
       </SignedIn>
 
       <SignedOut>
