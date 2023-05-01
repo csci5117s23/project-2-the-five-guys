@@ -10,7 +10,7 @@ import { updateTrip } from "@/modules/requests";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from 'dayjs';
 
-export default function ItineraryList({ itineraryList, trip, handleUpdateTrip }) {
+export default function ItineraryList({ itineraryList, trip, handleUpdateTrip, putRequest }) {
   const [currentItem, setCurrentItem] = useState(null);
   const [newDescription, setNewDescription] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -24,6 +24,8 @@ export default function ItineraryList({ itineraryList, trip, handleUpdateTrip })
   // opens the editor for itinerary's descriptions
   function handleOpenEdit(item) {
     setCurrentItem(item);
+    setNewDate(dayjs(item.startDate));
+    setNewDescription(item.description);
     setDialogOpen(true);
   }
 
@@ -56,7 +58,7 @@ export default function ItineraryList({ itineraryList, trip, handleUpdateTrip })
 
       const updatedItinerary = itineraryList.filter((day) => (console.log("Day Id check: ", day.id), day.id !== dayToDelete.id));
 
-      await handleUpdateTrip(trip._id, { itinerary: updatedItinerary });
+      await putRequest(trip._id, { ...trip, itinerary: updatedItinerary });
     } catch (error) {
       console.error("Delete error: ", error);
     }

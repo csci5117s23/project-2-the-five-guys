@@ -76,3 +76,16 @@ export async function updateTrip(authToken, id, updates) {
   });
   return await response.json();
 }
+
+export async function updateTripPut(authToken, id, updates) {
+  console.log("Backend Check: ", updates);
+  const response = await fetch(`${BASE_API_URL}/trips/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + authToken,
+    },
+    body: JSON.stringify(updates),
+  });
+  return await response.json();
+}

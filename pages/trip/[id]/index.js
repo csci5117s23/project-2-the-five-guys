@@ -20,6 +20,7 @@ import { ArrowBack } from "@mui/icons-material";
 import Link from "next/link";
 import PlacesTab from "../../../components/PlacesTab";
 import NotesTab from "../../../components/NotesTab";
+import { updateTripPut } from "../../../modules/requests";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -56,6 +57,14 @@ export default function Home() {
       const token = await getToken({ template: "codehooks" });
       if (token) {
         const newTrip = await updateTrip(token, trip._id, updates);
+        setTrip(newTrip);
+      }
+  }
+
+   async function handleTripUpdatesPUT(id, updates) {
+      const token = await getToken({ template: "codehooks" });
+      if (token) {
+        const newTrip = await updateTripPut(token, trip._id, updates);
         setTrip(newTrip);
       }
   }
@@ -232,7 +241,7 @@ export default function Home() {
           {tab === 0 &&
             <div>
               {trip.itinerary ? (
-                <ItineraryList itineraryList={trip.itinerary} trip={trip} loadData={loadData} notes={trip.notes} handleUpdateTrip={handleTripUpdates} />
+                <ItineraryList putRequest={handleTripUpdatesPUT} itineraryList={trip.itinerary} trip={trip} loadData={loadData} notes={trip.notes} handleUpdateTrip={handleTripUpdates} />
               ) : (
                 <Typography variant="body1">No Agenda! Go to the places tab to start planning your trip.</Typography>
               )}
@@ -242,7 +251,7 @@ export default function Home() {
           {tab === 1 && <PlacesTab trip={trip} handleUpdateTrip={handleTripUpdates} />}
           {/* If in map view, show map */}
           {tab === 2 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]} />}
-          {tab === 3 && <NotesTab trip={trip} />}
+          {tab === 3 && <NotesTab handleUpdates={handleTripUpdates} trip={trip} />}
         </Container>
 
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
