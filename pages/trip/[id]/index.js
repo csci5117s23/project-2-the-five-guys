@@ -18,6 +18,8 @@ import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import { ArrowBack } from "@mui/icons-material";
 import Link from "next/link";
+import PlacesTab from "../../../components/PlacesTab";
+import NotesTab from "../../../components/NotesTab";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -205,7 +207,7 @@ export default function Home() {
               {overallStartDate} - {overallEndDate}
             </Typography>
           </Stack>
-          <Stack direction="row" sx={{mt: 1}} spacing={2} alignItems="center">
+          <Stack direction="row" sx={{my: 1}} spacing={2} alignItems="center">
             <ShareComponent start={overallStartDate} end={overallEndDate} trip={trip} park={park} />
             <Button variant="outlined" onClick={handleDelete} startIcon={<DeleteIcon />}>
               Delete Trip
@@ -213,7 +215,9 @@ export default function Home() {
           </Stack>
           <Tabs value={tab} onChange={(event, newValue) => setTab(newValue)} variant="fullWidth">
             <Tab label="Agenda" />
+            <Tab label="Places" />
             <Tab label="Map" />
+            <Tab label="Notes" />
           </Tabs>
 
           {/* If in agenda view, show itinerary */}
@@ -227,8 +231,10 @@ export default function Home() {
             </div>
           }
 
+          {tab === 1 && <PlacesTab trip={trip} />}
           {/* If in map view, show map */}
-          {tab === 1 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]} />}
+          {tab === 2 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]} />}
+          {tab === 3 && <NotesTab trip={trip} />}
         </Container>
 
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>

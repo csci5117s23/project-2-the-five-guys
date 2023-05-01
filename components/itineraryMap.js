@@ -64,7 +64,7 @@ export default function ItineraryMapComponent(props)
 
    //get parks that wont appear on map, no lat or long
   const noLocations = itinerary.itinerary.filter((element) => !element.latitude || !element.longitude);
-  
+
   return (
     <>
       <div className='tripMap'>

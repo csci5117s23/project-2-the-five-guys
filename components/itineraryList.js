@@ -16,7 +16,6 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
   const [dialogOpen, setDialogOpen] = useState(false);
   const [newUpdate, setNewUpdate] = useState(false);
   const { getToken } = useAuth();
-  const [newNotes, setNewNotes] = useState(notes);
 
   //closes the editor for itinerary's descriptions
   function handleCloseEditDescription() {
@@ -64,17 +63,6 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
       setNewUpdate(true);
     } catch (error) {
       console.error("Delete error: ", error);
-    }
-  }
-
-  async function handleNotes() {
-    try {
-      const token = await getToken({ template: "codehooks" });
-
-      await updateTrip(token, tripId, { notes: newNotes });
-      setNewUpdate(true);
-    } catch (error) {
-      console.error("Notes error: ", error);
     }
   }
 
@@ -221,8 +209,6 @@ export default function ItineraryList({ itineraryList, tripId, loadData, notes }
           </DialogActions>
         </Dialog>
       )}
-      <TextField label="Log the Trip!" multiline fullWidth value={newNotes} onChange={(e) => setNewNotes(e.target.value)} />
-      <Button onClick={() => handleNotes()}>Save</Button>
     </Stack>
   );
 }
