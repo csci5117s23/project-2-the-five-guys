@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getNationalParks, updateTrip } from "@/modules/requests";
 import { SignedIn, SignedOut, useAuth } from "@clerk/nextjs";
 import RedirectToHome from "@/components/RedirectToHome";
-import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Container, Typography, List, ListItem, Fab, Tabs, Tab } from "@mui/material";
+import { Stack, IconButton, TextField, CircularProgress, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Container, Typography, List, ListItem, Fab, Tabs, Tab, Divider, Link as MuiLink } from "@mui/material";
 import dynamic from "next/dynamic";
 import ShareComponent from "@/components/ShareComponent"
 import myTripStyles from "@/styles/MyTrip.module.css";
@@ -16,8 +16,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { fetchItemData, deleteTrip } from "@/modules/data";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
-import Link from "next/link";
 import { ArrowBack } from "@mui/icons-material";
+import Link from "next/link";
 
 export default function Home() {
   const [nationalParks, setNationalParks] = useState([]);
@@ -191,36 +191,42 @@ export default function Home() {
               >
                 <ArrowBack style={{ fontSize: "2rem", color: "#1B742E" }} />
               </IconButton>
-              <Typography variant="h4">{title}</Typography>
+              <Typography variant="h5">{title}</Typography>
               <Fab color="primary" aria-label="edit" onClick={handleOpenEditName} sx={{ flexShrink: 0 }}>
                 <EditIcon />
               </Fab>
             </Stack>
           </Box>
-          <Typography variant="subtitle1">
-            {overallStartDate} - {overallEndDate}
-          </Typography>
+          <Stack direction="row" divider={<Divider orientation="vertical" flexItem />} spacing={2} alignItems="center">
+            <MuiLink component={Link} href={`/parks/${trip.nationalPark_id}`}>
+              {trip.parkName}
+            </MuiLink>
+            <Typography variant="body1">
+              {overallStartDate} - {overallEndDate}
+            </Typography>
+          </Stack>
           <Tabs value={tab} onChange={(event, newValue) => setTab(newValue)} variant="fullWidth">
             <Tab label="Agenda" />
             <Tab label="Map" />
           </Tabs>
 
           {/* If in agenda view, show itinerary */}
-          {tab === 0 &&
-          <div>
-            {trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}
-            <div className={myTripStyles.deleteButtonWrapper}>
-              <ShareComponent start={overallStartDate} end={overallEndDate} trip={trip} park={park}/>
+          {tab === 0 && (
+            <div>
+              {trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}
+              <div className={myTripStyles.deleteButtonWrapper}>
+                <ShareComponent start={overallStartDate} end={overallEndDate} trip={trip} park={park} />
+              </div>
+              <div className={myTripStyles.deleteButtonWrapper}>
+                <Button variant="outlined" className={myTripStyles.deleteButton} onClick={handleDelete} startIcon={<DeleteIcon />}>
+                  Delete Trip
+                </Button>
+              </div>
             </div>
-            <div className={myTripStyles.deleteButtonWrapper}>
-              <Button variant="outlined" className={myTripStyles.deleteButton} onClick={handleDelete} startIcon={<DeleteIcon />}>
-                      Delete Trip
-              </Button>
-            </div>
-          </div>}
+          )}
 
           {/* If in map view, show map */}
-          {tab === 1 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]}/>}
+          {tab === 1 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]} />}
         </Container>
 
         <Dialog open={onOpenEditName} onClose={handleCloseEditName}>
