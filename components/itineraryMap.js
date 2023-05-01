@@ -1,26 +1,24 @@
-import { MapContainer, Marker, Popup, Rectangle, TileLayer, useMap} from 'react-leaflet'
+import { MapContainer, Marker, Popup, TileLayer} from 'react-leaflet'
 import {divIcon, latLngBounds } from 'leaflet';
 import 'leaflet/dist/leaflet.css'
 import { useState, useEffect } from 'react';
 import { getParkPlaces } from '@/modules/requests';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ReactDOMServer  from 'react-dom/server';
-import { CircularProgress } from '@mui/material';
-
+import { CircularProgress, Accordion, AccordionDetails, AccordionSummary, Typography, Stack} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 //if using for parkItemComponet make sure park is not null, if for itinerary make sure itinerary not null
-export default function ParkMapComponent(props)
+export default function ItineraryMapComponent(props)
 {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const {itinerary, park} = props;
-  console.log(itinerary)
 
   useEffect(()=> {
     async function loadParkPlaces()
     {
       let data = await getParkPlaces(park.parkCode);
-      //console.log(data);
       setPlaces(data.data);
       setLoading(false);
     }
@@ -35,6 +33,16 @@ export default function ParkMapComponent(props)
         <div>Loading Map...</div>
       </div>
     )
+  }
+
+  //if no items on iternary dont display map
+  if(!itinerary.itinerary)
+  {
+    return (
+      <div className="centered">
+          <div>No agenda.</div>
+      </div>
+      )
   }
 
   const minLatLong = {"minLat":75, "minLong":-66};
@@ -53,8 +61,13 @@ export default function ParkMapComponent(props)
   const parkLatLongMax = [maxLatLong.maxLat + 1, maxLatLong.maxLong + 1.5];
   //park bounds
   const bounds = latLngBounds(parkLatLongMin, parkLatLongMax);
+
+   //get parks that wont appear on map, no lat or long
+  const noLocations = itinerary.itinerary.filter((element) => !element.latitude || !element.longitude);
   
   return (
+    <>
+      <div className='tripMap'>
       <MapContainer className='tripMapContainer' center={[park.latitude, park.longitude]} scrollWheelZoom={true} bounds={bounds} maxBounds={bounds} maxBoundsViscosity={1.0} zoom={9} minZoom={8}>
         <TileLayer
           //using OSM for map
@@ -84,5 +97,29 @@ export default function ParkMapComponent(props)
             </Popup>
         </Marker>
       </MapContainer>
+      </div>
+      <div style={{marginBottom: "1rem"}}>
+        {noLocations.length > 0 && (<Accordion style={{border: "4px Solid #1B742E", display: 'inline-block', marginTop: '.2rem'}}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography style={{fontSize: '1rem'}}>
+              Agenda places with no location data
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Stack spacing={.2}>
+              {noLocations.map((place) => {
+              return (
+                <div key={place.id}>
+                  <Typography color={"black"} fontSize={".9rem"}>
+                    {place.location}
+                  </Typography>
+                </div>
+              );
+              })}
+            </Stack>
+          </AccordionDetails>
+        </Accordion>)}
+      </div>
+      </>
   );
 }

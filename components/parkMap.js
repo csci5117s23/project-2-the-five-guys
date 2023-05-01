@@ -5,12 +5,14 @@ import { useState, useEffect } from 'react';
 import { getParkPlaces } from '@/modules/requests';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ReactDOMServer  from 'react-dom/server';
-import Skeleton from '@mui/material/Skeleton';
+import { Accordion, AccordionDetails, AccordionSummary, Skeleton, Typography, Stack } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function ParkMapComponent(props)
 {
-  const [places, setPlaces] = useState([]);
+  const [places, setPlaces] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [noLocations, setNoLocations] = useState([]);
   const {park} = props;
 
   useEffect(()=> {
@@ -22,6 +24,15 @@ export default function ParkMapComponent(props)
     }
     loadParkPlaces();
   },[]);
+
+  useEffect(() => {
+    if(places)
+    {
+      //get parks that wont appear on map, no lat or long
+      const noLocationPlaces = places.filter((element) => !element.latitude || !element.longitude);
+      setNoLocations(noLocationPlaces);
+    }
+  }, [places])
 
   if(loading)
   {
@@ -48,6 +59,7 @@ export default function ParkMapComponent(props)
   const bounds = latLngBounds(parkLatLongMin, parkLatLongMax);
   
   return (
+    <>
     <div className='parkMap'>
       <MapContainer className='parkMapContainer' center={[park.latitude, park.longitude]} scrollWheelZoom={true} bounds={bounds} maxBounds={bounds} maxBoundsViscosity={1.0} zoom={9} minZoom={8}>
         <TileLayer
@@ -79,5 +91,28 @@ export default function ParkMapComponent(props)
         </Marker>
       </MapContainer>
     </div>
+    <div>
+      {noLocations.length > 0 && (<Accordion style={{border: "4px Solid #1B742E", display: 'inline-block', marginTop: '.2rem'}}>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography style={{fontSize: '1rem'}}>
+            Park places with no location data
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Stack spacing={.2}>
+            {noLocations.map((place) => {
+            return (
+              <div key={place.id}>
+                <Typography color={"black"} fontSize={".9rem"}>
+                  {place.title}
+                </Typography>
+              </div>
+            );
+            })}
+          </Stack>
+        </AccordionDetails>
+      </Accordion>)}
+    </div>
+  </>
   );
 }
