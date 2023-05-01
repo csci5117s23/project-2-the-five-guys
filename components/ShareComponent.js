@@ -38,9 +38,12 @@ export default function ShareComponent(props) {
 
         async function shareTrip(){
           try {
-              await navigator.share(shareData);
+              if (navigator.share) {
+                await navigator.share(shareData);
+              } else {
+                setOpen(true);
+              }
           } catch (err) {
-              setOpen(true);
               console.log(err)
           }
         }

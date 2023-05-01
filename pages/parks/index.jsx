@@ -20,6 +20,7 @@ import RedirectToHome from '@/components/RedirectToHome';
 import dynamic from 'next/dynamic';
 import { fetchVisitedParks } from '../../modules/data';
 import { useAuth } from '@clerk/nextjs';
+import { getNationalParksStatic } from '../../modules/requests';
 
 export default function Home({ nationalParks }) {
   const [isListView, setIsListView] = useState(true);
@@ -152,7 +153,7 @@ export default function Home({ nationalParks }) {
 
 export async function getStaticProps() {
   // Grab all parks and filter
-  const unfilteredParks = await getNationalParks();
+  const unfilteredParks = await getNationalParksStatic();
   const nationalParks = unfilteredParks.data.filter((element) =>
     element.designation.includes("National Park") ||
     element.fullName.includes("Redwood") ||

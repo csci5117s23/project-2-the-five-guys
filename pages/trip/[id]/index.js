@@ -217,7 +217,15 @@ export default function Home() {
           </Tabs>
 
           {/* If in agenda view, show itinerary */}
-          {tab === 0 && <div>{trip.itinerary ? <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} /> : <h2>No Agenda!</h2>}</div>}
+          {tab === 0 &&
+            <div>
+              {trip.itinerary ? (
+                <ItineraryList itineraryList={trip.itinerary} tripId={tripId} loadData={loadData} notes={trip.notes} />
+              ) : (
+                <Typography variant="body1">No Agenda! Go to the places tab to start planning your trip.</Typography>
+              )}
+            </div>
+          }
 
           {/* If in map view, show map */}
           {tab === 1 && trip.itinerary && <ItineraryMap itinerary={trip} park={nationalParks.filter((element) => element.parkCode === trip.parkCode)[0]} />}

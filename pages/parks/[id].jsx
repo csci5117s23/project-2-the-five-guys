@@ -8,6 +8,7 @@ import { CircularProgress, IconButton } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useAuth } from "@clerk/nextjs";
 import { fetchVisitedParks } from "../../modules/data";
+import { getNationalParksStatic } from "../../modules/requests";
 
 export default function Home({ park }) {
   const router = useRouter();
@@ -22,8 +23,8 @@ export default function Home({ park }) {
       const token = await getToken({ template: "codehooks" });
       const visits = await fetchVisitedParks(userId, token);
 
-      // Check whether the user has visited this park, 
-      // If they have, store that trip id 
+      // Check whether the user has visited this park,
+      // If they have, store that trip id
       if(visits){
         const trip = visits.find(visit => visit[0] === park.id);
         if(trip){
@@ -64,9 +65,9 @@ export default function Home({ park }) {
 
 export async function getStaticPaths() {
   const unfilteredParks = await getNationalParks();
-  const filteredParks = unfilteredParks.data.filter((element) => 
-    element.designation.includes("National Park") || 
-    element.fullName.includes("Redwood")|| 
+  const filteredParks = unfilteredParks.data.filter((element) =>
+    element.designation.includes("National Park") ||
+    element.fullName.includes("Redwood")||
     element.fullName.includes("American Samoa")
   );
   const paths = filteredParks.map((park) => ({
@@ -81,10 +82,10 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   // params contains the post `id`.
   // If the route is like /posts/1, then params.id is 1
-  const unfilteredParks = await getNationalParks();
-  const filteredParks = unfilteredParks.data.filter((element) => 
-    element.designation.includes("National Park") || 
-    element.fullName.includes("Redwood") || 
+  const unfilteredParks = await getNationalParksStatic();
+  const filteredParks = unfilteredParks.data.filter((element) =>
+    element.designation.includes("National Park") ||
+    element.fullName.includes("Redwood") ||
     element.fullName.includes("American Samoa")
   );
 
