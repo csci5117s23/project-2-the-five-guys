@@ -51,7 +51,7 @@ Our homepage will show the user all national parks either in a list view or a ma
 
 **Is there anything special we need to know in order to effectively test your app? (optional):**
 
-* ...
+* Share feature requires a compatible browser [Web Share API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API#browser_compatibility)
 
 
 
@@ -72,10 +72,11 @@ Please do not document required libraries (e.g., Vue, Vuefire, Firebase).**
 
 * [Material UI](https://mui.com/): Styling, components
 * [React leaflet](https://react-leaflet.js.org/): Interactive Map
-* [Materual UI Carosel](https://www.npmjs.com/package/react-material-ui-carousel): Image carosel
+* [Materual UI Carousel](https://www.npmjs.com/package/react-material-ui-carousel): Image carousel
 * [Leaftlet Custom Control](https://www.npmjs.com/package/react-leaflet-custom-control): Custom location button
 * [Geolocation Api](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API): Access to device location
 * [Web Share Api](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API): Share Access
+* [Brandmark](https://app.brandmark.io/v3/): Logo creation
 
 **If there's anything else you would like to disclose about how your project
 relied on external code, expertise, or anything else, please disclose that
