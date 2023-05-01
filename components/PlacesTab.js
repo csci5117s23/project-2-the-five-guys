@@ -5,6 +5,7 @@ import PlaceCard from "./PlaceCard";
 import { useState, useEffect } from "react";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { v4 as uuidv4 } from 'uuid';
+import dayjs from 'dayjs';
 
 export default function PlacesTab({ trip, handleUpdateTrip }) {
   //console.log(parkPlaces);
@@ -12,8 +13,8 @@ export default function PlacesTab({ trip, handleUpdateTrip }) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [dialogPlace, setDialogPlace] = useState({});
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [dateTime, setDateTime] = useState(null);
+  const [newName, setNewName] = useState("");
   const [error, setError] = useState(null);
   const { getToken } = useAuth();
   const [places, setPlaces] = useState([]);
@@ -45,6 +46,7 @@ export default function PlacesTab({ trip, handleUpdateTrip }) {
 
   const handleCreateOpen = (place) => {
     setDialogPlace(place);
+    setNewName(place.title);
     setCreateDialogOpen(true);
   };
 
@@ -54,14 +56,14 @@ export default function PlacesTab({ trip, handleUpdateTrip }) {
   };
 
   const handleSubmit = async () => {
-    if (dialogPlace && startDate && endDate) {
+    if (dialogPlace && dateTime && newName) {
       const itineraryItem = {
-        description: dialogPlace.listDescription,
-        location: dialogPlace.title,
+        description: "",
+        location: newName,
         latitude: dialogPlace.latitude,
         longitude: dialogPlace.longitude,
-        startDate: startDate.toJSON(),
-        endDate: endDate.toJSON(),
+        startDate: dateTime.toJSON(),
+        endDate: dateTime.toJSON(),
         id: uuidv4()
       };
       const newItinerary = trip.itinerary ? [...trip.itinerary, itineraryItem] : [itineraryItem];
@@ -102,6 +104,7 @@ export default function PlacesTab({ trip, handleUpdateTrip }) {
         }}
         onChange={(e) => handleSearch(e)}
       />
+      <Button onClick={() => handleCreateOpen({title: "", latitude: "", longitude: ""})} sx={{mb: 1}} variant="contained">Create your own place</Button>
       <Grid container spacing={2} justifyContent="center">
         {filteredPlaces.map((place) => (
           <Grid item xs={12} md={6} key={place.id}>
@@ -110,12 +113,12 @@ export default function PlacesTab({ trip, handleUpdateTrip }) {
         ))}
       </Grid>
         <Dialog open={createDialogOpen} onClose={handleCreateClose} fullWidth={true}>
-          <DialogTitle>Add &quot;{dialogPlace.title}&quot; to trip?</DialogTitle>
+          <DialogTitle>Add to trip?</DialogTitle>
           <DialogContent>
             <Stack spacing={2} pt={1}>
               {error && <Alert severity="error">{error}</Alert>}
-              <DateTimePicker label="Start Time" fullWidth value={startDate} onChange={(newValue) => setStartDate(newValue)} />
-              <DateTimePicker label="End Time" fullWidth value={endDate} onChange={(newValue) => setEndDate(newValue)} />
+              <TextField label="Name" variant="outlined" value={newName} onChange={(event) => setNewName(event.target.value)} fullWidth/>
+              <DateTimePicker label="Date and Time" fullWidth value={dateTime} onChange={(newValue) => setDateTime(newValue)} minDate={dayjs(trip.startDate)} maxDate={dayjs(trip.endDate)}/>
             </Stack>
           </DialogContent>
           <DialogActions>
