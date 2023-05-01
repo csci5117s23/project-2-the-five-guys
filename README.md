@@ -24,6 +24,7 @@ CSCI 5117, Spring 2022, [assignment description](https://canvas.umn.edu/courses/
 
 * Map integration, adding custom icons and geolocation button
 * Codehooks custom routes, codehooks issues overall
+* Integration with national parks api to gather much of site data
 
 Which (if any) device integration(s) does your app support?
 
@@ -69,8 +70,7 @@ along with a very brief caption:**
 **Document integrations with 3rd Party code or services here.
 Please do not document required libraries (e.g., Vue, Vuefire, Firebase).**
 
-* Library or service name: description of use
-* Material UI:Styling, components
+* [Material UI](https://mui.com/): Styling, components
 * [React leaflet](https://react-leaflet.js.org/): Interactive Map
 * [Materual UI Carosel](https://www.npmjs.com/package/react-material-ui-carousel): Image carosel
 * [Leaftlet Custom Control](https://www.npmjs.com/package/react-leaflet-custom-control): Custom location button
