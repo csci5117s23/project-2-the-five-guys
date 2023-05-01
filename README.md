@@ -22,15 +22,17 @@ CSCI 5117, Spring 2022, [assignment description](https://canvas.umn.edu/courses/
 **Describe the most challenging features you implemented
 (one sentence per bullet, maximum 4 bullets):**
 
-* ...
+* Map integration, adding custom icons and geolocation button
+* Codehooks custom routes, codehooks issues overall
 
 Which (if any) device integration(s) does your app support?
 
-* ...
+* Device Location
+* Sharing
 
 Which (if any) progressive web app feature(s) does your app support?
 
-* ...
+* Sharing
 
 
 
@@ -56,7 +58,10 @@ Our homepage will show the user all national parks either in a list view or a ma
 
 **[Add a screenshot of each key page](https://stackoverflow.com/questions/10189356/how-to-add-screenshot-to-readmes-in-github-repository)
 along with a very brief caption:**
-
+![](/static/listView.png)
+![](/static/mapView.png)
+![](/static/tripPage.png)
+![](/static/editTrip.png)
 
 
 ## External Dependencies
@@ -65,10 +70,14 @@ along with a very brief caption:**
 Please do not document required libraries (e.g., Vue, Vuefire, Firebase).**
 
 * Library or service name: description of use
-* ...
+* Material UI:Styling, components
+* [React leaflet](https://react-leaflet.js.org/): Interactive Map
+* [Materual UI Carosel](https://www.npmjs.com/package/react-material-ui-carousel): Image carosel
+* [Leaftlet Custom Control](https://www.npmjs.com/package/react-leaflet-custom-control): Custom location button
+* [Geolocation Api](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API): Access to device location
+* [Web Share Api](https://developer.mozilla.org/en-US/docs/Web/API/Web_Share_API): Share Access
 
 **If there's anything else you would like to disclose about how your project
 relied on external code, expertise, or anything else, please disclose that
 here:**
-
-...
+ Some small portions were taken from stack overflow and we credit the posts in the code
